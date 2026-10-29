@@ -1,0 +1,22 @@
+{
+  "id": "./",
+  "name": "MyThoughtsNest — המחשבות שלי",
+  "short_name": "המחשבות שלי",
+  "description": "הקלטה ותמלול של רעיונות, שורות לשירים, רשימות קניות ותזכורות מוקראות",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0b0b0d",
+  "theme_color": "#0b0b0d",
+  "lang": "he",
+  "dir": "rtl",
+  "icons": [
+    {"src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any"},
+    {"src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any"},
+    {"src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable"}
+  ],
+  "shortcuts": [
+    {"name": "הקלטה מהירה", "short_name": "הקלטה", "url": "./?quick=1", "icons": [{"src": "icon-192.png", "sizes": "192x192"}]}
+  ]
+}

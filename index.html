@@ -1,0 +1,944 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<script>
+/* GitHub Pages -> Cloudflare redirect (only on the old host) */
+if(location.hostname==='barakaflalo.github.io'){location.replace('https://mythoughtsnest.pages.dev/');}
+</script>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0b0b0d">
+<meta name="description" content="MyThoughtsNest — הקלטה ותמלול של רעיונות, שורות לשירים, רשימות קניות ותזכורות מוקראות">
+<title>MyThoughtsNest · המחשבות שלי</title>
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<style>
+:root{--bg:#0b0b0d;--bg2:#121216;--card:#18181d;--card2:#202027;--line:#2c2c35;--tx:#f2efe6;--tx2:#a9a69b;--ac:#d4af37;--ac2:#f0cf6a;--acx:#1a1400;--acl:#d4af37;--red:#ff5a5f;--ok:#46c37b;--rad:16px}
+body[data-theme=ocean]{--bg:#07101a;--bg2:#0c1826;--card:#122234;--card2:#18304a;--line:#24405e;--tx:#e8f2ff;--tx2:#8fa9c4;--ac:#4aa3ff;--ac2:#8cc4ff;--acx:#00172d;--acl:#4aa3ff}
+body[data-theme=forest]{--bg:#08120d;--bg2:#0d1c14;--card:#12261b;--card2:#193526;--line:#26503a;--tx:#e9f7ee;--tx2:#8fb8a0;--ac:#3ecf8e;--ac2:#7fe6b8;--acx:#00200f;--acl:#3ecf8e}
+body[data-theme=rose]{--bg:#150810;--bg2:#1f0c18;--card:#2a1020;--card2:#3a182c;--line:#5a2a45;--tx:#ffeaf3;--tx2:#c79ab0;--ac:#ff6b9d;--ac2:#ff9ec0;--acx:#2a0014;--acl:#ff6b9d}
+body[data-theme=day]{--bg:#f5f2ea;--bg2:#ebe7db;--card:#ffffff;--card2:#f0ece0;--line:#d8d2c0;--tx:#1b1b1f;--tx2:#5d5a50;--ac:#c79a1a;--ac2:#a67c00;--acx:#fff;--acl:color-mix(in srgb,#c79a1a 72%,#000);--red:#d6333a;--ok:#1f9a55}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;height:100%;background:var(--bg);color:var(--tx);font-family:system-ui,-apple-system,"Segoe UI",Roboto,"Noto Sans Hebrew",Arial,sans-serif;font-size:16px;line-height:1.45}
+body{overflow:hidden}
+#app{display:flex;flex-direction:column;height:100dvh;max-width:720px;margin:0 auto;position:relative}
+#top{display:flex;align-items:center;gap:8px;padding:calc(env(safe-area-inset-top) + 10px) 14px 10px;background:var(--bg);border-bottom:1px solid var(--line)}
+#top h1{flex:1;margin:0;font-size:1.1rem;font-weight:800;letter-spacing:.2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#top h1 b{color:var(--ac)}
+.ib{width:42px;height:42px;border-radius:12px;border:1px solid var(--line);background:var(--card);color:var(--tx);font-size:1.2rem;display:grid;place-items:center;cursor:pointer;flex:none}
+.ib:active{transform:scale(.94)}
+.back{display:flex;align-items:center;gap:6px;border:1px solid var(--line);background:var(--card);color:var(--tx);border-radius:12px;padding:0 12px;height:42px;font-size:.95rem;cursor:pointer;max-width:55%;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+#main{flex:1;overflow-y:auto;overflow-x:hidden;padding:14px 14px 24px;-webkit-overflow-scrolling:touch}
+#tabs{display:flex;border-top:1px solid var(--line);background:var(--bg2);padding:6px 6px calc(env(safe-area-inset-bottom) + 6px)}
+.tab{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;border:0;background:none;color:var(--tx2);font-size:.72rem;padding:6px 2px;cursor:pointer;border-radius:12px;font-family:inherit}
+.tab svg{width:24px;height:24px}
+.tab.on{color:var(--acl);font-weight:700}
+.tab.on svg{stroke:var(--acl)}
+h2{font-size:1.05rem;margin:18px 0 10px;display:flex;align-items:center;gap:8px}
+h2 small{color:var(--tx2);font-weight:400;font-size:.8rem}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--rad);padding:14px;margin-bottom:10px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:46px;padding:0 16px;border-radius:14px;border:1px solid var(--line);background:var(--card2);color:var(--tx);font-size:1rem;font-family:inherit;cursor:pointer}
+.btn:active{transform:scale(.97)}
+.btn.pri{background:var(--ac);color:var(--acx);border-color:var(--ac);font-weight:800}
+.btn.dng{color:var(--red);border-color:var(--red);background:transparent}
+.btn.sm{min-height:36px;padding:0 12px;font-size:.88rem;border-radius:10px}
+.btn[disabled]{opacity:.5;pointer-events:none}
+.btns{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}
+.btns .btn{flex:1 1 auto}
+.chips{display:flex;gap:8px;overflow-x:auto;padding:2px 0 8px;scrollbar-width:none}
+.chips::-webkit-scrollbar{display:none}
+.chip{flex:none;border:1px solid var(--line);background:var(--card);color:var(--tx);padding:8px 14px;border-radius:999px;font-size:.92rem;cursor:pointer;font-family:inherit;white-space:nowrap}
+.chip.on{background:var(--ac);color:var(--acx);border-color:var(--ac);font-weight:700}
+input,textarea,select{width:100%;background:var(--bg2);border:1px solid var(--line);color:var(--tx);border-radius:12px;padding:12px;font-size:1rem;font-family:inherit}
+textarea{min-height:130px;resize:vertical;line-height:1.55}
+input:focus,textarea:focus,select:focus{outline:2px solid var(--ac);outline-offset:1px}
+label.f{display:block;font-size:.85rem;color:var(--tx2);margin:12px 0 5px}
+.muted{color:var(--tx2);font-size:.88rem}
+.warn{background:color-mix(in srgb,var(--ac) 14%,transparent);border:1px solid color-mix(in srgb,var(--ac) 45%,transparent);border-radius:12px;padding:10px 12px;font-size:.88rem;margin-bottom:10px}
+.err{color:var(--red)}
+.mic-wrap{display:flex;flex-direction:column;align-items:center;gap:10px;padding:10px 0 4px}
+.mic{width:148px;height:148px;border-radius:50%;border:0;cursor:pointer;background:radial-gradient(circle at 30% 25%,var(--ac2),var(--ac) 65%);color:var(--acx);display:grid;place-items:center;box-shadow:0 8px 28px color-mix(in srgb,var(--ac) 40%,transparent);position:relative}
+.mic svg{width:64px;height:64px}
+.mic.rec{background:radial-gradient(circle at 30% 25%,#ff8a8e,var(--red) 65%);color:#fff;animation:pulse 1.3s infinite}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(255,90,95,.55)}100%{box-shadow:0 0 0 30px rgba(255,90,95,0)}}
+body.no-anim *{animation:none!important;transition:none!important}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+.timer{font-variant-numeric:tabular-nums;font-size:1.5rem;font-weight:800;min-height:2rem}
+.live{width:100%;min-height:68px;max-height:160px;overflow:auto;background:var(--bg2);border:1px dashed var(--line);border-radius:14px;padding:12px;font-size:1.05rem;line-height:1.6}
+.live i{color:var(--tx2);font-style:normal}
+.note{display:flex;gap:10px;align-items:flex-start}
+.note .ic{font-size:1.5rem;flex:none;width:34px;text-align:center}
+.note .bd{flex:1;min-width:0}
+.note .tx{white-space:pre-wrap;word-break:break-word;font-size:1.02rem;display:-webkit-box;-webkit-line-clamp:7;-webkit-box-orient:vertical;overflow:hidden}
+.note .tx.empty{color:var(--tx2);font-style:italic}
+.note .mt{display:flex;gap:8px;flex-wrap:wrap;color:var(--tx2);font-size:.78rem;margin-top:6px;align-items:center}
+.note .acts{display:flex;flex-direction:column;gap:6px;flex:none}
+.items{margin:6px 0 0;padding:0;list-style:none}
+.items li{display:flex;align-items:center;gap:10px;padding:8px 2px;border-bottom:1px solid var(--line);cursor:pointer}
+.items li.done span{text-decoration:line-through;color:var(--tx2)}
+.items li:last-child{border-bottom:0}
+.box{width:24px;height:24px;border-radius:7px;border:2px solid var(--ac);display:grid;place-items:center;flex:none;font-size:.9rem;color:var(--acx)}
+.done .box{background:var(--ac)}
+.fgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.fcard{background:var(--card);border:1px solid var(--line);border-radius:var(--rad);padding:16px 12px;text-align:center;cursor:pointer;font-family:inherit;color:var(--tx)}
+.fcard .e{font-size:2rem;display:block}
+.fcard b{display:block;margin-top:4px}
+.fcard span{color:var(--tx2);font-size:.82rem}
+.list{background:var(--card);border:1px solid var(--line);border-radius:var(--rad);overflow:hidden;margin-bottom:12px}
+.list>button,.list>div.li{display:flex;align-items:center;gap:12px;width:100%;padding:14px;border:0;border-bottom:1px solid var(--line);background:none;color:var(--tx);font-size:1rem;font-family:inherit;text-align:start;cursor:pointer}
+.list>*:last-child{border-bottom:0}
+.list .arr{margin-inline-start:auto;color:var(--tx2)}
+.sw{display:flex;align-items:center;gap:12px;padding:12px 14px;border-bottom:1px solid var(--line);cursor:pointer}
+.sw:last-child{border-bottom:0}
+.sw .t{flex:1}
+.sw .t small{display:block;color:var(--tx2);font-size:.8rem}
+.sw input{display:none}
+.sw .k{width:50px;height:30px;border-radius:999px;background:var(--line);position:relative;flex:none;transition:.2s}
+.sw .k:after{content:"";position:absolute;top:3px;inset-inline-start:3px;width:24px;height:24px;border-radius:50%;background:#fff;transition:.2s}
+.sw input:checked+.k{background:var(--ac)}
+.sw input:checked+.k:after{inset-inline-start:23px}
+.themes{display:flex;gap:10px;flex-wrap:wrap}
+.th{width:46px;height:46px;border-radius:50%;border:3px solid transparent;cursor:pointer}
+.th.on{border-color:var(--tx)}
+.rem{display:flex;gap:10px;align-items:center}
+.rem .when{font-weight:700;color:var(--acl)}
+.rem.past .when{color:var(--red)}
+.rem.fin{opacity:.55}
+.ov{position:fixed;inset:0;background:rgba(0,0,0,.62);display:flex;align-items:flex-end;justify-content:center;z-index:50}
+.sheet{background:var(--bg2);border:1px solid var(--line);width:100%;max-width:720px;max-height:92dvh;overflow-y:auto;border-radius:22px 22px 0 0;padding:16px 16px calc(env(safe-area-inset-bottom) + 16px)}
+.sheet.mid{border-radius:22px;margin:auto 14px}
+.ov.c{align-items:center}
+.sheet h3{margin:0 0 10px;font-size:1.15rem;display:flex;align-items:center;gap:8px}
+.sheet h3 .x{margin-inline-start:auto}
+#toast{position:fixed;inset-inline:14px;bottom:calc(env(safe-area-inset-bottom) + 84px);z-index:90;display:flex;justify-content:center;pointer-events:none}
+body.ov-open #toast{bottom:auto;top:calc(env(safe-area-inset-top) + 12px)}
+#toast div{background:var(--card2);border:1px solid var(--ac);color:var(--tx);padding:12px 16px;border-radius:14px;box-shadow:0 8px 24px rgba(0,0,0,.5);display:flex;gap:14px;align-items:center;pointer-events:auto;max-width:100%}
+#toast button{background:none;border:0;color:var(--acl);font-weight:800;font-size:1rem;cursor:pointer;font-family:inherit}
+.spin{display:inline-block;width:14px;height:14px;border:2px solid var(--line);border-top-color:var(--ac);border-radius:50%;animation:sp .8s linear infinite}
+@keyframes sp{to{transform:rotate(360deg)}}
+.badge{display:inline-block;font-size:.7rem;font-weight:800;padding:2px 7px;border-radius:999px;background:var(--ac);color:var(--acx);margin-inline-start:6px}
+.appfoot{text-align:center;color:var(--tx2);font-size:.75rem;padding:18px 0 6px}
+.appfoot b{color:var(--ac)}
+.dot{width:10px;height:10px;border-radius:50%;background:var(--red);display:inline-block}
+.dot.ok{background:var(--ok)}
+.skip{position:absolute;inset-inline-start:-999px}
+.skip:focus{inset-inline-start:8px;top:8px;z-index:99;background:var(--ac);color:var(--acx);padding:8px;border-radius:8px}
+pre.diag{white-space:pre-wrap;font-size:.8rem;background:var(--bg2);border:1px solid var(--line);border-radius:12px;padding:12px;direction:ltr;text-align:left}
+.dots{display:flex;gap:6px;justify-content:center;margin:12px 0}
+.dots i{width:8px;height:8px;border-radius:50%;background:var(--line)}
+.dots i.on{background:var(--ac)}
+.gbig{font-size:3.2rem;text-align:center;margin:6px 0}
+</style>
+</head>
+<body data-theme="gold">
+<a class="skip" href="#main">דלג לתוכן</a>
+<div id="app">
+  <header id="top"></header>
+  <main id="main" tabindex="-1"></main>
+  <nav id="tabs" aria-label="ניווט ראשי"></nav>
+</div>
+<div id="ovroot"></div>
+<div id="toast" aria-live="polite"></div>
+<script>
+'use strict';
+/* ============ MyThoughtsNest · AppNest · core ============ */
+var VERSION='1.0.0';
+var SUPPORT='appnest55@gmail.com';
+var STORE_URL='https://appnest-store.pages.dev';
+
+/* ---------- i18n (he + en) ---------- */
+var LANG={
+he:{
+ app:'המחשבות שלי',tHome:'בית',tNotes:'הערות',tRem:'תזכורות',tMore:'עוד',
+ hello:'שלום',helloU:'שלום {0}',tapRec:'לחץ כדי להקליט',tapStop:'לחץ כדי לעצור',saveTo:'שמור אל',auto:'אוטומטי',
+ listening:'מקשיב…',typeIdea:'הקלד רעיון',recent:'אחרונות',upcoming:'תזכורות קרובות',none:'אין עדיין',noNotes:'עוד אין הערות. לחץ על המיקרופון ותגיד משהו.',noRem:'אין תזכורות קרובות.',
+ f_ideas:'רעיונות',f_songs:'שירים',f_shop:'קניות',f_tasks:'תזכורות ומשימות',
+ search:'חיפוש בכל ההערות…',newFolder:'תיקייה חדשה',editFolder:'עריכת תיקייה',folderName:'שם התיקייה',notesN:'{0} הערות',all:'הכל',
+ saved:'נשמר ב{0}',change:'שנה',undo:'בטל',deleted:'נמחק',restored:'שוחזר',
+ remSet:'⏰ תזכורת: {0}',remDel:'תזכורת בוטלה',
+ nothing:'לא נקלט כלום. נסה שוב.',micDenied:'אין גישה למיקרופון. אשר הרשאה בהגדרות הדפדפן.',noSR:'התמלול החי לא נתמך בדפדפן הזה. ההקלטה נשמרת, ואפשר לתמלל עם AI או להקליד.',
+ conflict:'התמלול החי לא עבד יחד עם ההקלטה במכשיר הזה. נסה מצב "תמלול חי בלבד" או "הקלטה בלבד + AI" בהגדרות.',
+ srNet:'התמלול החי דורש אינטרנט.',srDeny:'אין הרשאה לתמלול קולי.',
+ noText:'🎧 הקלטה בלי תמלול',editNote:'עריכת הערה',newNote:'הערה חדשה',noteText:'הטקסט',folder:'תיקייה',close:'סגור',del:'מחק',edit:'ערוך',
+ play:'נגן',pause:'השהה',dl:'הורד שמע',share:'שתף',copy:'העתק',copied:'הועתק',
+ aiTr:'תמלל עם AI',aiBusy:'מתמלל…',aiDone:'התמלול עודכן',aiRestore:'שחזר תמלול קודם',aiNoKey:'כדי לתמלל עם AI צריך להזין מפתח בהגדרות › AI.',aiFail:'התמלול נכשל: {0}',aiLong:'ההקלטה ארוכה מדי לתמלול AI (מעל 6 דקות).',aiNoAudio:'אין שמע שמור להערה הזו.',
+ rem:'תזכורת',remAdd:'הוסף תזכורת',remNew:'תזכורת חדשה',remEdit:'עריכת תזכורת',remTitle:'על מה להזכיר?',remWhen:'מתי',remRepeat:'חזרה',r_none:'פעם אחת',r_daily:'כל יום',r_weekly:'כל שבוע',
+ remHonest:'התראה מתוך האפליקציה מגיעה כשהיא פתוחה או פועלת ברקע. לתזכורת שמגיעה תמיד, גם כשהאפליקציה סגורה לגמרי — הוסף ליומן של הטלפון (📅).',
+ remNotif:'הפעל התראות מערכת',remNotifOn:'התראות מערכת פעילות',remNotifNo:'ההתראות חסומות בדפדפן. אפשר לאשר בהגדרות האתר.',
+ cal:'📅 הוסף ליומן',calAll:'📅 ייצא את כל התזכורות ליומן',calNone:'אין תזכורות עתידיות לייצוא.',done:'בוצע',snooze:'דחה 10 דק׳',speakNow:'הקרא',dismiss:'סגור',
+ missed:'תזכורת שפספסת',alarmTitle:'⏰ תזכורת',
+ shopList:'המר לרשימה',shopText:'הצג כטקסט',songCopy:'העתק את כל השורות',songMode:'כל השורות כשיר אחד',exportTxt:'ייצא לטקסט',
+ settings:'הגדרות',backup:'גיבוי וייצוא',guide:'מדריך',diag:'אבחון',about:'אודות',
+ userName:'שם משתמש',lang:'שפה',theme:'עיצוב',font:'גודל טקסט',
+ recMode:'מצב הקלטה',m_both:'הקלטה + תמלול חי',m_live:'תמלול חי בלבד (בלי שמע)',m_audio:'הקלטה בלבד (תמלול ב-AI)',
+ recLang:'שפת הדיבור',autoFolder:'סיווג אוטומטי לתיקיות',autoFolderD:'לפי מילים בהערה (קניות, שירים, תזכורות)',
+ remSettings:'תזכורות',speak:'הקרא תזכורות בקול',beep:'צליל התראה',vib:'רטט',defTime:'שעה ברירת מחדל כשלא אמרת שעה',testSpeak:'נסה הקראה',
+ ai:'תמלול AI (אופציונלי)',aiD:'עובד גם בלי. מי שרוצה דיוק גבוה יותר מחבר מפתח אישי. השמע נשלח לספק שבחרת, ישירות מהמכשיר.',
+ provider:'ספק',apiKey:'מפתח API',model:'מודל',refresh:'רענן מודלים',test:'בדוק חיבור',disconnect:'נתק',autoAI:'תמלל אוטומטית עם AI כשאין תמלול חי',
+ keyHow:'איך משיגים מפתח Gemini בחינם: aistudio.google.com/app/apikey ← Create API key. המפתח נשמר רק במכשיר הזה.',
+ testOk:'החיבור תקין ✓',testNoKey:'הזן מפתח קודם',testFail:'החיבור נכשל: {0}',modelsN:'נטענו {0} מודלים',
+ exportNotes:'ייצא את כל ההערות לטקסט',backupSafe:'גיבוי JSON (בלי מפתחות, בלי שמע)',backupFull:'גיבוי JSON כולל שמע (כבד)',restore:'שחזר מגיבוי',restoreAsk:'השחזור מחליף את כל הנתונים הנוכחיים. להמשיך?',restoreOk:'השחזור הושלם',restoreBad:'הקובץ לא תקין',
+ backupTip:'הנתונים נשמרים רק על המכשיר. מומלץ לגבות מדי פעם.',backupRemind:'עברו יותר מ-14 יום מהגיבוי האחרון. כדאי לגבות 💾',lastBackup:'גיבוי אחרון: {0}',never:'אף פעם',
+ wipe:'מחק את כל הנתונים',wipeAsk1:'למחוק את כל ההערות, ההקלטות והתזכורות?',wipeAsk2:'בטוח? אי אפשר לשחזר בלי קובץ גיבוי.',wiped:'הכל נמחק',
+ ok:'אישור',cancel:'ביטול',yes:'כן, מחק',next:'הבא',skip:'דלג',start:'מתחילים',
+ g1t:'דבר — והאפליקציה רושמת',g1:'לחץ על המיקרופון, תגיד רעיון, שורה לשיר או מה צריך לקנות. ההקלטה והתמלול נשמרים אוטומטית.',
+ g2t:'תיקיות חכמות',g2:'"צריך לקנות לחם וחלב" נכנס לקניות. "שורה לשיר" נכנס לשירים. אפשר גם לבחור יעד קבוע מראש.',
+ g3t:'תזכורות בקול',g3:'תגיד "מחר בשעה 5 פגישה" והאפליקציה תקבע תזכורת, תקפיץ התראה ותקריא אותה.',
+ g4t:'כנות על התראות',g4:'התראות פועלות כשהאפליקציה פתוחה או ברקע. לתזכורת חשובה שתגיע תמיד — לחץ "הוסף ליומן".',
+ g5t:'הכל אצלך',g5:'הכל נשמר רק בטלפון. אפשר לגבות, לייצא, ולחבר מפתח AI אם רוצים תמלול מדויק יותר.',
+ pressExit:'לחץ שוב כדי לצאת',saveFail:'השמירה נכשלה — האחסון מלא או חסום',noDb:'האחסון המקומי לא זמין — הערות לא יישמרו אחרי סגירה',
+ zipWarn:'האפליקציה נפתחה מקובץ מקומי. במצב הזה אופליין, התראות וההתקנה לא יעבדו. פתח מהכתובת של האפליקציה.',
+ version:'גרסה',dev:'פותח על ידי',platform:'פלטפורמה',storage:'אחסון',onDevice:'על המכשיר בלבד',license:'רישיון',store:'חנות AppNest',shareApp:'שתף את האפליקציה',feedback:'שלח משוב',privacy:'מדיניות פרטיות',
+ disclaimer:'תמלול אוטומטי עלול לטעות — בדוק לפני שאתה סומך עליו.',
+ stats:'סטטוס',byU:'הופק ע״י {0}',moreBack:'עוד',pickFolder:'לאיזו תיקייה?',emoji:'אייקון',delFolderAsk:'למחוק את התיקייה? ההערות יעברו לרעיונות.',delNoteAsk:'למחוק את ההערה הזו?',delRemAsk:'למחוק את התזכורת?',
+ setBeepNote:'צליל והקראה עובדים רק אחרי שנגעת באפליקציה פעם אחת מאז שנפתחה.',quick:'הקלטה מהירה',len:'{0}',items:'פריטים',manual:'ידני',live:'תמלול חי',ai_:'AI',
+ permNotif:'נדרשת הרשאת התראות',
+},
+en:{
+ app:'My Thoughts',tHome:'Home',tNotes:'Notes',tRem:'Reminders',tMore:'More',
+ hello:'Hello',helloU:'Hello {0}',tapRec:'Tap to record',tapStop:'Tap to stop',saveTo:'Save to',auto:'Auto',
+ listening:'Listening…',typeIdea:'Type an idea',recent:'Recent',upcoming:'Upcoming reminders',none:'None yet',noNotes:'No notes yet. Tap the mic and say something.',noRem:'No upcoming reminders.',
+ f_ideas:'Ideas',f_songs:'Songs',f_shop:'Shopping',f_tasks:'Reminders & tasks',
+ search:'Search all notes…',newFolder:'New folder',editFolder:'Edit folder',folderName:'Folder name',notesN:'{0} notes',all:'All',
+ saved:'Saved in {0}',change:'Change',undo:'Undo',deleted:'Deleted',restored:'Restored',
+ remSet:'⏰ Reminder: {0}',remDel:'Reminder cancelled',
+ nothing:'Nothing was captured. Try again.',micDenied:'No microphone access. Allow it in browser settings.',noSR:'Live transcription is not supported in this browser. The audio is saved; transcribe with AI or type.',
+ conflict:'Live transcription did not work together with recording on this device. Try "live transcription only" or "record only + AI" in settings.',
+ srNet:'Live transcription needs internet.',srDeny:'Speech recognition permission denied.',
+ noText:'🎧 Recording without transcript',editNote:'Edit note',newNote:'New note',noteText:'Text',folder:'Folder',close:'Close',del:'Delete',edit:'Edit',
+ play:'Play',pause:'Pause',dl:'Download audio',share:'Share',copy:'Copy',copied:'Copied',
+ aiTr:'Transcribe with AI',aiBusy:'Transcribing…',aiDone:'Transcript updated',aiRestore:'Restore previous transcript',aiNoKey:'To transcribe with AI add a key in Settings › AI.',aiFail:'Transcription failed: {0}',aiLong:'Recording is too long for AI transcription (over 6 min).',aiNoAudio:'This note has no saved audio.',
+ rem:'Reminder',remAdd:'Add reminder',remNew:'New reminder',remEdit:'Edit reminder',remTitle:'Remind me about',remWhen:'When',remRepeat:'Repeat',r_none:'Once',r_daily:'Daily',r_weekly:'Weekly',
+ remHonest:'In-app alerts arrive while the app is open or running in the background. For a reminder that always arrives, even when the app is fully closed, add it to your phone calendar (📅).',
+ remNotif:'Enable system notifications',remNotifOn:'System notifications are on',remNotifNo:'Notifications are blocked in the browser. Allow them in site settings.',
+ cal:'📅 Add to calendar',calAll:'📅 Export all reminders to calendar',calNone:'No future reminders to export.',done:'Done',snooze:'Snooze 10 min',speakNow:'Read aloud',dismiss:'Dismiss',
+ missed:'Missed reminder',alarmTitle:'⏰ Reminder',
+ shopList:'Convert to list',shopText:'Show as text',songCopy:'Copy all lines',songMode:'All lines as one song',exportTxt:'Export to text',
+ settings:'Settings',backup:'Backup & export',guide:'Guide',diag:'Diagnostics',about:'About',
+ userName:'User name',lang:'Language',theme:'Theme',font:'Text size',
+ recMode:'Recording mode',m_both:'Record + live transcript',m_live:'Live transcript only (no audio)',m_audio:'Record only (transcribe with AI)',
+ recLang:'Spoken language',autoFolder:'Auto-sort into folders',autoFolderD:'By words in the note (shopping, songs, reminders)',
+ remSettings:'Reminders',speak:'Read reminders aloud',beep:'Alert sound',vib:'Vibration',defTime:'Default time when no time is said',testSpeak:'Test speech',
+ ai:'AI transcription (optional)',aiD:'Works without it. For higher accuracy connect your own key. Audio goes straight from your device to the provider you pick.',
+ provider:'Provider',apiKey:'API key',model:'Model',refresh:'Refresh models',test:'Test connection',disconnect:'Disconnect',autoAI:'Auto-transcribe with AI when there is no live transcript',
+ keyHow:'Get a free Gemini key: aistudio.google.com/app/apikey › Create API key. The key stays on this device only.',
+ testOk:'Connection OK ✓',testNoKey:'Enter a key first',testFail:'Connection failed: {0}',modelsN:'Loaded {0} models',
+ exportNotes:'Export all notes as text',backupSafe:'JSON backup (no keys, no audio)',backupFull:'JSON backup with audio (large)',restore:'Restore from backup',restoreAsk:'Restoring replaces all current data. Continue?',restoreOk:'Restore complete',restoreBad:'Invalid file',
+ backupTip:'Data lives only on this device. Back up once in a while.',backupRemind:'More than 14 days since last backup. Worth backing up 💾',lastBackup:'Last backup: {0}',never:'never',
+ wipe:'Delete all data',wipeAsk1:'Delete all notes, recordings and reminders?',wipeAsk2:'Sure? It cannot be undone without a backup file.',wiped:'Everything deleted',
+ ok:'OK',cancel:'Cancel',yes:'Yes, delete',next:'Next',skip:'Skip',start:"Let's go",
+ g1t:'Speak — it writes it down',g1:'Tap the mic and say an idea, a song line, or what to buy. Audio and transcript are saved automatically.',
+ g2t:'Smart folders',g2:'"Need to buy bread and milk" goes to Shopping. "Line for a song" goes to Songs. You can also pick a fixed target.',
+ g3t:'Spoken reminders',g3:'Say "tomorrow at 5 meeting" and the app sets a reminder, pops an alert and reads it out.',
+ g4t:'Honest about alerts',g4:'Alerts work while the app is open or in the background. For an important reminder that always arrives, tap "Add to calendar".',
+ g5t:'All yours',g5:'Everything stays on your phone. Back up, export, and add an AI key if you want more accurate transcripts.',
+ pressExit:'Press back again to exit',saveFail:'Save failed — storage is full or blocked',noDb:'Local storage unavailable — notes will not survive closing',
+ zipWarn:'The app was opened from a local file. Offline, alerts and install will not work. Open it from the app address.',
+ version:'Version',dev:'Developed by',platform:'Platform',storage:'Storage',onDevice:'On device only',license:'License',store:'AppNest store',shareApp:'Share the app',feedback:'Send feedback',privacy:'Privacy policy',
+ disclaimer:'Automatic transcription can be wrong — check before relying on it.',
+ stats:'Status',byU:'By {0}',moreBack:'More',pickFolder:'Which folder?',emoji:'Icon',delFolderAsk:'Delete this folder? Its notes move to Ideas.',delNoteAsk:'Delete this note?',delRemAsk:'Delete this reminder?',
+ setBeepNote:'Sound and speech only work after you touched the app once since it opened.',quick:'Quick record',len:'{0}',items:'items',manual:'manual',live:'live',ai_:'AI',
+ permNotif:'Notification permission needed',
+}};
+var curLang='he';
+function T(k){var a=arguments,s=(LANG[curLang]&&LANG[curLang][k]);if(s==null)s=LANG.en[k];if(s==null)s=k;for(var i=1;i<a.length;i++)s=s.split('{'+(i-1)+'}').join(a[i]);return s}
+
+/* ---------- helpers ---------- */
+function $(s,r){return (r||document).querySelector(s)}
+function $$(s,r){return Array.prototype.slice.call((r||document).querySelectorAll(s))}
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
+function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,6)}
+var memLS={};
+function lsGet(k){try{return localStorage.getItem(k)}catch(e){return memLS[k]==null?null:memLS[k]}}
+function lsSet(k,v){try{localStorage.setItem(k,v);return true}catch(e){memLS[k]=v;if(!lsSet.w){lsSet.w=1;setTimeout(function(){toast(T('saveFail'))},0)}return false}}
+function safeParse(k,fb){try{var v=lsGet(k);if(v==null)return fb;var o=JSON.parse(v);return o==null?fb:o}catch(e){return fb}}
+function pad(n){return n<10?'0'+n:''+n}
+function fmtDur(ms){var s=Math.round(ms/1000);return Math.floor(s/60)+':'+pad(s%60)}
+function fmtDate(ts){try{return new Date(ts).toLocaleDateString(curLang==='he'?'he-IL':'en-GB',{day:'numeric',month:'short'})}catch(e){return ''}}
+function fmtTime(ts){var d=new Date(ts);return pad(d.getHours())+':'+pad(d.getMinutes())}
+function fmtWhen(ts){try{return new Date(ts).toLocaleString(curLang==='he'?'he-IL':'en-GB',{weekday:'short',day:'numeric',month:'numeric',hour:'2-digit',minute:'2-digit'})}catch(e){return ''+new Date(ts)}}
+function toLocalInput(ts){var d=new Date(ts);return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate())+'T'+pad(d.getHours())+':'+pad(d.getMinutes())}
+function fromLocalInput(s){var t=new Date(s).getTime();return isNaN(t)?0:t}
+function dl(blob,name){var a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;document.body.appendChild(a);a.click();setTimeout(function(){URL.revokeObjectURL(a.href);a.remove()},1500)}
+function vibrate(p){try{if(navigator.vibrate)navigator.vibrate(p)}catch(e){}}
+
+/* ---------- state ---------- */
+var DEF={lang:'he',theme:'gold',zoom:1,user:'',mode:'both',recLang:'he-IL',auto:true,target:'auto',speak:true,beep:true,vib:true,defTime:'09:00',provider:'gemini',keyG:'',keyO:'',gModel:'',autoAI:true,lastBackup:0,seenGuide:0,lastNag:''};
+var SYSF=[{id:'ideas',sys:'ideas',icon:'💡'},{id:'songs',sys:'songs',icon:'🎵'},{id:'shop',sys:'shop',icon:'🛒'},{id:'tasks',sys:'tasks',icon:'⏰'}];
+var S={set:{},folders:[],notes:[],rem:[],dbOk:false};
+function loadSettings(){var s=safeParse('mtn_set',{});S.set={};for(var k in DEF)S.set[k]=(s[k]!==undefined&&typeof s[k]===typeof DEF[k])?s[k]:DEF[k];
+ var f=safeParse('mtn_folders',null);if(!Array.isArray(f)||!f.length)f=SYSF.map(function(x){return {id:x.id,sys:x.sys,icon:x.icon}});
+ SYSF.forEach(function(x){if(!f.some(function(y){return y.id===x.id}))f.push({id:x.id,sys:x.sys,icon:x.icon})});S.folders=f;
+ var r=safeParse('mtn_rem',[]);S.rem=Array.isArray(r)?r:[]}
+function saveSet(){lsSet('mtn_set',JSON.stringify(S.set))}
+function saveFolders(){lsSet('mtn_folders',JSON.stringify(S.folders))}
+function saveRem(){lsSet('mtn_rem',JSON.stringify(S.rem))}
+function folderOf(id){for(var i=0;i<S.folders.length;i++)if(S.folders[i].id===id)return S.folders[i];return S.folders[0]}
+function fName(f){return f.sys?T('f_'+f.sys):f.name}
+function noteById(id){for(var i=0;i<S.notes.length;i++)if(S.notes[i].id===id)return S.notes[i];return null}
+function remById(id){for(var i=0;i<S.rem.length;i++)if(S.rem[i].id===id)return S.rem[i];return null}
+
+/* ---------- IndexedDB ---------- */
+var DB=null;
+function dbOpen(){return new Promise(function(res){try{var r=indexedDB.open('mythoughtsnest',1);r.onupgradeneeded=function(){var d=r.result;if(!d.objectStoreNames.contains('notes'))d.createObjectStore('notes',{keyPath:'id'});if(!d.objectStoreNames.contains('audio'))d.createObjectStore('audio',{keyPath:'id'})};r.onsuccess=function(){DB=r.result;res(true)};r.onerror=function(){res(false)};r.onblocked=function(){res(false)}}catch(e){res(false)}})}
+function dbReq(store,mode,fn){return new Promise(function(res,rej){if(!DB){rej(new Error('nodb'));return}try{var t=DB.transaction(store,mode),q=fn(t.objectStore(store));t.oncomplete=function(){res(q&&q.result)};t.onerror=t.onabort=function(){rej(t.error||new Error('tx'))}}catch(e){rej(e)}})}
+function dbPut(store,v){return dbReq(store,'readwrite',function(s){return s.put(v)}).catch(function(){toast(T('saveFail'))})}
+function dbDel(store,id){return dbReq(store,'readwrite',function(s){return s.delete(id)}).catch(function(){})}
+function dbAll(store){return dbReq(store,'readonly',function(s){return s.getAll()}).then(function(r){return r||[]}).catch(function(){return []})}
+function dbGet(store,id){return dbReq(store,'readonly',function(s){return s.get(id)}).catch(function(){return null})}
+function dbClear(store){return dbReq(store,'readwrite',function(s){return s.clear()}).catch(function(){})}
+function saveNote(n){if(n._new)return Promise.resolve();return dbPut('notes',n)}
+var pendingSave={};
+function saveNoteSoon(n){clearTimeout(pendingSave[n.id]);pendingSave[n.id]=setTimeout(function(){saveNote(n)},350)}
+
+/* ---------- toast / confirm / overlays ---------- */
+var toastT=0;
+function toast(msg,ms,label,fn){var el=$('#toast');if(!el)return;clearTimeout(toastT);el.innerHTML='';var d=document.createElement('div');var s=document.createElement('span');s.textContent=msg;d.appendChild(s);if(label){var b=document.createElement('button');b.textContent=label;b.onclick=function(){el.innerHTML='';clearTimeout(toastT);fn&&fn()};d.appendChild(b)}el.appendChild(d);toastT=setTimeout(function(){el.innerHTML=''},ms||(label?7000:2600))}
+var ovStack=[];
+function ovClass(){document.body.classList.toggle('ov-open',ovStack.length>0)}
+function openOv(id,html,opts){opts=opts||{};closeOv(id,true);var o=document.createElement('div');o.className='ov'+(opts.center?' c':'');o.dataset.ov=id;o.setAttribute('role','dialog');o.setAttribute('aria-modal','true');o.innerHTML='<div class="sheet'+(opts.center?' mid':'')+'">'+html+'</div>';$('#ovroot').appendChild(o);ovStack.push({id:id,el:o,onClose:opts.onClose,noBack:opts.noBack});ovClass();
+ o.addEventListener('mousedown',function(e){if(e.target===o&&!opts.sticky)closeOv(id)});
+ var f=$('[autofocus]',o)||$('textarea,input',o);if(f&&!opts.noFocus){try{f.focus({preventScroll:true})}catch(e){}}
+ syncHistory();return o}
+function topOverlay(){return ovStack.length?ovStack[ovStack.length-1].id:null}
+function closeOv(id,silent){for(var i=ovStack.length-1;i>=0;i--){if(ovStack[i].id===id){var x=ovStack.splice(i,1)[0];if(x.onClose&&!silent)try{x.onClose()}catch(e){}x.el.remove();ovClass();break}}if(!silent)syncHistory()}
+function confirmDlg(msg,okLabel,danger){return new Promise(function(res){var done=false;function fin(v){if(done)return;done=true;closeOv('confirm');res(v)}
+ openOv('confirm','<p style="font-size:1.05rem;margin:4px 0 14px">'+esc(msg)+'</p><div class="btns"><button class="btn" data-act="cfNo">'+esc(T('cancel'))+'</button><button class="btn '+(danger?'dng':'pri')+'" data-act="cfYes">'+esc(okLabel||T('ok'))+'</button></div>',{center:true,sticky:true,onClose:function(){fin(false)}});
+ ACT.cfYes=function(){fin(true)};ACT.cfNo=function(){fin(false)}})}
+
+/* ---------- history / back button (AppNest mandatory) ---------- */
+var hist={guard:false,ignore:0},exitArm=0,navStack=[{sc:'home',p:null}],curSc='home',curP=null;
+var TABS=['home','notes','remind','more'];
+function isTab(s){return TABS.indexOf(s)>-1}
+function syncHistory(){var need=!exitArm;if(need&&!hist.guard){try{history.pushState({g:1},'')}catch(e){}hist.guard=true}else if(!need&&hist.guard){hist.guard=false;hist.ignore++;history.back()}}
+window.addEventListener('popstate',function(){
+ if(hist.ignore>0){hist.ignore--;return}hist.guard=false;
+ if(topOverlay()){closeOv(topOverlay())}
+ else if(!isTab(curSc)){goBack()}
+ else if(curSc!=='home'){showSc('home')}
+ else{toast(T('pressExit'),2000);exitArm=setTimeout(function(){exitArm=0;syncHistory()},2000);return}
+ syncHistory();
+});
+var armed=false;
+window.addEventListener('pointerdown',function(){if(!armed){armed=true;syncHistory();try{audioCtx()}catch(e){}}},{capture:true});
+
+/* ============ Hebrew time parsing + classification ============ */
+var HNUMS={'אחת':1,'אחד':1,'שתיים':2,'שתים':2,'שניים':2,'שנים':2,'שלוש':3,'שלושה':3,'ארבע':4,'ארבעה':4,'חמש':5,'חמישה':5,'שש':6,'שישה':6,'שבע':7,'שבעה':7,'שמונה':8,'תשע':9,'תשעה':9,'עשר':10,'עשרה':10,'עשרים':20};
+function normHe(t){
+ t=String(t||'').replace(/[\u0591-\u05C7]/g,'').replace(/[־–—]/g,' ').replace(/[״"”“׳'`,!?;()]/g,' ').replace(/\s+/g,' ').trim();
+ t=t.replace(/אחת עשרה|אחד עשר/g,'11').replace(/שתים עשרה|שתיים עשרה|שנים עשר|שניים עשר/g,'12');
+ t=t.split(' ').map(function(w){var m=w.match(/^(ב)(.+)$/);if(HNUMS[w]!=null&&w!=='שני'&&w!=='שנים')return ''+HNUMS[w];if(m&&HNUMS[m[2]]!=null&&m[2]!=='שני')return m[1]+' '+HNUMS[m[2]];return w}).join(' ');
+ return t}
+var WDAYS={'ראשון':0,'שני':1,'שלישי':2,'רביעי':3,'חמישי':4,'שישי':5,'שבת':6};
+function parseWhen(text,now){
+ now=now||new Date();var n=' '+normHe(text)+' ',m,dayOff=null,wd=null,dt=null,H=null,M=0,period=null,evening=false,strong=false;
+ /* relative: "in 20 minutes", "in an hour and a half", "in 3 days" */
+ m=n.match(/ בעוד (חצי שעה|רבע שעה|שעה וחצי|שעתיים|שעה|דקה|יומיים|שבועיים|שבוע|יום|(\d+) (דקות|דקה|שעות|שעה|ימים|יום|שבועות|שבוע)) /);
+ if(m){var w=m[1],k=m[2]?+m[2]:1,u=m[3]||w,ms=0,days=null;
+  if(w==='חצי שעה')ms=30*6e4;else if(w==='רבע שעה')ms=15*6e4;else if(w==='שעה וחצי')ms=90*6e4;else if(w==='שעתיים')ms=120*6e4;else if(w==='שעה')ms=60*6e4;else if(w==='דקה')ms=6e4;
+  else if(w==='יומיים')days=2;else if(w==='שבועיים')days=14;else if(w==='שבוע')days=7;else if(w==='יום')days=1;
+  else if(/דקות|דקה/.test(u))ms=k*6e4;else if(/שעות|שעה/.test(u))ms=k*36e5;else if(/ימים|יום/.test(u))days=k;else if(/שבועות|שבוע/.test(u))days=7*k;
+  if(days==null)return {ts:now.getTime()+ms,rel:true};
+  dayOff=days;n=n.replace(m[0],' ')}
+ /* explicit date: d/m, d/m/y, d.m.y */
+ m=n.match(/ (?:ב ?)?(\d{1,2})\/(\d{1,2})(?:\/(\d{2,4}))? /)||n.match(/ (?:ב ?)?(\d{1,2})\.(\d{1,2})\.(\d{2,4}) /);
+ if(m&&+m[1]>=1&&+m[1]<=31&&+m[2]>=1&&+m[2]<=12){var yy=m[3]?(+m[3]<100?2000+ +m[3]:+m[3]):now.getFullYear();dt=new Date(yy,+m[2]-1,+m[1]);
+  if(!m[3]){var c0=new Date(now.getFullYear(),now.getMonth(),now.getDate());if(dt<c0)dt=new Date(yy+1,+m[2]-1,+m[1])}n=n.replace(m[0],' ')}
+ /* day words */
+ if(dayOff==null&&!dt){
+  if(/ מחרתיים /.test(n))dayOff=2;
+  else if(/ (?:ל|ב)?מחר /.test(n))dayOff=1;
+  else if(/ הערב /.test(n)){dayOff=0;evening=true}
+  else if(/ היום /.test(n))dayOff=0;
+  else{m=n.match(/ (?:ב|ל)?יום (ראשון|שני|שלישי|רביעי|חמישי|שישי|שבת) /)||n.match(/ (?:ב|ל)(שבת) /);if(m)wd=WDAYS[m[1]]}}
+ if(dayOff!=null||wd!=null||dt)strong=true;
+ /* time of day */
+ var mt=n.match(/ (בשעה|שעה|ב) ?(\d{1,2})(?::(\d{2}))?(?! ?(?:דקות|דקה|ימים|שעות|שקל|אחוז|%))(?!\d)/),mc=n.match(/ (\d{1,2}):(\d{2})(?!\d)/);
+ if(mt&&+mt[2]<=24){H=+mt[2];M=mt[3]?+mt[3]:0;if(mt[1]!=='ב'||mt[3])strong=true;
+  if(!mt[3]){var after=n.slice(n.indexOf(mt[0])+mt[0].length),a2=after.match(/^ (וחצי|ורבע|ועשרה|ועשרים|וחמש) /);if(a2)M={'וחצי':30,'ורבע':15,'ועשרה':10,'ועשרים':20,'וחמש':5}[a2[1]]}}
+ else if(mc&&+mc[1]<=24&&+mc[2]<60){H=+mc[1];M=+mc[2];strong=true}
+ if(/ (בבוקר|הבוקר) /.test(n))period='am';else if(/ (בצהריים|בצהרים|צהריים) /.test(n))period='noon';else if(/ (אחר הצהריים|אחרי הצהריים|אחה צ|אחהצ|אחר הצהרים) /.test(n))period='pm';else if(/ (בערב|הערב) /.test(n))period='pm';else if(/ (בלילה|הלילה) /.test(n))period='night';
+ if(period&&H!=null)strong=true;
+ if(!strong)return null;
+ if(dayOff==null&&wd==null&&!dt&&H==null)return null;
+ var base=new Date(now.getFullYear(),now.getMonth(),now.getDate()),noDay=false;
+ if(dt)base=dt;else if(dayOff!=null)base.setDate(base.getDate()+dayOff);
+ else if(wd!=null){var diff=(wd-base.getDay()+7)%7;base.setDate(base.getDate()+diff)}else noDay=true;
+ var today0=new Date(now.getFullYear(),now.getMonth(),now.getDate()),isToday=base.getTime()===today0.getTime();
+ function at(h,mi){return new Date(base.getFullYear(),base.getMonth(),base.getDate(),h,mi,0,0).getTime()}
+ var ts;
+ if(H==null){var dp=(S&&S.set&&S.set.defTime||'09:00').split(':');ts=evening?at(20,0):at(+dp[0],+dp[1])}
+ else{var hh=null;
+  if(H>=13||H===0)hh=H%24;
+  else if(period==='am')hh=H;
+  else if(period==='noon')hh=H===12?12:(H<=5?H+12:H);
+  else if(period==='pm')hh=H<12?H+12:H;
+  else if(period==='night')hh=H===12?0:(H>=6?H+12:H);
+  if(hh!=null)ts=at(hh,M);
+  else{var c1=at(H%12,M),c2=at(H%12+12,M);
+   if(isToday||noDay){ts=c1>now.getTime()?c1:(c2>now.getTime()?c2:c1)}
+   else{ts=(H>=7&&H<=11)?c1:(H===12?at(12,M):c2)}}}
+ if(noDay&&ts<=now.getTime())ts+=864e5;
+ if(wd!=null&&ts<=now.getTime())ts+=7*864e5;
+ return {ts:ts,rel:false,hasTime:H!=null}}
+
+function classify(text){
+ var t=normHe(text);
+ if(/(צריך לקנות|צריכה לקנות|צריך להביא|לקנות|רשימת קניות|רשימה לסופר|קניות|בסופר|להביא מהסופר|נגמר ה|נגמרו ה)/.test(t))return {folder:'shop',when:null};
+ if(/(שורה לשיר|שורה חדשה|פזמון|הפזמון|בית ראשון|בית שני|בית שלישי|מילים לשיר|מילה לשיר|לשיר שלי|חרוז|חריזה|ראפ|סונו|ברידג|פרה פזמון|שיר חדש|לשיר )/.test(t))return {folder:'songs',when:null};
+ var w=parseWhen(text);
+ if(w)return {folder:'tasks',when:w.ts};
+ if(/(תזכיר לי|תזכורת|פגישה|תור ל|לא לשכוח|אל תשכח)/.test(t))return {folder:'tasks',when:null};
+ return {folder:'ideas',when:null}}
+function cleanTitle(t){return String(t||'').replace(/^\s*(תזכיר לי( ש)?|תזכורת( ש)?)\s*/,'').trim()||String(t||'').trim()}
+
+/* ============ reminders ============ */
+function addReminder(o){var r={id:uid(),noteId:o.noteId||null,title:o.title||'',when:o.when,repeat:o.repeat||'none',fired:false,done:false};S.rem.push(r);saveRem();return r}
+function nextRepeat(r,now){var step=r.repeat==='daily'?864e5:7*864e5,w=r.when;while(w<=now)w+=step;return w}
+var alarmQ=[];
+function checkReminders(){
+ var now=Date.now(),due=[];
+ S.rem.forEach(function(r){if(!r.fired&&!r.done&&r.when<=now)due.push(r)});
+ if(!due.length)return;
+ due.forEach(function(r){
+  if(r.repeat&&r.repeat!=='none'){alarmQ.push({id:r.id,title:r.title,when:r.when});r.when=nextRepeat(r,now);r.fired=false}
+  else{r.fired=true;alarmQ.push({id:r.id,title:r.title,when:r.when})}
+  if(document.hidden||!document.hasFocus())showSysNotif(r)});
+ saveRem();showAlarm();if(curSc==='remind'||curSc==='home')refresh()}
+function showSysNotif(r){try{if(!('Notification' in window)||Notification.permission!=='granted'||!navigator.serviceWorker)return;
+ navigator.serviceWorker.ready.then(function(reg){reg.showNotification(T('alarmTitle'),{body:r.title,tag:'r'+r.id,renotify:true,requireInteraction:true,vibrate:[250,120,250],icon:'icon-192.png',badge:'icon-192.png',data:{id:r.id},actions:[{action:'done',title:'✓ '+T('done')},{action:'snooze',title:'+10'}]})})}catch(e){}}
+var AC=null;
+function audioCtx(){try{if(!AC){var C=window.AudioContext||window.webkitAudioContext;if(C)AC=new C()}if(AC&&AC.state==='suspended')AC.resume()}catch(e){}return AC}
+function beep(){if(!S.set.beep)return;var c=audioCtx();if(!c)return;try{[0,.35,.7].forEach(function(d){var o=c.createOscillator(),g=c.createGain();o.type='sine';o.frequency.value=880;g.gain.setValueAtTime(.0001,c.currentTime+d);g.gain.exponentialRampToValueAtTime(.3,c.currentTime+d+.02);g.gain.exponentialRampToValueAtTime(.0001,c.currentTime+d+.28);o.connect(g);g.connect(c.destination);o.start(c.currentTime+d);o.stop(c.currentTime+d+.3)})}catch(e){}}
+function speakText(t,force){if((!S.set.speak&&!force)||!('speechSynthesis' in window))return;try{speechSynthesis.cancel();var u=new SpeechSynthesisUtterance(t);u.lang=curLang==='he'?'he-IL':'en-US';u.rate=.95;speechSynthesis.speak(u)}catch(e){}}
+function showAlarm(){
+ if(!alarmQ.length)return;var a=alarmQ[0];
+ var late=Date.now()-a.when>120000;
+ var more=alarmQ.length>1?'<div class="muted">+'+(alarmQ.length-1)+'</div>':'';
+ openOv('alarm','<div class="gbig">⏰</div><h3 style="justify-content:center">'+esc(late?T('missed'):T('alarmTitle'))+'</h3><p style="font-size:1.25rem;text-align:center;font-weight:700;margin:6px 0">'+esc(a.title)+'</p><p class="muted" style="text-align:center">'+esc(fmtWhen(a.when))+'</p>'+more+
+  '<div class="btns"><button class="btn pri" data-act="alDone" data-id="'+esc(a.id)+'">✓ '+esc(T('done'))+'</button><button class="btn" data-act="alSnooze" data-id="'+esc(a.id)+'">⏳ '+esc(T('snooze'))+'</button><button class="btn" data-act="alSpeak" data-id="'+esc(a.id)+'">🔊 '+esc(T('speakNow'))+'</button><button class="btn" data-act="alClose">'+esc(T('dismiss'))+'</button></div>',
+  {center:true,sticky:true,noFocus:true,onClose:function(){alarmQ.shift();if(alarmQ.length)setTimeout(showAlarm,150)}});
+ beep();if(S.set.vib)vibrate([300,150,300,150,300]);speakText(a.title)}
+function remDone(id){var r=remById(id);if(r){r.done=true;r.fired=true;saveRem()}}
+function remSnooze(id,mins){var r=remById(id);if(r){r.when=Date.now()+mins*6e4;r.fired=false;r.done=false;saveRem()}}
+/* ICS export — the "always arrives" path (phone calendar) */
+function icsDate(ts){var d=new Date(ts);return d.getUTCFullYear()+pad(d.getUTCMonth()+1)+pad(d.getUTCDate())+'T'+pad(d.getUTCHours())+pad(d.getUTCMinutes())+pad(d.getUTCSeconds())+'Z'}
+function icsEsc(s){return String(s||'').replace(/\\/g,'\\\\').replace(/;/g,'\\;').replace(/,/g,'\\,').replace(/\r?\n/g,'\\n')}
+function buildIcs(list){var L=['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//AppNest//MyThoughtsNest//HE','CALSCALE:GREGORIAN'];
+ list.forEach(function(r){L.push('BEGIN:VEVENT','UID:'+r.id+'@mythoughtsnest','DTSTAMP:'+icsDate(Date.now()),'DTSTART:'+icsDate(r.when),'DTEND:'+icsDate(r.when+15*6e4),'SUMMARY:'+icsEsc(r.title));
+  if(r.repeat==='daily')L.push('RRULE:FREQ=DAILY');else if(r.repeat==='weekly')L.push('RRULE:FREQ=WEEKLY');
+  L.push('BEGIN:VALARM','ACTION:DISPLAY','DESCRIPTION:'+icsEsc(r.title),'TRIGGER:PT0S','END:VALARM','BEGIN:VALARM','ACTION:DISPLAY','DESCRIPTION:'+icsEsc(r.title),'TRIGGER:-PT10M','END:VALARM','END:VEVENT')});
+ L.push('END:VCALENDAR');return L.join('\r\n')}
+function exportIcs(list){if(!list.length){toast(T('calNone'));return}dl(new Blob([buildIcs(list)],{type:'text/calendar'}),list.length===1?'reminder.ics':'reminders.ics')}
+
+/* ============ recording + live transcript ============ */
+var R={on:false,busy:false,t0:0,iv:0,stream:null,mr:null,chunks:[],mime:'',sr:null,base:'',sf:'',si:'',srErr:'',srEnd:null,restarts:0,gotRes:false,wl:null,live:false,aud:false};
+function pickMime(){var c=['audio/webm;codecs=opus','audio/webm','audio/mp4','audio/ogg;codecs=opus'];for(var i=0;i<c.length;i++){try{if(window.MediaRecorder&&MediaRecorder.isTypeSupported(c[i]))return c[i]}catch(e){}}return ''}
+function liveText(){return (R.base+' '+R.sf+' '+R.si).replace(/\s+/g,' ').trim()}
+function startSR(){
+ var SR=window.SpeechRecognition||window.webkitSpeechRecognition;if(!SR)return false;
+ var sr=new SR();sr.lang=S.set.recLang;sr.continuous=true;sr.interimResults=true;sr.maxAlternatives=1;R.sr=sr;
+ sr.onresult=function(ev){var f='',i='';for(var k=0;k<ev.results.length;k++){var r=ev.results[k];if(r.isFinal)f+=' '+r[0].transcript;else i+=' '+r[0].transcript}R.sf=f;R.si=i;R.gotRes=true;updateLive()};
+ sr.onerror=function(ev){R.srErr=ev.error||'err';if(ev.error==='no-speech'||ev.error==='aborted')R.srErr=''};
+ sr.onend=function(){R.base=(R.base+' '+R.sf+' '+R.si).replace(/\s+/g,' ').trim();R.sf='';R.si='';
+  if(R.on&&!/^(not-allowed|service-not-allowed|audio-capture|language-not-supported)$/.test(R.srErr)&&R.restarts<200){R.restarts++;setTimeout(function(){if(R.on&&R.sr===sr){try{sr.start()}catch(e){}}},250)}
+  else if(R.srEnd){R.srEnd();R.srEnd=null}};
+ try{sr.start();return true}catch(e){R.srErr='start';return false}}
+function updateLive(){var el=$('#live');if(!el)return;var t=liveText();el.innerHTML=t?esc(R.base+' '+R.sf)+'<i> '+esc(R.si)+'</i>':'<i>'+esc(T('listening'))+'</i>'}
+function tickTimer(){var el=$('#timer');if(el)el.textContent=fmtDur(Date.now()-R.t0)}
+async function startRec(){
+ if(R.on||R.busy)return;R.busy=true;
+ var mode=S.set.mode,SR=window.SpeechRecognition||window.webkitSpeechRecognition,needLive=mode!=='audio',needAud=mode!=='live';
+ if(needLive&&!SR){needLive=false;needAud=true;toast(T('noSR'),4200)}
+ R.base='';R.sf='';R.si='';R.srErr='';R.restarts=0;R.gotRes=false;R.chunks=[];R.mr=null;R.stream=null;R.live=needLive;R.aud=needAud;
+ try{
+  if(needAud){
+   R.stream=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true}});
+   R.mime=pickMime();R.mr=R.mime?new MediaRecorder(R.stream,{mimeType:R.mime}):new MediaRecorder(R.stream);
+   R.mr.ondataavailable=function(e){if(e.data&&e.data.size)R.chunks.push(e.data)};R.mr.start(1000)}
+ }catch(e){R.busy=false;R.stream&&R.stream.getTracks().forEach(function(t){t.stop()});toast(T('micDenied'),4000);return}
+ R.on=true;R.busy=false;R.t0=Date.now();
+ if(needLive)startSR();
+ try{if(navigator.wakeLock)navigator.wakeLock.request('screen').then(function(l){R.wl=l}).catch(function(){})}catch(e){}
+ clearInterval(R.iv);R.iv=setInterval(tickTimer,250);refresh(true);updateLive()}
+async function stopRec(){
+ if(!R.on)return;R.on=false;clearInterval(R.iv);var dur=Date.now()-R.t0;
+ var srDone=R.live&&R.sr?new Promise(function(res){R.srEnd=res;setTimeout(res,900);try{R.sr.stop()}catch(e){res()}}):Promise.resolve();
+ var blob=null;
+ if(R.mr&&R.mr.state!=='inactive'){blob=await new Promise(function(res){R.mr.onstop=function(){res(R.chunks.length?new Blob(R.chunks,{type:R.mime||R.mr.mimeType||'audio/webm'}):null)};try{R.mr.stop()}catch(e){res(null)}})}
+ try{R.stream&&R.stream.getTracks().forEach(function(t){t.stop()})}catch(e){}
+ try{R.wl&&R.wl.release();R.wl=null}catch(e){}
+ await srDone;
+ var text=(R.base+' '+R.sf+' '+R.si).replace(/\s+/g,' ').trim();
+ var err=R.srErr,wasLive=R.live,hadAud=R.aud;R.sr=null;
+ refresh();
+ if(!text&&!blob){toast(T('nothing'));return}
+ await finalizeCapture(text,blob,dur,err,wasLive&&hadAud);}
+function hasKey(){return !!(S.set.provider==='openai'?S.set.keyO:S.set.keyG)}
+async function finalizeCapture(text,blob,dur,srErr,both){
+ var tgt=S.set.target,folder='ideas',whenTs=null;
+ if(tgt!=='auto'&&folderOf(tgt)&&folderOf(tgt).id===tgt){folder=tgt;if(tgt==='tasks'){var w=parseWhen(text);if(w)whenTs=w.ts}}
+ else if(S.set.auto&&text){var c=classify(text);folder=c.folder;whenTs=c.when}
+ var n={id:uid(),ts:Date.now(),folder:folder,text:text,dur:dur,aud:!!blob,mime:blob?blob.type:'',tr:text?'live':'none'};
+ S.notes.unshift(n);await saveNote(n);if(blob)await dbPut('audio',{id:n.id,blob:blob,mime:blob.type});
+ var f=folderOf(folder),msg=T('saved',f.icon+' '+fName(f));
+ if(whenTs&&folder!=='songs'&&folder!=='shop'){var r=addReminder({noteId:n.id,title:cleanTitle(text),when:whenTs});n.remId=r.id;saveNote(n);msg=T('remSet',fmtWhen(whenTs))}
+ toast(msg,5000,T('change'),function(){openNote(n.id)});
+ if(!text&&blob){ if(S.set.autoAI&&hasKey())aiTranscribeNote(n.id,true); else if(srErr&&both)setTimeout(function(){toast(T('conflict'),6000)},300) }
+ else if(both&&srErr&&/audio-capture/.test(srErr))setTimeout(function(){toast(T('conflict'),6000)},300);
+ else if(srErr==='network')setTimeout(function(){toast(T('srNet'),4000)},300);
+ else if(/not-allowed|service-not-allowed/.test(srErr))setTimeout(function(){toast(T('srDeny'),4000)},300);
+ refresh()}
+
+/* ============ AI transcription (BYOK, optional) ============ */
+var DEAD_MODELS=['gemini-1.5-flash','gemini-1.5-pro','gemini-2.0-flash','gemini-2.0-flash-lite','gemini-2.5-flash','gemini-3-flash','gemini-pro'];
+var G_CHAIN=['gemini-flash-latest','gemini-3.6-flash','gemini-3.5-flash','gemini-flash-lite-latest'];
+var TR_PROMPT='Transcribe this audio exactly as spoken, in the language that is spoken (Hebrew is expected). Return ONLY the transcript text, with no preface, no quotes and no explanations. Do not translate. Do not add words that were not said. If there is no speech, return an empty string.';
+function geminiChain(){var c=[];var s=S.set.gModel;if(s&&DEAD_MODELS.indexOf(s)<0)c.push(s);G_CHAIN.forEach(function(m){if(c.indexOf(m)<0)c.push(m)});return c}
+function blobToB64(b){return new Promise(function(res,rej){var r=new FileReader();r.onload=function(){res(String(r.result).split(',')[1]||'')};r.onerror=function(){rej(r.error)};r.readAsDataURL(b)})}
+async function toWav16k(blob){
+ var ab=await blob.arrayBuffer(),C=window.AudioContext||window.webkitAudioContext,ctx=new C(),buf;
+ try{buf=await ctx.decodeAudioData(ab)}finally{try{ctx.close()}catch(e){}}
+ if(buf.duration>360)throw new Error('LONG');
+ var len=Math.max(1,Math.ceil(buf.duration*16000)),oc=new OfflineAudioContext(1,len,16000),src=oc.createBufferSource();src.buffer=buf;src.connect(oc.destination);src.start();
+ var out=await oc.startRendering(),pcm=out.getChannelData(0),bytes=new ArrayBuffer(44+pcm.length*2),v=new DataView(bytes);
+ function ws(o,s){for(var i=0;i<s.length;i++)v.setUint8(o+i,s.charCodeAt(i))}
+ ws(0,'RIFF');v.setUint32(4,36+pcm.length*2,true);ws(8,'WAVE');ws(12,'fmt ');v.setUint32(16,16,true);v.setUint16(20,1,true);v.setUint16(22,1,true);v.setUint32(24,16000,true);v.setUint32(28,32000,true);v.setUint16(32,2,true);v.setUint16(34,16,true);ws(36,'data');v.setUint32(40,pcm.length*2,true);
+ for(var i=0;i<pcm.length;i++){var s=Math.max(-1,Math.min(1,pcm[i]));v.setInt16(44+i*2,s<0?s*32768:s*32767,true)}
+ return new Blob([bytes],{type:'audio/wav'})}
+function apiMsg(j,st){try{return (j&&j.error&&(j.error.message||j.error))||('HTTP '+st)}catch(e){return 'HTTP '+st}}
+async function geminiCall(model,parts){
+ var key=S.set.keyG;
+ var r=await fetch('https://generativelanguage.googleapis.com/v1beta/models/'+model+':generateContent?key='+encodeURIComponent(key),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({contents:[{parts:parts}],generationConfig:{temperature:0}})});
+ var j=null;try{j=await r.json()}catch(e){}
+ return {ok:r.ok,status:r.status,j:j}}
+async function geminiRun(parts){
+ if(!S.set.keyG)throw new Error(T('testNoKey'));
+ var chain=geminiChain(),last='';
+ for(var i=0;i<chain.length;i++){var m=chain[i],r=await geminiCall(m,parts);
+  if(r.status===404){if(DEAD_MODELS.indexOf(m)<0&&m!==G_CHAIN[0])DEAD_MODELS.push(m);last=apiMsg(r.j,404);continue}
+  if(r.status>=500){last=apiMsg(r.j,r.status);continue}
+  if(!r.ok)throw new Error(apiMsg(r.j,r.status));
+  var c=r.j&&r.j.candidates&&r.j.candidates[0],tx=c&&c.content&&c.content.parts?c.content.parts.map(function(p){return p.text||''}).join(''):'';
+  if(S.set.gModel!==m){S.set.gModel=m;saveSet()}
+  return tx.trim()}
+ throw new Error(last||'no model')}
+async function openaiTranscribe(wav){
+ if(!S.set.keyO)throw new Error(T('testNoKey'));var models=['gpt-4o-mini-transcribe','whisper-1'],last='';
+ for(var i=0;i<models.length;i++){var fd=new FormData();fd.append('file',wav,'audio.wav');fd.append('model',models[i]);fd.append('language',(S.set.recLang||'he').slice(0,2));
+  var r=await fetch('https://api.openai.com/v1/audio/transcriptions',{method:'POST',headers:{Authorization:'Bearer '+S.set.keyO},body:fd}),j=null;try{j=await r.json()}catch(e){}
+  if(r.status===404||(r.status===400&&/model/i.test(apiMsg(j,400)))){last=apiMsg(j,r.status);continue}
+  if(!r.ok)throw new Error(apiMsg(j,r.status));return String(j.text||'').trim()}
+ throw new Error(last||'no model')}
+async function aiTranscribeBlob(blob){
+ var wav=await toWav16k(blob);
+ if(S.set.provider==='openai')return openaiTranscribe(wav);
+ var b64=await blobToB64(wav);return geminiRun([{text:TR_PROMPT},{inline_data:{mime_type:'audio/wav',data:b64}}])}
+var aiBusy={};
+async function aiTranscribeNote(id,quiet){
+ var n=noteById(id);if(!n)return;
+ if(!hasKey()){if(!quiet)toast(T('aiNoKey'),4500);return}
+ if(aiBusy[id])return;
+ var rec=n.aud?await dbGet('audio',id):null;if(!rec||!rec.blob){toast(T('aiNoAudio'));return}
+ aiBusy[id]=1;refresh();refreshEditor(id);
+ try{var tx=await aiTranscribeBlob(rec.blob);
+  if(tx){var wasEmpty=!n.text;if(n.text&&n.text!==tx)n.alt=n.text;n.text=tx;n.tr='ai';
+   if(wasEmpty&&S.set.auto&&S.set.target==='auto'){var c=classify(tx);n.folder=c.folder;if(c.when&&c.folder==='tasks'&&!n.remId){var r=addReminder({noteId:n.id,title:cleanTitle(tx),when:c.when});n.remId=r.id;toast(T('remSet',fmtWhen(c.when)),5000)}}
+   await saveNote(n);if(!quiet||true)toast(T('aiDone'))}
+  else toast(T('nothing'))}
+ catch(e){var m=e&&e.message==='LONG'?T('aiLong'):T('aiFail',(e&&e.message)||e);toast(m,5500)}
+ delete aiBusy[id];refresh();refreshEditor(id)}
+
+/* ============ UI ============ */
+var ACT={};
+var IC={
+ mic:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3M8 21h8"/></svg>',
+ stop:'<svg viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="6" width="12" height="12" rx="2.5"/></svg>',
+ home:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-8 9 8M5 10v10h14V10"/></svg>',
+ notes:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>',
+ bell:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9M10 21h4"/></svg>',
+ more:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>'};
+var THEMES=['gold','ocean','forest','rose','day'];
+var THCOL={gold:'#d4af37',ocean:'#4aa3ff',forest:'#3ecf8e',rose:'#ff6b9d',day:'#f5f2ea'};
+var searchQ='',P={id:null,audio:null,url:null},EDN=null,EDR=null,FEDIT=null;
+
+function applyPrefs(){
+ curLang=S.set.lang==='en'?'en':'he';
+ document.documentElement.lang=curLang;document.documentElement.dir=curLang==='he'?'rtl':'ltr';
+ document.body.setAttribute('data-theme',S.set.theme);
+ document.body.style.zoom=S.set.zoom===1?'':S.set.zoom;
+ var mt=document.querySelector('meta[name=theme-color]');if(mt)mt.content=getComputedStyle(document.body).getPropertyValue('--bg').trim()||'#0b0b0d'}
+function scTitle(sc,p){
+ if(sc==='home')return T('tHome');if(sc==='notes')return T('tNotes');if(sc==='remind')return T('tRem');if(sc==='more')return T('tMore');
+ if(sc==='folder'){var f=folderOf(p);return f.icon+' '+fName(f)}
+ return T({settings:'settings',backup:'backup',about:'about',diag:'diag'}[sc]||'app')}
+function tabOf(sc){return sc==='folder'?'notes':(isTab(sc)?sc:'more')}
+function renderBars(){
+ var top=$('#top'),h;
+ if(isTab(curSc)){h='<h1>My<b>Thoughts</b>Nest <span class="muted" style="font-weight:400;font-size:.8rem">· '+esc(T('app'))+'</span></h1>'+(R.on&&curSc!=='home'?'<button class="ib" data-act="tab" data-sc="home" style="color:var(--red)" aria-label="rec">●</button>':'')+'<button class="ib" data-act="themeCycle" aria-label="'+esc(T('theme'))+'">🎨</button>'}
+ else{var prev=navStack.length>1?navStack[navStack.length-2]:{sc:'home'};h='<button class="back" data-act="back">'+(curLang==='he'?'→':'←')+' '+esc(scTitle(prev.sc,prev.p))+'</button><h1 style="text-align:center">'+esc(scTitle(curSc,curP))+'</h1><span style="width:42px"></span>'}
+ top.innerHTML=h;
+ var tb=[['home',IC.home,T('tHome')],['notes',IC.notes,T('tNotes')],['remind',IC.bell,T('tRem')],['more',IC.more,T('tMore')]],cur=tabOf(curSc);
+ $('#tabs').innerHTML=tb.map(function(t){return '<button class="tab'+(cur===t[0]?' on':'')+'" data-act="tab" data-sc="'+t[0]+'" aria-label="'+esc(t[2])+'">'+t[1]+'<span>'+esc(t[2])+'</span></button>'}).join('')}
+var SCR={home:vHome,notes:vNotes,remind:vRemind,more:vMore,folder:vFolder,settings:vSettings,backup:vBackup,about:vAbout,diag:vDiag};
+function render(){
+ var main=$('#main'),st=main.scrollTop;renderBars();main.innerHTML=(SCR[curSc]||vHome)(curP);
+ main.scrollTop=st;if(R.on&&curSc==='home'){updateLive();tickTimer()}}
+function refresh(force){if(R.on&&curSc==='home'&&!force)return;render()}
+function showSc(sc,p,push){
+ var main=$('#main');
+ if(isTab(sc)){navStack=[{sc:sc,p:null}]}
+ else if(push!==false){navStack.push({sc:sc,p:p})}
+ curSc=sc;curP=p==null?null:p;render();main.scrollTop=0;syncHistory()}
+function goBack(){if(navStack.length>1){navStack.pop();var t=navStack[navStack.length-1];curSc=t.sc;curP=t.p;render();$('#main').scrollTop=0}else showSc('home')}
+function refreshEditor(id){if(EDN&&EDN.id===id&&topOverlay()==='note'){var o=$('[data-ov=note] .sheet');if(o){o.innerHTML=editorHtml(EDN)}}}
+
+/* ---- home ---- */
+function targetChips(){
+ var h='<button class="chip'+(S.set.target==='auto'?' on':'')+'" data-act="tgt" data-f="auto">✨ '+esc(T('auto'))+'</button>';
+ S.folders.forEach(function(f){h+='<button class="chip'+(S.set.target===f.id?' on':'')+'" data-act="tgt" data-f="'+esc(f.id)+'">'+esc(f.icon)+' '+esc(fName(f))+'</button>'});return h}
+function metaOf(n){
+ var m=[esc(fmtDate(n.ts)+' '+fmtTime(n.ts))];if(n.dur)m.push('🎙 '+esc(fmtDur(n.dur)));
+ if(n.tr==='ai')m.push('✨ AI');
+ var r=n.remId&&remById(n.remId);if(r&&!r.done)m.push('⏰ '+esc(fmtWhen(r.when)));
+ if(aiBusy[n.id])m.push('<span class="spin"></span> '+esc(T('aiBusy')));
+ return m.join('<span>·</span>')}
+function noteCard(n,showFolder){
+ var f=folderOf(n.folder),body;
+ if(n.items&&n.items.length){body='<ul class="items">'+n.items.map(function(it,i){return '<li class="'+(it.d?'done':'')+'" data-act="tgItem" data-id="'+esc(n.id)+'" data-i="'+i+'"><span class="box">'+(it.d?'✓':'')+'</span><span>'+esc(it.t)+'</span></li>'}).join('')+'</ul>'}
+ else body='<div class="tx'+(n.text?'':' empty')+'" data-act="open" data-id="'+esc(n.id)+'">'+esc(n.text||T('noText'))+'</div>';
+ var play=n.aud?'<button class="ib" style="width:38px;height:38px" data-act="play" data-id="'+esc(n.id)+'" aria-label="'+esc(T('play'))+'">'+(P.id===n.id?'⏸':'▶')+'</button>':'';
+ return '<div class="card note" data-id="'+esc(n.id)+'"><div class="ic">'+esc(f.icon)+'</div><div class="bd">'+body+'<div class="mt">'+(showFolder?'<span>'+esc(fName(f))+'</span><span>·</span>':'')+metaOf(n)+'</div></div><div class="acts">'+play+'<button class="ib" style="width:38px;height:38px" data-act="edit" data-id="'+esc(n.id)+'" aria-label="'+esc(T('edit'))+'">✎</button></div></div>'}
+function remCard(r){
+ var past=!r.done&&r.when<Date.now();
+ return '<div class="card rem'+(r.done?' fin':'')+(past?' past':'')+'"><div style="flex:1;min-width:0"><div class="when">'+(r.done?'✓ ':'')+esc(fmtWhen(r.when))+(r.repeat!=='none'?' · 🔁 '+esc(T('r_'+r.repeat)):'')+'</div><div style="word-break:break-word">'+esc(r.title)+'</div></div>'+
+  (r.done?'':'<button class="ib" data-act="remDone" data-id="'+esc(r.id)+'" aria-label="'+esc(T('done'))+'">✓</button>')+'<button class="ib" data-act="remCal" data-id="'+esc(r.id)+'" aria-label="'+esc(T('cal'))+'">📅</button><button class="ib" data-act="remEdit" data-id="'+esc(r.id)+'" aria-label="'+esc(T('edit'))+'">✎</button></div>'}
+function foot(){return '<div class="appfoot"><b>AppNest</b> · MyThoughtsNest v'+VERSION+'</div>'}
+function vHome(){
+ var rec=R.on,u=S.set.user,h='';
+ h+='<div class="mic-wrap"><div class="muted">'+esc(u?T('helloU',u):T('hello'))+'</div><button class="mic'+(rec?' rec':'')+'" id="micbtn" data-act="rec" aria-label="'+esc(rec?T('tapStop'):T('tapRec'))+'">'+(rec?IC.stop:IC.mic)+'</button><div class="timer" id="timer">'+(rec?fmtDur(Date.now()-R.t0):'')+'</div><div class="muted">'+esc(rec?T('tapStop'):T('tapRec'))+'</div></div>';
+ if(rec)h+='<div class="live" id="live"></div>';
+ h+='<h2>'+esc(T('saveTo'))+'</h2><div class="chips">'+targetChips()+'</div>';
+ h+='<div class="btns"><button class="btn" data-act="addTxt">⌨️ '+esc(T('typeIdea'))+'</button></div>';
+ var rs=S.notes.slice(0,5);
+ h+='<h2>'+esc(T('recent'))+'</h2>'+(rs.length?rs.map(function(n){return noteCard(n,true)}).join(''):'<div class="card muted">'+esc(T('noNotes'))+'</div>');
+ var up=S.rem.filter(function(r){return !r.done}).sort(function(a,b){return a.when-b.when}).slice(0,3);
+ h+='<h2>'+esc(T('upcoming'))+'</h2>'+(up.length?up.map(remCard).join(''):'<div class="card muted">'+esc(T('noRem'))+'</div>');
+ if(location.protocol==='file:')h='<div class="warn">'+esc(T('zipWarn'))+'</div>'+h;
+ return h+'<div class="muted" style="text-align:center;margin-top:8px">'+esc(T('disclaimer'))+'</div>'+foot()}
+
+/* ---- notes ---- */
+function notesResults(){
+ var q=searchQ.trim().toLowerCase();
+ if(q){var rs=S.notes.filter(function(n){return (n.text||'').toLowerCase().indexOf(q)>-1});return rs.length?rs.map(function(n){return noteCard(n,true)}).join(''):'<div class="card muted">'+esc(T('none'))+'</div>'}
+ var h='<div class="fgrid">';
+ S.folders.forEach(function(f){var c=S.notes.filter(function(n){return n.folder===f.id}).length;h+='<button class="fcard" data-act="openFolder" data-f="'+esc(f.id)+'"><span class="e">'+esc(f.icon)+'</span><b>'+esc(fName(f))+'</b><span>'+esc(T('notesN',c))+'</span></button>'});
+ h+='<button class="fcard" data-act="newFolder"><span class="e">＋</span><b>'+esc(T('newFolder'))+'</b><span>&nbsp;</span></button></div>';
+ var rs2=S.notes.slice(0,20);h+='<h2>'+esc(T('all'))+' <small>'+S.notes.length+'</small></h2>'+(rs2.length?rs2.map(function(n){return noteCard(n,true)}).join(''):'<div class="card muted">'+esc(T('noNotes'))+'</div>');return h}
+function vNotes(){return '<input id="q" type="search" placeholder="'+esc(T('search'))+'" value="'+esc(searchQ)+'" aria-label="'+esc(T('search'))+'" style="margin-bottom:12px"><div id="nres">'+notesResults()+'</div>'+foot()}
+function folderNotes(id){return S.notes.filter(function(n){return n.folder===id})}
+function vFolder(id){
+ var f=folderOf(id),ns=folderNotes(f.id),h='<div class="btns">';
+ if(f.sys==='songs')h+='<button class="btn" data-act="copyFolder" data-f="'+esc(f.id)+'">📋 '+esc(T('songCopy'))+'</button>';
+ h+='<button class="btn" data-act="expFolder" data-f="'+esc(f.id)+'">⬇ '+esc(T('exportTxt'))+'</button>';
+ if(!f.sys||true)h+='<button class="btn" data-act="editFolder" data-f="'+esc(f.id)+'">✎ '+esc(T('editFolder'))+'</button>';
+ h+='</div>';
+ return h+(ns.length?ns.map(function(n){return noteCard(n,false)}).join(''):'<div class="card muted">'+esc(T('none'))+'</div>')+foot()}
+
+/* ---- reminders ---- */
+function notifState(){return ('Notification' in window)?Notification.permission:'unsupported'}
+function vRemind(){
+ var h='<div class="warn">'+esc(T('remHonest'))+'</div>',ns=notifState();
+ h+='<div class="btns">';
+ if(ns==='default')h+='<button class="btn" data-act="remNotif">🔔 '+esc(T('remNotif'))+'</button>';
+ else if(ns==='granted')h+='<span class="muted">🔔 '+esc(T('remNotifOn'))+'</span>';
+ else if(ns==='denied')h+='<span class="muted">🔕 '+esc(T('remNotifNo'))+'</span>';
+ h+='<button class="btn pri" data-act="remAdd">＋ '+esc(T('remAdd'))+'</button><button class="btn" data-act="remCalAll">'+esc(T('calAll'))+'</button></div>';
+ var act=S.rem.filter(function(r){return !r.done}).sort(function(a,b){return a.when-b.when}),dn=S.rem.filter(function(r){return r.done}).sort(function(a,b){return b.when-a.when}).slice(0,15);
+ h+=act.length?act.map(remCard).join(''):'<div class="card muted">'+esc(T('noRem'))+'</div>';
+ if(dn.length)h+='<h2>✓ '+esc(T('done'))+'</h2>'+dn.map(remCard).join('');
+ return h+foot()}
+
+/* ---- more ---- */
+function vMore(){
+ var L=function(act,ic,t,sub){return '<button data-act="'+act+'"><span style="font-size:1.4rem">'+ic+'</span><span>'+esc(t)+(sub||'')+'</span><span class="arr">'+(curLang==='he'?'‹':'›')+'</span></button>'};
+ return '<div class="list">'+L('go_settings','⚙️',T('settings'))+L('go_backup','💾',T('backup'))+L('guide','📖',T('guide'))+L('go_diag','🩺',T('diag'))+L('go_about','ℹ️',T('about'))+'</div>'+foot()}
+
+/* ---- settings ---- */
+function sw(key,label,sub){return '<label class="sw"><span class="t">'+esc(label)+(sub?'<small>'+esc(sub)+'</small>':'')+'</span><input type="checkbox" data-set="'+key+'"'+(S.set[key]?' checked':'')+'><span class="k"></span></label>'}
+function vSettings(){
+ var s=S.set,h='';
+ h+='<div class="card"><label class="f">'+esc(T('userName'))+'</label><input data-set="user" value="'+esc(s.user)+'" maxlength="40" autocomplete="off">';
+ h+='<label class="f">'+esc(T('lang'))+'</label><select data-set="lang"><option value="he"'+(s.lang==='he'?' selected':'')+'>עברית</option><option value="en"'+(s.lang==='en'?' selected':'')+'>English</option></select>';
+ h+='<label class="f">'+esc(T('theme'))+'</label><div class="themes">'+THEMES.map(function(t){return '<button class="th'+(s.theme===t?' on':'')+'" data-act="setTheme" data-t="'+t+'" style="background:'+THCOL[t]+'" aria-label="'+t+'"></button>'}).join('')+'</div>';
+ h+='<label class="f">'+esc(T('font'))+'</label><div class="chips">'+[[1,'A'],[1.15,'A+'],[1.3,'A++']].map(function(z){return '<button class="chip'+(s.zoom===z[0]?' on':'')+'" data-act="setZoom" data-z="'+z[0]+'">'+z[1]+'</button>'}).join('')+'</div></div>';
+ h+='<h2>🎙 '+esc(T('recMode'))+'</h2><div class="card"><select data-set="mode"><option value="both"'+(s.mode==='both'?' selected':'')+'>'+esc(T('m_both'))+'</option><option value="live"'+(s.mode==='live'?' selected':'')+'>'+esc(T('m_live'))+'</option><option value="audio"'+(s.mode==='audio'?' selected':'')+'>'+esc(T('m_audio'))+'</option></select>';
+ h+='<label class="f">'+esc(T('recLang'))+'</label><select data-set="recLang">'+[['he-IL','עברית'],['en-US','English'],['ru-RU','Русский'],['ar-IL','العربية'],['es-ES','Español']].map(function(l){return '<option value="'+l[0]+'"'+(s.recLang===l[0]?' selected':'')+'>'+l[1]+'</option>'}).join('')+'</select></div>';
+ h+='<div class="list">'+sw('auto',T('autoFolder'),T('autoFolderD'))+'</div>';
+ h+='<h2>⏰ '+esc(T('remSettings'))+'</h2><div class="list">'+sw('speak',T('speak'),T('setBeepNote'))+sw('beep',T('beep'))+sw('vib',T('vib'))+'</div>';
+ h+='<div class="card"><label class="f">'+esc(T('defTime'))+'</label><input type="time" data-set="defTime" value="'+esc(s.defTime)+'"><div class="btns"><button class="btn sm" data-act="testSpeak">🔊 '+esc(T('testSpeak'))+'</button></div></div>';
+ var g=s.provider==='gemini',keyv=g?s.keyG:s.keyO;
+ h+='<h2>✨ '+esc(T('ai'))+' <span class="dot'+(keyv?' ok':'')+'"></span></h2><div class="card"><div class="muted">'+esc(T('aiD'))+'</div>';
+ h+='<label class="f">'+esc(T('provider'))+'</label><select data-set="provider"><option value="gemini"'+(g?' selected':'')+'>Gemini · FREE</option><option value="openai"'+(!g?' selected':'')+'>OpenAI · API</option></select>';
+ h+='<label class="f">'+esc(T('apiKey'))+'</label><input type="password" data-set="'+(g?'keyG':'keyO')+'" value="'+esc(keyv)+'" autocomplete="off" spellcheck="false" dir="ltr">';
+ if(g)h+='<label class="f">'+esc(T('model'))+'</label><select data-set="gModel" id="gmodel">'+modelOpts()+'</select>';
+ h+='<div class="btns"><button class="btn sm" data-act="aiTest">'+esc(T('test'))+'</button>'+(g?'<button class="btn sm" data-act="aiModels">'+esc(T('refresh'))+'</button>':'')+'<button class="btn sm dng" data-act="aiDisc">'+esc(T('disconnect'))+'</button></div><div class="muted">'+esc(T('keyHow'))+'</div></div>';
+ h+='<div class="list">'+sw('autoAI',T('autoAI'))+'</div>';
+ h+='<div class="btns" style="margin-top:20px"><button class="btn dng" data-act="wipe">🗑 '+esc(T('wipe'))+'</button></div>';
+ return h+foot()}
+var liveModels=[];
+function modelOpts(){var list=[];geminiChain().forEach(function(m){list.push(m)});liveModels.forEach(function(m){if(list.indexOf(m)<0)list.push(m)});var cur=S.set.gModel||list[0];if(list.indexOf(cur)<0)list.unshift(cur);return list.map(function(m){return '<option value="'+esc(m)+'"'+(m===cur?' selected':'')+'>'+esc(m)+'</option>'}).join('')}
+
+/* ---- backup / about / diag ---- */
+function vBackup(){
+ var lb=S.set.lastBackup?new Date(S.set.lastBackup).toLocaleDateString(curLang==='he'?'he-IL':'en-GB'):T('never');
+ return '<div class="warn">'+esc(T('backupTip'))+'</div><div class="muted" style="margin-bottom:10px">'+esc(T('lastBackup',lb))+'</div><div class="btns" style="flex-direction:column"><button class="btn pri" data-act="backupSafe">💾 '+esc(T('backupSafe'))+'</button><button class="btn" data-act="backupFull">🎧 '+esc(T('backupFull'))+'</button><button class="btn" data-act="exportAll">📄 '+esc(T('exportNotes'))+'</button><button class="btn" data-act="restore">♻️ '+esc(T('restore'))+'</button></div><input type="file" id="restoreF" accept=".json,application/json" style="display:none">'+foot()}
+function vAbout(){
+ var row=function(a,b){return '<div class="li" style="justify-content:space-between"><span class="muted">'+esc(a)+'</span><b>'+b+'</b></div>'};
+ return '<div class="card" style="text-align:center"><div class="gbig">🪺</div><h2 style="justify-content:center;margin:0">MyThoughtsNest</h2><div class="muted">'+esc(T('app'))+' · v'+VERSION+'</div></div><div class="list">'+row(T('version'),VERSION)+row(T('dev'),'Barak Aflalo')+row(T('platform'),'PWA · HTML5')+row(T('storage'),esc(T('onDevice')))+row(T('license'),'© AppNest 2026')+'</div>'+
+ '<div class="list"><button data-act="shareApp">🔗 <span>'+esc(T('shareApp'))+'</span></button><a class="li" style="display:flex;gap:12px;padding:14px;color:var(--tx);text-decoration:none;border-bottom:1px solid var(--line)" href="mailto:'+SUPPORT+'?subject=MyThoughtsNest%20v'+VERSION+'">✉️ <span>'+esc(T('feedback'))+'</span></a><a class="li" style="display:flex;gap:12px;padding:14px;color:var(--tx);text-decoration:none;border-bottom:1px solid var(--line)" href="privacy_policy.html">🔒 <span>'+esc(T('privacy'))+'</span></a><a class="li" style="display:flex;gap:12px;padding:14px;color:var(--tx);text-decoration:none" href="'+STORE_URL+'" rel="noopener">🏪 <span>'+esc(T('store'))+'</span></a></div><div class="muted" style="text-align:center">'+esc(T('disclaimer'))+'</div>'+foot()}
+var diagTxt='';
+function vDiag(){
+ setTimeout(buildDiag,0);return '<pre class="diag" id="diagpre">…</pre>'+foot()}
+async function buildDiag(){
+ var SR=!!(window.SpeechRecognition||window.webkitSpeechRecognition),per='?';
+ try{per=navigator.storage&&navigator.storage.persisted?String(await navigator.storage.persisted()):'n/a'}catch(e){}
+ var sw_=navigator.serviceWorker?(navigator.serviceWorker.controller?'active':'none'):'unsupported';
+ var t=['MyThoughtsNest v'+VERSION,'origin: '+location.origin,'protocol: '+location.protocol,'SpeechRecognition: '+SR,'MediaRecorder: '+!!window.MediaRecorder+' ('+(pickMime()||'-')+')','getUserMedia: '+!!(navigator.mediaDevices&&navigator.mediaDevices.getUserMedia),'speechSynthesis: '+('speechSynthesis' in window),'IndexedDB: '+!!DB,'ServiceWorker: '+sw_,'Notification: '+notifState(),'storage persisted: '+per,'standalone: '+(window.matchMedia&&matchMedia('(display-mode: standalone)').matches),'notes: '+S.notes.length+' · reminders: '+S.rem.length,'mode: '+S.set.mode+' · lang: '+S.set.recLang,'AI provider: '+S.set.provider+' · key: '+(hasKey()?'set':'none'),'UA: '+navigator.userAgent].join('\n');
+ diagTxt=t;var el=$('#diagpre');if(el)el.textContent=t}
+
+/* ---- note editor ---- */
+function editorHtml(n){
+ var f=folderOf(n.folder),h='<h3>'+esc(f.icon)+' '+esc(n._new&&!n.text?T('newNote'):T('editNote'))+'<button class="ib x" data-act="edClose" aria-label="'+esc(T('close'))+'">✕</button></h3>';
+ h+='<label class="f">'+esc(T('noteText'))+'</label><textarea id="edtext" autofocus>'+esc(n.text)+'</textarea>';
+ h+='<label class="f">'+esc(T('folder'))+'</label><div class="chips">'+S.folders.map(function(x){return '<button class="chip'+(n.folder===x.id?' on':'')+'" data-act="edFolder" data-f="'+esc(x.id)+'">'+esc(x.icon)+' '+esc(fName(x))+'</button>'}).join('')+'</div>';
+ var b='';
+ if(n.aud){b+='<button class="btn sm" data-act="play" data-id="'+esc(n.id)+'">'+(P.id===n.id?'⏸ '+esc(T('pause')):'▶ '+esc(T('play')))+'</button><button class="btn sm" data-act="edDl">⬇ '+esc(T('dl'))+'</button>';
+  b+='<button class="btn sm" data-act="edAi"'+(aiBusy[n.id]?' disabled':'')+'>'+(aiBusy[n.id]?'<span class="spin"></span> '+esc(T('aiBusy')):'✨ '+esc(T('aiTr')))+'</button>';
+  if(n.alt)b+='<button class="btn sm" data-act="edAlt">↩ '+esc(T('aiRestore'))+'</button>'}
+ b+='<button class="btn sm" data-act="edCopy">📋 '+esc(T('copy'))+'</button><button class="btn sm" data-act="edShare">↗ '+esc(T('share'))+'</button>';
+ if(n.folder==='shop')b+='<button class="btn sm" data-act="edItems">'+(n.items&&n.items.length?'📝 '+esc(T('shopText')):'🛒 '+esc(T('shopList')))+'</button>';
+ h+='<div class="btns">'+b+'</div>';
+ var r=n.remId&&remById(n.remId);
+ h+='<div class="card" style="margin-top:6px"><b>⏰ '+esc(T('rem'))+'</b>';
+ if(r){h+='<label class="f">'+esc(T('remWhen'))+'</label><input type="datetime-local" id="edrwhen" value="'+toLocalInput(r.when)+'"><label class="f">'+esc(T('remRepeat'))+'</label><select id="edrrep">'+['none','daily','weekly'].map(function(x){return '<option value="'+x+'"'+(r.repeat===x?' selected':'')+'>'+esc(T('r_'+x))+'</option>'}).join('')+'</select><div class="btns"><button class="btn sm" data-act="remCal" data-id="'+esc(r.id)+'">'+esc(T('cal'))+'</button><button class="btn sm dng" data-act="edRemDel">'+esc(T('del'))+'</button></div>'}
+ else h+='<div class="btns"><button class="btn sm" data-act="edRemAdd">＋ '+esc(T('remAdd'))+'</button></div>';
+ h+='</div><div class="btns"><button class="btn dng" data-act="edDel">🗑 '+esc(T('del'))+'</button><button class="btn pri" data-act="edClose">'+esc(T('close'))+'</button></div>';return h}
+function openNote(id){
+ var n=id?noteById(id):null;if(id&&!n)return;
+ if(!n){var tg=S.set.target;n={id:uid(),ts:Date.now(),folder:(tg!=='auto'&&folderOf(tg).id===tg)?tg:'ideas',text:'',dur:0,aud:false,tr:'manual',_new:true}}
+ EDN=n;openOv('note',editorHtml(n),{onClose:function(){var x=EDN;EDN=null;if(x&&x._new&&!x.text){/* discard empty */}else if(x)saveNote(x);if(P.id){stopPlay()}refresh()}})}
+function stopPlay(){try{if(P.audio){P.audio.pause();P.audio=null}if(P.url){URL.revokeObjectURL(P.url);P.url=null}}catch(e){}P.id=null}
+function persistNew(n){if(n._new){delete n._new;S.notes.unshift(n)}}
+
+/* ============ actions ============ */
+function byId(id){return noteById(id)}
+function remainingFoldersFix(){S.notes.forEach(function(n){if(!S.folders.some(function(f){return f.id===n.folder}))n.folder='ideas'})}
+ACT.tab=function(el){if(curSc===el.dataset.sc){$('#main').scrollTop=0;return}showSc(el.dataset.sc)};
+ACT.back=function(){goBack();syncHistory()};
+ACT.themeCycle=function(){var i=(THEMES.indexOf(S.set.theme)+1)%THEMES.length;S.set.theme=THEMES[i];saveSet();applyPrefs();render()};
+ACT.setTheme=function(el){S.set.theme=el.dataset.t;saveSet();applyPrefs();render()};
+ACT.setZoom=function(el){S.set.zoom=+el.dataset.z;saveSet();applyPrefs();render()};
+ACT.rec=function(){audioCtx();if(R.on)stopRec();else startRec()};
+ACT.tgt=function(el){S.set.target=el.dataset.f;saveSet();render()};
+ACT.addTxt=function(){openNote(null)};
+ACT.open=function(el){openNote(el.dataset.id)};
+ACT.edit=function(el){openNote(el.dataset.id)};
+ACT.go_settings=function(){showSc('settings')};ACT.go_backup=function(){showSc('backup')};ACT.go_diag=function(){showSc('diag')};ACT.go_about=function(){showSc('about')};
+ACT.guide=function(){openGuide(0)};
+ACT.openFolder=function(el){showSc('folder',el.dataset.f)};
+ACT.tgItem=function(el,e){e.stopPropagation();var n=byId(el.dataset.id);if(!n||!n.items)return;var it=n.items[+el.dataset.i];if(it){it.d=!it.d;saveNote(n);refresh()}};
+
+/* audio playback */
+ACT.play=async function(el){
+ var id=el.dataset.id;
+ if(P.id===id&&P.audio){if(P.audio.paused)P.audio.play();else P.audio.pause();refresh();refreshEditor(id);return}
+ stopPlay();var rec=await dbGet('audio',id);if(!rec||!rec.blob){toast(T('aiNoAudio'));return}
+ P.url=URL.createObjectURL(rec.blob);P.audio=new Audio(P.url);P.id=id;
+ P.audio.onended=function(){stopPlay();refresh();refreshEditor(id)};P.audio.onpause=function(){refresh();refreshEditor(id)};P.audio.onplay=function(){refresh();refreshEditor(id)};
+ try{await P.audio.play()}catch(e){stopPlay();toast(T('aiNoAudio'))}refresh();refreshEditor(id)};
+
+/* note editor */
+ACT.edClose=function(){closeOv('note')};
+ACT.edFolder=function(el){if(!EDN)return;EDN.folder=el.dataset.f;persistNewIfText();saveNote(EDN);refreshEditor(EDN.id)};
+function persistNewIfText(){if(EDN&&EDN._new&&EDN.text){persistNew(EDN)}}
+ACT.edDel=async function(){if(!EDN)return;var ok=await confirmDlg(T('delNoteAsk'),T('del'),true);if(!ok||!EDN)return;var n=EDN;closeOv('note',true);EDN=null;await deleteNote(n)};
+async function deleteNote(n){
+ if(n._new){syncHistory();refresh();return}
+ var rec=n.aud?await dbGet('audio',n.id):null,rems=S.rem.filter(function(r){return r.noteId===n.id}),idx=S.notes.indexOf(n);
+ S.notes=S.notes.filter(function(x){return x!==n});S.rem=S.rem.filter(function(r){return r.noteId!==n.id});
+ await dbDel('notes',n.id);await dbDel('audio',n.id);saveRem();if(P.id===n.id)stopPlay();syncHistory();refresh();
+ toast(T('deleted'),7000,T('undo'),async function(){S.notes.splice(Math.min(idx,S.notes.length),0,n);rems.forEach(function(r){S.rem.push(r)});await saveNote(n);if(rec)await dbPut('audio',rec);saveRem();refresh();toast(T('restored'))})}
+ACT.edAi=function(){if(EDN){persistNewIfText();aiTranscribeNote(EDN.id)}};
+ACT.edAlt=function(){if(!EDN||!EDN.alt)return;var t=EDN.text;EDN.text=EDN.alt;EDN.alt=t;saveNote(EDN);refreshEditor(EDN.id)};
+ACT.edDl=async function(){if(!EDN)return;var rec=await dbGet('audio',EDN.id);if(!rec||!rec.blob){toast(T('aiNoAudio'));return}var ext=/mp4/.test(rec.blob.type)?'m4a':/ogg/.test(rec.blob.type)?'ogg':'webm';dl(rec.blob,'idea-'+new Date(EDN.ts).toISOString().slice(0,16).replace(/[:T]/g,'-')+'.'+ext)};
+function byline(){return S.set.user?'\n— '+T('byU',S.set.user):''}
+ACT.edCopy=async function(){if(!EDN)return;try{await navigator.clipboard.writeText(EDN.text||'');toast(T('copied'))}catch(e){toast(T('saveFail'))}};
+ACT.edShare=async function(){if(!EDN)return;var txt=(EDN.text||'')+byline();try{if(navigator.share)await navigator.share({text:txt});else{await navigator.clipboard.writeText(txt);toast(T('copied'))}}catch(e){}};
+ACT.edItems=function(){if(!EDN)return;if(EDN.items&&EDN.items.length){EDN.items=null}else{EDN.items=splitItems(EDN.text)}saveNote(EDN);refreshEditor(EDN.id);refresh()};
+function splitItems(t){
+ var parts=String(t||'').split(/[\n,،;]+|\s+ו(?=\S)/).map(function(x){return x.replace(/^[\s\-•*]+|\s+$/g,'').replace(/^צריך לקנות\s*/,'').replace(/^לקנות\s*/,'')}).filter(Boolean);
+ if(parts.length===1&&/\s/.test(parts[0]))parts=parts[0].split(/\s+/);
+ return parts.map(function(x){return {t:x,d:false}})}
+ACT.edRemAdd=function(){
+ if(!EDN)return;persistNewIfText();if(EDN._new){toast(T('nothing'));return}
+ var w=parseWhen(EDN.text),when=w?w.ts:Math.ceil((Date.now()+36e5)/9e5)*9e5;
+ var r=addReminder({noteId:EDN.id,title:cleanTitle(EDN.text)||T('rem'),when:when});EDN.remId=r.id;saveNote(EDN);refreshEditor(EDN.id)};
+ACT.edRemDel=function(){if(!EDN||!EDN.remId)return;S.rem=S.rem.filter(function(r){return r.id!==EDN.remId});EDN.remId=null;saveRem();saveNote(EDN);refreshEditor(EDN.id);toast(T('remDel'))};
+
+/* folders */
+var EMOJIS=['💡','🎵','🛒','⏰','📝','🎬','💼','🏠','❤️','🌟','📚','🧠','🎨','✈️','🍳','💪'];
+ACT.newFolder=function(){FEDIT={id:null,icon:'📝',name:''};openFolderEd()};
+ACT.editFolder=function(el){var f=folderOf(el.dataset.f);FEDIT={id:f.id,icon:f.icon,name:f.sys?T('f_'+f.sys):f.name,sys:f.sys};openFolderEd()};
+function openFolderEd(){
+ var f=FEDIT,h='<h3>'+esc(f.id?T('editFolder'):T('newFolder'))+'<button class="ib x" data-act="fClose">✕</button></h3><label class="f">'+esc(T('folderName'))+'</label><input id="fname" value="'+esc(f.name)+'" maxlength="30"'+(f.sys?' disabled':'')+' autofocus><label class="f">'+esc(T('emoji'))+'</label><div class="chips" style="flex-wrap:wrap">'+EMOJIS.map(function(e){return '<button class="chip'+(f.icon===e?' on':'')+'" data-act="fEmoji" data-e="'+e+'">'+e+'</button>'}).join('')+'</div><div class="btns">'+(f.id&&!f.sys?'<button class="btn dng" data-act="fDel">'+esc(T('del'))+'</button>':'')+'<button class="btn pri" data-act="fSave">'+esc(T('ok'))+'</button></div>';
+ openOv('folder',h)}
+ACT.fClose=function(){closeOv('folder')};
+ACT.fEmoji=function(el){var nm=$('#fname');if(nm&&!nm.disabled)FEDIT.name=nm.value;FEDIT.icon=el.dataset.e;var o=$('[data-ov=folder] .sheet');closeOv('folder',true);openFolderEd()};
+ACT.fSave=function(){
+ var nm=$('#fname'),name=nm&&!nm.disabled?nm.value.trim():FEDIT.name;if(!FEDIT.sys&&!name){nm&&nm.focus();return}
+ if(FEDIT.id){var f=folderOf(FEDIT.id);f.icon=FEDIT.icon;if(!f.sys)f.name=name}else S.folders.push({id:'f'+uid(),icon:FEDIT.icon,name:name});
+ saveFolders();closeOv('folder');render()};
+ACT.fDel=async function(){var id=FEDIT.id,ok=await confirmDlg(T('delFolderAsk'),T('del'),true);if(!ok)return;S.notes.forEach(function(n){if(n.folder===id){n.folder='ideas';saveNote(n)}});S.folders=S.folders.filter(function(f){return f.id!==id});if(S.set.target===id){S.set.target='auto';saveSet()}saveFolders();closeOv('folder',true);if(curSc==='folder'){goBack()}syncHistory();render()};
+function textOfFolder(id,chron){var ns=folderNotes(id).slice();if(chron)ns.reverse();return ns.map(function(n){return n.text}).filter(Boolean).join('\n')}
+ACT.copyFolder=async function(el){var t=textOfFolder(el.dataset.f,true)+byline();try{await navigator.clipboard.writeText(t);toast(T('copied'))}catch(e){toast(T('saveFail'))}};
+function exportText(ids){
+ var out=['MyThoughtsNest'+(S.set.user?' · '+S.set.user:'')+' · '+new Date().toLocaleDateString(curLang==='he'?'he-IL':'en-GB'),''];
+ S.folders.forEach(function(f){if(ids&&ids.indexOf(f.id)<0)return;var ns=folderNotes(f.id).slice().reverse();if(!ns.length)return;out.push('== '+f.icon+' '+fName(f)+' ==');ns.forEach(function(n){out.push('['+fmtDate(n.ts)+' '+fmtTime(n.ts)+'] '+(n.text||'').replace(/\n/g,'\n  '))});out.push('')});
+ dl(new Blob([out.join('\n')],{type:'text/plain;charset=utf-8'}),'mythoughts-'+new Date().toISOString().slice(0,10)+'.txt')}
+ACT.expFolder=function(el){exportText([el.dataset.f])};
+ACT.exportAll=function(){exportText(null)};
+
+/* reminders */
+ACT.remAdd=function(){openRemEd(null)};
+ACT.remEdit=function(el){openRemEd(el.dataset.id)};
+ACT.remDone=function(el){remDone(el.dataset.id);refresh()};
+ACT.remCal=function(el){var r=remById(el.dataset.id);if(r)exportIcs([r])};
+ACT.remCalAll=function(){exportIcs(S.rem.filter(function(r){return !r.done&&r.when>Date.now()}))};
+ACT.remNotif=async function(){try{var p=await Notification.requestPermission();if(p!=='granted')toast(T('remNotifNo'),4000)}catch(e){}refresh()};
+function openRemEd(id){
+ var r=id?remById(id):null;EDR=r?r:{id:uid(),title:'',when:Math.ceil((Date.now()+36e5)/9e5)*9e5,repeat:'none',noteId:null,fired:false,done:false,_new:true};
+ var h='<h3>⏰ '+esc(r?T('remEdit'):T('remNew'))+'<button class="ib x" data-act="rClose">✕</button></h3><label class="f">'+esc(T('remTitle'))+'</label><input id="rtitle" value="'+esc(EDR.title)+'" maxlength="200" autofocus><label class="f">'+esc(T('remWhen'))+'</label><input type="datetime-local" id="rwhen" value="'+toLocalInput(EDR.when)+'"><label class="f">'+esc(T('remRepeat'))+'</label><select id="rrep">'+['none','daily','weekly'].map(function(x){return '<option value="'+x+'"'+(EDR.repeat===x?' selected':'')+'>'+esc(T('r_'+x))+'</option>'}).join('')+'</select><div class="btns">'+(r?'<button class="btn dng" data-act="rDel">'+esc(T('del'))+'</button>':'')+'<button class="btn pri" data-act="rSave">'+esc(T('ok'))+'</button></div>';
+ openOv('rem',h,{onClose:function(){commitRem(true)}})}
+function commitRem(fromClose){
+ var r=EDR;if(!r)return false;var ti=$('#rtitle'),wh=$('#rwhen'),rp=$('#rrep');
+ if(ti){r.title=ti.value.trim()}if(wh){var t=fromLocalInput(wh.value);if(t)r.when=t}if(rp)r.repeat=rp.value;
+ if(!r.title){if(r._new){EDR=null;return false}r.title=T('rem')}
+ r.fired=false;r.done=false;
+ if(r._new){delete r._new;S.rem.push(r)}saveRem();EDR=null;if(fromClose)refresh();return true}
+ACT.rClose=function(){closeOv('rem')};
+ACT.rSave=function(){if(!$('#rtitle').value.trim()){$('#rtitle').focus();return}closeOv('rem')};
+ACT.rDel=async function(){var r=EDR,ok=await confirmDlg(T('delRemAsk'),T('del'),true);if(!ok||!r)return;EDR=null;closeOv('rem',true);var copy=Object.assign({},r);S.rem=S.rem.filter(function(x){return x.id!==r.id});S.notes.forEach(function(n){if(n.remId===r.id){n.remId=null;saveNote(n)}});saveRem();syncHistory();refresh();toast(T('remDel'),6000,T('undo'),function(){S.rem.push(copy);saveRem();refresh()})};
+ACT.alDone=function(el){remDone(el.dataset.id);closeOv('alarm');refresh()};
+ACT.alSnooze=function(el){remSnooze(el.dataset.id,10);closeOv('alarm');refresh()};
+ACT.alSpeak=function(el){var r=remById(el.dataset.id);audioCtx();speakText(r?r.title:'',true)};
+ACT.alClose=function(){closeOv('alarm')};
+ACT.testSpeak=function(){audioCtx();speakText(T('testSpeak'),true);beep()};
+
+/* AI settings */
+ACT.aiTest=async function(){
+ if(!hasKey()){toast(T('testNoKey'));return}
+ try{if(S.set.provider==='openai'){var r=await fetch('https://api.openai.com/v1/models',{headers:{Authorization:'Bearer '+S.set.keyO}});if(!r.ok)throw new Error('HTTP '+r.status);toast(T('testOk'))}
+  else{var t=await geminiRun([{text:'Reply with the single word OK'}]);toast(T('testOk'));ACT.aiModels(null,true)}}
+ catch(e){toast(T('testFail',e.message||e),5500)}};
+ACT.aiModels=async function(el,quiet){
+ if(!S.set.keyG){toast(T('testNoKey'));return}
+ try{var r=await fetch('https://generativelanguage.googleapis.com/v1beta/models?pageSize=200&key='+encodeURIComponent(S.set.keyG)),j=await r.json();if(!r.ok)throw new Error(apiMsg(j,r.status));
+  liveModels=(j.models||[]).filter(function(m){return /generateContent/.test((m.supportedGenerationMethods||[]).join())&&/gemini/.test(m.name)&&!/embedding|tts|image|live|aqa|robotics|computer/.test(m.name)}).map(function(m){return m.name.replace(/^models\//,'')}).filter(function(m){return DEAD_MODELS.indexOf(m)<0});
+  if(S.set.gModel&&liveModels.length&&liveModels.indexOf(S.set.gModel)<0&&G_CHAIN.indexOf(S.set.gModel)<0){S.set.gModel='';saveSet()}
+  if(curSc==='settings')refresh();if(!quiet)toast(T('modelsN',liveModels.length))}
+ catch(e){if(!quiet)toast(T('testFail',e.message||e),5500)}};
+ACT.aiDisc=function(){if(S.set.provider==='openai')S.set.keyO='';else S.set.keyG='';S.set.gModel='';saveSet();refresh()};
+
+/* backup / restore / wipe */
+async function buildBackup(withAudio){
+ var set=Object.assign({},S.set);delete set.keyG;delete set.keyO;
+ var out={app:'mythoughtsnest',v:1,ts:Date.now(),user:S.set.user,withAudio:!!withAudio,settings:set,folders:S.folders,reminders:S.rem,notes:S.notes.map(function(n){var c=Object.assign({},n);delete c._new;return c}),audio:{}};
+ if(withAudio){for(var i=0;i<S.notes.length;i++){var n=S.notes[i];if(!n.aud)continue;var rec=await dbGet('audio',n.id);if(rec&&rec.blob)out.audio[n.id]={mime:rec.mime||rec.blob.type,b64:await blobToB64(rec.blob)}}}
+ return out}
+async function doBackup(full){
+ try{var o=await buildBackup(full);dl(new Blob([JSON.stringify(o)],{type:'application/json'}),(full?'full-':'safe-')+'mythoughtsnest-'+new Date().toISOString().slice(0,10)+'.json');S.set.lastBackup=Date.now();saveSet();refresh()}catch(e){toast(T('saveFail'))}}
+ACT.backupSafe=function(){doBackup(false)};ACT.backupFull=function(){doBackup(true)};
+ACT.restore=function(){var f=$('#restoreF');if(f){f.value='';f.click()}};
+async function doRestore(file){
+ var o;try{o=JSON.parse(await file.text())}catch(e){toast(T('restoreBad'));return}
+ if(!o||o.app!=='mythoughtsnest'||!Array.isArray(o.notes)){toast(T('restoreBad'));return}
+ var ok=await confirmDlg(T('restoreAsk'),T('ok'),false);if(!ok)return;
+ await dbClear('notes');await dbClear('audio');
+ var keep={keyG:S.set.keyG,keyO:S.set.keyO};
+ S.notes=o.notes.filter(function(n){return n&&n.id});
+ for(var i=0;i<S.notes.length;i++){var n=S.notes[i];await saveNote(n);var a=o.audio&&o.audio[n.id];if(a&&a.b64){var bin=atob(a.b64),u=new Uint8Array(bin.length);for(var k=0;k<bin.length;k++)u[k]=bin.charCodeAt(k);await dbPut('audio',{id:n.id,blob:new Blob([u],{type:a.mime||'audio/webm'}),mime:a.mime})}else if(n.aud&&!(o.audio&&o.audio[n.id])){n.aud=false;saveNote(n)}}
+ S.folders=Array.isArray(o.folders)&&o.folders.length?o.folders:S.folders;S.rem=Array.isArray(o.reminders)?o.reminders:[];
+ var set=o.settings||{};for(var k2 in DEF)if(set[k2]!==undefined&&typeof set[k2]===typeof DEF[k2])S.set[k2]=set[k2];S.set.keyG=keep.keyG;S.set.keyO=keep.keyO;
+ remainingFoldersFix();S.notes.sort(function(a,b){return b.ts-a.ts});saveSet();saveFolders();saveRem();applyPrefs();render();toast(T('restoreOk'))}
+ACT.wipe=async function(){
+ if(!await confirmDlg(T('wipeAsk1'),T('yes'),true))return;if(!await confirmDlg(T('wipeAsk2'),T('yes'),true))return;
+ await dbClear('notes');await dbClear('audio');S.notes=[];S.rem=[];S.folders=SYSF.map(function(x){return {id:x.id,sys:x.sys,icon:x.icon}});S.set.target='auto';saveSet();saveFolders();saveRem();stopPlay();render();toast(T('wiped'))};
+ACT.shareApp=async function(){var d={title:'MyThoughtsNest',text:T('app')+' — AppNest',url:location.href.split('#')[0]};try{if(navigator.share)await navigator.share(d);else{await navigator.clipboard.writeText(d.url);toast(T('copied'))}}catch(e){}};
+
+/* guide */
+function openGuide(i){
+ var steps=[1,2,3,4,5],last=i>=steps.length-1;
+ openOv('guide','<div class="gbig">'+['🎙','🗂','⏰','🤝','🪺'][i]+'</div><h3 style="justify-content:center">'+esc(T('g'+(i+1)+'t'))+'</h3><p style="text-align:center;font-size:1.05rem">'+esc(T('g'+(i+1)))+'</p><div class="dots">'+steps.map(function(s,k){return '<i class="'+(k===i?'on':'')+'"></i>'}).join('')+'</div><div class="btns">'+(last?'':'<button class="btn" data-act="guideSkip">'+esc(T('skip'))+'</button>')+'<button class="btn pri" data-act="guideNext" data-i="'+i+'">'+esc(last?T('start'):T('next'))+'</button></div>',{center:true,sticky:true,noFocus:true,onClose:function(){if(!S.set.seenGuide){S.set.seenGuide=1;saveSet()}}})}
+ACT.guideNext=function(el){var i=+el.dataset.i;if(i>=4){closeOv('guide');return}closeOv('guide',true);openGuide(i+1)};
+ACT.guideSkip=function(){closeOv('guide')};
+
+/* ============ events ============ */
+var lp={t:0,x:0,y:0,fired:false};
+document.addEventListener('click',function(e){
+ if(lp.fired){lp.fired=false;e.preventDefault();e.stopPropagation();return}
+ var el=e.target.closest('[data-act]');if(!el)return;var f=ACT[el.dataset.act];if(f){e.preventDefault();f(el,e)}},true);
+document.addEventListener('pointerdown',function(e){
+ var c=e.target.closest('.note[data-id]');if(!c||e.target.closest('button,li'))return;lp.x=e.clientX;lp.y=e.clientY;clearTimeout(lp.t);
+ lp.t=setTimeout(function(){lp.fired=true;vibrate(30);openNote(c.dataset.id);setTimeout(function(){lp.fired=false},700)},550)});
+['pointerup','pointercancel','scroll'].forEach(function(ev){document.addEventListener(ev,function(){clearTimeout(lp.t)},true)});
+document.addEventListener('pointermove',function(e){if(lp.t&&(Math.abs(e.clientX-lp.x)>10||Math.abs(e.clientY-lp.y)>10))clearTimeout(lp.t)});
+document.addEventListener('contextmenu',function(e){var c=e.target.closest('.note[data-id]');if(c){e.preventDefault();openNote(c.dataset.id)}});
+document.addEventListener('input',function(e){
+ var t=e.target;
+ if(t.id==='edtext'&&EDN){EDN.text=t.value;persistNewIfText();saveNoteSoon(EDN);return}
+ if(t.id==='q'){searchQ=t.value;var r=$('#nres');if(r)r.innerHTML=notesResults();return}
+ if(t.dataset&&t.dataset.set&&(t.type==='text'||t.type==='password')){S.set[t.dataset.set]=t.value.trim();saveSet()}});
+document.addEventListener('change',function(e){
+ var t=e.target;
+ if(t.id==='restoreF'&&t.files&&t.files[0]){doRestore(t.files[0]);return}
+ if(t.id==='edrwhen'&&EDN&&EDN.remId){var r=remById(EDN.remId),v=fromLocalInput(t.value);if(r&&v){r.when=v;r.fired=false;r.done=false;saveRem()}return}
+ if(t.id==='edrrep'&&EDN&&EDN.remId){var r2=remById(EDN.remId);if(r2){r2.repeat=t.value;saveRem()}return}
+ if(t.dataset&&t.dataset.set){var k=t.dataset.set,v2=t.type==='checkbox'?t.checked:t.value;
+  if(k==='lang'){S.set.lang=v2;saveSet();applyPrefs();render();return}
+  if(k==='provider'){S.set.provider=v2;saveSet();render();return}
+  if(k==='speak'&&v2){audioCtx()}
+  S.set[k]=v2;saveSet();if(k==='mode'||k==='recLang'||k==='gModel'){}}});
+document.addEventListener('keydown',function(e){if(e.key==='Escape'&&topOverlay()){closeOv(topOverlay())}
+ if(e.key==='Tab'&&topOverlay()){var ov=ovStack[ovStack.length-1].el,f=$$('button,input,textarea,select,a[href]',ov).filter(function(x){return !x.disabled&&x.offsetParent!==null});if(f.length){var first=f[0],last=f[f.length-1];if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus()}else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus()}}}});
+document.addEventListener('visibilitychange',function(){if(!document.hidden){checkReminders()}});
+window.addEventListener('focus',checkReminders);window.addEventListener('pageshow',checkReminders);
+
+/* ============ init ============ */
+function handleRemParam(){
+ try{var u=new URL(location.href),id=u.searchParams.get('rem'),act=u.searchParams.get('act');if(id){if(act==='done')remDone(id);else if(act==='snooze')remSnooze(id,10);history.replaceState(null,'',u.pathname)}}catch(e){}}
+async function init(){
+ loadSettings();applyPrefs();
+ S.dbOk=await dbOpen();
+ if(S.dbOk){S.notes=(await dbAll('notes')).sort(function(a,b){return b.ts-a.ts})}else{setTimeout(function(){toast(T('noDb'),6000)},800)}
+ remainingFoldersFix();
+ try{if(navigator.storage&&navigator.storage.persist)navigator.storage.persist()}catch(e){}
+ handleRemParam();
+ if(navigator.serviceWorker&&location.protocol!=='file:'){
+  navigator.serviceWorker.register('sw.js').catch(function(){});
+  navigator.serviceWorker.addEventListener('message',function(ev){var d=ev.data||{};if(d.type==='rem'){if(d.action==='done')remDone(d.id);else if(d.action==='snooze')remSnooze(d.id,10);refresh()}})}
+ render();
+ setInterval(checkReminders,10000);
+ setTimeout(function(){checkReminders()},400);
+ if(!S.set.seenGuide&&!S.notes.length)setTimeout(function(){openGuide(0)},500);
+ try{var q=new URL(location.href).searchParams;if(q.get('quick')==='1'){setTimeout(function(){startRec()},600)}}catch(e){}
+ var day=new Date().toISOString().slice(0,10);
+ if(S.notes.length>=10&&S.set.lastBackup&&Date.now()-S.set.lastBackup>14*864e5&&S.set.lastNag!==day){S.set.lastNag=day;saveSet();setTimeout(function(){toast(T('backupRemind'),6000)},1500)}
+ else if(S.notes.length>=10&&!S.set.lastBackup&&S.set.lastNag!==day){S.set.lastNag=day;saveSet();setTimeout(function(){toast(T('backupRemind'),6000)},1500)}
+}
+window.addEventListener('error',function(e){try{console.error('MTN error',e.message)}catch(x){}});
+init();
+</script>
+</body>
+</html>
