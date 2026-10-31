@@ -33,6 +33,7 @@ body{overflow:hidden}
 #tabs{display:flex;border-top:1px solid var(--line);background:var(--bg2);padding:6px 6px calc(env(safe-area-inset-bottom) + 6px)}
 .tab{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;border:0;background:none;color:var(--tx2);font-size:.72rem;padding:6px 2px;cursor:pointer;border-radius:12px;font-family:inherit}
 .tab svg{width:24px;height:24px}
+.tab.trec{overflow:visible}
 .tab.on{color:var(--acl);font-weight:700}
 .tab.on svg{stroke:var(--acl)}
 h2{font-size:1.05rem;margin:18px 0 10px;display:flex;align-items:center;gap:8px}
@@ -57,7 +58,18 @@ label.f{display:block;font-size:.85rem;color:var(--tx2);margin:12px 0 5px}
 .muted{color:var(--tx2);font-size:.88rem}
 .warn{background:color-mix(in srgb,var(--ac) 14%,transparent);border:1px solid color-mix(in srgb,var(--ac) 45%,transparent);border-radius:12px;padding:10px 12px;font-size:.88rem;margin-bottom:10px}
 .err{color:var(--red)}
-.mic-wrap{display:flex;flex-direction:column;align-items:center;gap:10px;padding:10px 0 4px}
+.mic-wrap{display:flex;flex-direction:column;align-items:center;gap:8px;padding:2px 0 4px}
+.mic.rec.paused{animation:none;background:radial-gradient(circle at 30% 25%,#ffd27a,#e0a030 65%)}
+.rbtns{display:flex;gap:10px;justify-content:center}
+#recbar{display:none;align-items:center;gap:10px;padding:8px 14px;background:color-mix(in srgb,var(--red) 18%,var(--bg2));border-top:1px solid var(--red);font-weight:700}
+#recbar.on{display:flex}
+#recbar .rt{font-variant-numeric:tabular-nums;flex:1}
+#recbar .rd{width:10px;height:10px;border-radius:50%;background:var(--red);animation:pulse 1.3s infinite}
+.trec{position:relative}
+.trec .rc{width:56px;height:56px;border-radius:50%;background:radial-gradient(circle at 30% 25%,var(--ac2),var(--ac) 70%);color:var(--acx);display:grid;place-items:center;margin-top:-26px;box-shadow:0 4px 16px color-mix(in srgb,var(--ac) 45%,transparent);border:3px solid var(--bg2)}
+.trec.on .rc{background:radial-gradient(circle at 30% 25%,#ff8a8e,var(--red) 70%);color:#fff}
+.trec .rc svg{width:28px;height:28px}
+.trec span{margin-top:0}
 .mic{width:148px;height:148px;border-radius:50%;border:0;cursor:pointer;background:radial-gradient(circle at 30% 25%,var(--ac2),var(--ac) 65%);color:var(--acx);display:grid;place-items:center;box-shadow:0 8px 28px color-mix(in srgb,var(--ac) 40%,transparent);position:relative}
 .mic svg{width:64px;height:64px}
 .mic.rec{background:radial-gradient(circle at 30% 25%,#ff8a8e,var(--red) 65%);color:#fff;animation:pulse 1.3s infinite}
@@ -93,7 +105,10 @@ body.no-anim *{animation:none!important;transition:none!important}
 .sw:last-child{border-bottom:0}
 .sw .t{flex:1}
 .sw .t small{display:block;color:var(--tx2);font-size:.8rem}
-.sw input{display:none}
+.sw{position:relative}
+.sw input{position:absolute;opacity:0;width:1px;height:1px}
+.sw input:focus-visible+.k{outline:2px solid var(--ac);outline-offset:2px}
+.items li:focus-visible{outline:2px solid var(--ac)}
 .sw .k{width:50px;height:30px;border-radius:999px;background:var(--line);position:relative;flex:none;transition:.2s}
 .sw .k:after{content:"";position:absolute;top:3px;inset-inline-start:3px;width:24px;height:24px;border-radius:50%;background:#fff;transition:.2s}
 .sw input:checked+.k{background:var(--ac)}
@@ -136,6 +151,7 @@ pre.diag{white-space:pre-wrap;font-size:.8rem;background:var(--bg2);border:1px s
 <div id="app">
   <header id="top"></header>
   <main id="main" tabindex="-1"></main>
+  <div id="recbar"></div>
   <nav id="tabs" aria-label="ניווט ראשי"></nav>
 </div>
 <div id="ovroot"></div>
@@ -143,7 +159,7 @@ pre.diag{white-space:pre-wrap;font-size:.8rem;background:var(--bg2);border:1px s
 <script>
 'use strict';
 /* ============ MyThoughtsNest · AppNest · core ============ */
-var VERSION='1.0.0';
+var VERSION='1.1.0';
 var SUPPORT='appnest55@gmail.com';
 var STORE_URL='https://appnest-store.pages.dev';
 
@@ -194,6 +210,13 @@ he:{
  stats:'סטטוס',byU:'הופק ע״י {0}',moreBack:'עוד',pickFolder:'לאיזו תיקייה?',emoji:'אייקון',delFolderAsk:'למחוק את התיקייה? ההערות יעברו לרעיונות.',delNoteAsk:'למחוק את ההערה הזו?',delRemAsk:'למחוק את התזכורת?',
  setBeepNote:'צליל והקראה עובדים רק אחרי שנגעת באפליקציה פעם אחת מאז שנפתחה.',quick:'הקלטה מהירה',len:'{0}',items:'פריטים',manual:'ידני',live:'תמלול חי',ai_:'AI',
  permNotif:'נדרשת הרשאת התראות',
+ tRec:'הקלטה',pause:'השהה',resume:'המשך',stopRec:'עצור',recPaused:'מושהה — לחץ המשך',
+ noSpeechYet:'עדיין לא נקלט דיבור. אם זה נמשך: הגדרות › מצב הקלטה.',
+ autoSwitched:'התמלול החי לא עבד יחד עם ההקלטה במכשיר הזה, אז עברתי אוטומטית למצב: {0}. אפשר לשנות בהגדרות.',
+ movedTo:'הועבר ל{0}',recovered:'שוחזרה הקלטה שנקטעה באמצע',micNone:'לא נמצא מיקרופון',micFail:'ההקלטה לא התחילה ({0})',
+ restoreNoAudio:'הגיבוי הזה בלי שמע — הקלטות קיימות במכשיר יימחקו.',
+ modeHelp:'אם התמלול החי לא עובד יחד עם ההקלטה בטלפון שלך: בחר "תמלול חי בלבד" (בלי שמע) או "הקלטה בלבד" ותמלל עם AI.',
+ autoAI2:'שימוש אוטומטי ב-AI: תמלול כשאין תמלול חי + סיווג לתיקיות ותזכורות',autoAI2d:'השמע (לתמלול) והטקסט (לסיווג) נשלחים לספק שחיברת',
 },
 en:{
  app:'My Thoughts',tHome:'Home',tNotes:'Notes',tRem:'Reminders',tMore:'More',
@@ -240,6 +263,13 @@ en:{
  stats:'Status',byU:'By {0}',moreBack:'More',pickFolder:'Which folder?',emoji:'Icon',delFolderAsk:'Delete this folder? Its notes move to Ideas.',delNoteAsk:'Delete this note?',delRemAsk:'Delete this reminder?',
  setBeepNote:'Sound and speech only work after you touched the app once since it opened.',quick:'Quick record',len:'{0}',items:'items',manual:'manual',live:'live',ai_:'AI',
  permNotif:'Notification permission needed',
+ tRec:'Record',pause:'Pause',resume:'Resume',stopRec:'Stop',recPaused:'Paused — tap Resume',
+ noSpeechYet:'No speech picked up yet. If this continues: Settings › Recording mode.',
+ autoSwitched:'Live transcription did not work together with recording on this device, so I switched to: {0}. You can change it in Settings.',
+ movedTo:'Moved to {0}',recovered:'Recovered an interrupted recording',micNone:'No microphone found',micFail:'Recording did not start ({0})',
+ restoreNoAudio:'This backup has no audio — existing recordings on the device will be deleted.',
+ modeHelp:'If live transcription does not work together with recording on your phone: pick "Live transcript only" (no audio) or "Record only" and transcribe with AI.',
+ autoAI2:'Automatic AI: transcribe when there is no live transcript + sort into folders and reminders',autoAI2d:'Audio (for transcription) and text (for sorting) are sent to the provider you connected',
 }};
 var curLang='he';
 function T(k){var a=arguments,s=(LANG[curLang]&&LANG[curLang][k]);if(s==null)s=LANG.en[k];if(s==null)s=k;for(var i=1;i<a.length;i++)s=s.split('{'+(i-1)+'}').join(a[i]);return s}
@@ -283,7 +313,7 @@ function remById(id){for(var i=0;i<S.rem.length;i++)if(S.rem[i].id===id)return S
 var DB=null;
 function dbOpen(){return new Promise(function(res){try{var r=indexedDB.open('mythoughtsnest',1);r.onupgradeneeded=function(){var d=r.result;if(!d.objectStoreNames.contains('notes'))d.createObjectStore('notes',{keyPath:'id'});if(!d.objectStoreNames.contains('audio'))d.createObjectStore('audio',{keyPath:'id'})};r.onsuccess=function(){DB=r.result;res(true)};r.onerror=function(){res(false)};r.onblocked=function(){res(false)}}catch(e){res(false)}})}
 function dbReq(store,mode,fn){return new Promise(function(res,rej){if(!DB){rej(new Error('nodb'));return}try{var t=DB.transaction(store,mode),q=fn(t.objectStore(store));t.oncomplete=function(){res(q&&q.result)};t.onerror=t.onabort=function(){rej(t.error||new Error('tx'))}}catch(e){rej(e)}})}
-function dbPut(store,v){return dbReq(store,'readwrite',function(s){return s.put(v)}).catch(function(){toast(T('saveFail'))})}
+function dbPut(store,v){return dbReq(store,'readwrite',function(s){return s.put(v)}).then(function(){return true}).catch(function(){toast(T('saveFail'));return false})}
 function dbDel(store,id){return dbReq(store,'readwrite',function(s){return s.delete(id)}).catch(function(){})}
 function dbAll(store){return dbReq(store,'readonly',function(s){return s.getAll()}).then(function(r){return r||[]}).catch(function(){return []})}
 function dbGet(store,id){return dbReq(store,'readonly',function(s){return s.get(id)}).catch(function(){return null})}
@@ -344,6 +374,7 @@ function parseWhen(text,now){
  /* explicit date: d/m, d/m/y, d.m.y */
  m=n.match(/ (?:ב ?)?(\d{1,2})\/(\d{1,2})(?:\/(\d{2,4}))? /)||n.match(/ (?:ב ?)?(\d{1,2})\.(\d{1,2})\.(\d{2,4}) /);
  if(m&&+m[1]>=1&&+m[1]<=31&&+m[2]>=1&&+m[2]<=12){var yy=m[3]?(+m[3]<100?2000+ +m[3]:+m[3]):now.getFullYear();dt=new Date(yy,+m[2]-1,+m[1]);
+  if(dt.getMonth()!==+m[2]-1||dt.getDate()!==+m[1])return null;
   if(!m[3]){var c0=new Date(now.getFullYear(),now.getMonth(),now.getDate());if(dt<c0)dt=new Date(yy+1,+m[2]-1,+m[1])}n=n.replace(m[0],' ')}
  /* day words */
  if(dayOff==null&&!dt){
@@ -355,9 +386,11 @@ function parseWhen(text,now){
  if(dayOff!=null||wd!=null||dt)strong=true;
  /* time of day */
  var mt=n.match(/ (בשעה|שעה|ב) ?(\d{1,2})(?::(\d{2}))?(?! ?(?:דקות|דקה|ימים|שעות|שקל|אחוז|%))(?!\d)/),mc=n.match(/ (\d{1,2}):(\d{2})(?!\d)/);
- if(mt&&+mt[2]<=24){H=+mt[2];M=mt[3]?+mt[3]:0;if(mt[1]!=='ב'||mt[3])strong=true;
+ if(mt&&(+mt[2]>23||(mt[3]&&+mt[3]>59)))return null;
+ if(!mt&&mc&&(+mc[1]>23||+mc[2]>59))return null;
+ if(mt){H=+mt[2];M=mt[3]?+mt[3]:0;if(mt[1]!=='ב'||mt[3])strong=true;
   if(!mt[3]){var after=n.slice(n.indexOf(mt[0])+mt[0].length),a2=after.match(/^ (וחצי|ורבע|ועשרה|ועשרים|וחמש) /);if(a2)M={'וחצי':30,'ורבע':15,'ועשרה':10,'ועשרים':20,'וחמש':5}[a2[1]]}}
- else if(mc&&+mc[1]<=24&&+mc[2]<60){H=+mc[1];M=+mc[2];strong=true}
+ else if(mc){H=+mc[1];M=+mc[2];strong=true}
  if(/ (בבוקר|הבוקר) /.test(n))period='am';else if(/ (בצהריים|בצהרים|צהריים) /.test(n))period='noon';else if(/ (אחר הצהריים|אחרי הצהריים|אחה צ|אחהצ|אחר הצהרים) /.test(n))period='pm';else if(/ (בערב|הערב) /.test(n))period='pm';else if(/ (בלילה|הלילה) /.test(n))period='night';
  if(period&&H!=null)strong=true;
  if(!strong)return null;
@@ -383,19 +416,27 @@ function parseWhen(text,now){
  if(wd!=null&&ts<=now.getTime())ts+=7*864e5;
  return {ts:ts,rel:false,hasTime:H!=null}}
 
+var GROC=/^(ו?)(לחם|חלב|ביצים|ביצה|גבינה|יוגורט|קוטג|חמאה|עגבני|מלפפון|בצל|שום|תפוח|בננה|תפוז|לימון|אבטיח|ירקות|פירות|עוף|בשר|דג|סלמון|אורז|פסטה|קמח|סוכר|מלח|שמן|קפה|תה|מים|שוקולד|חומוס|טחינה|שמפו|סבון|פיתות|פיתה|לחמניות|שמנת|נייר|תרד|גזר|תפוחי|פלפל|חסה|אבוקדו|עדשים|שקדים|אגוזים|דבש|ריבה|קורנפלקס|במבה|ביסלי|בירה|יין|קולה)/;
 function classify(text){
  var t=normHe(text);
- if(/(צריך לקנות|צריכה לקנות|צריך להביא|לקנות|רשימת קניות|רשימה לסופר|קניות|בסופר|להביא מהסופר|נגמר ה|נגמרו ה)/.test(t))return {folder:'shop',when:null};
- if(/(שורה לשיר|שורה חדשה|פזמון|הפזמון|בית ראשון|בית שני|בית שלישי|מילים לשיר|מילה לשיר|לשיר שלי|חרוז|חריזה|ראפ|סונו|ברידג|פרה פזמון|שיר חדש|לשיר )/.test(t))return {folder:'songs',when:null};
- var w=parseWhen(text);
- if(w)return {folder:'tasks',when:w.ts};
- if(/(תזכיר לי|תזכורת|פגישה|תור ל|לא לשכוח|אל תשכח)/.test(t))return {folder:'tasks',when:null};
- return {folder:'ideas',when:null}}
+ if(/(צריך לקנות|צריכה לקנות|צריך להביא|לקנות|רשימת קניות|רשימה לסופר|קניות|בסופר|להביא מהסופר|נגמר ה|נגמרו ה)/.test(t))return {folder:'shop'};
+ var tk=t.split(' ').filter(Boolean),hits=tk.filter(function(w){return GROC.test(w)}).length;
+ if(tk.length>=2&&tk.length<=10&&hits>=2&&hits/tk.length>=.5)return {folder:'shop'};
+ if(/(שורה לשיר|שורה חדשה|שורה |פזמון|הפזמון|בית ראשון|בית שני|בית שלישי|מילים לשיר|מילה לשיר|לשיר שלי|חרוז|חריזה|ראפ|סונו|ברידג|פרה פזמון|שיר חדש|רעיון לשיר|לשיר |בשיר |שיר על|לחן )/.test(t))return {folder:'songs'};
+ if(parseWhen(text))return {folder:'tasks'};
+ if(/(תזכיר לי|תזכורת|פגישה|תור ל|לא לשכוח|אל תשכח)/.test(t))return {folder:'tasks'};
+ return {folder:'ideas'}}
+/* the folder and the reminder are decided separately: a shopping line or a song line can also carry a reminder */
+function reminderFor(text,folder,explicit){
+ if(!text)return null;var w=parseWhen(text);if(!w)return null;
+ if(explicit&&folder!=='tasks')return null;
+ if(folder!=='tasks'&&!(w.hasTime||w.rel))return null;
+ return w.ts}
 function cleanTitle(t){return String(t||'').replace(/^\s*(תזכיר לי( ש)?|תזכורת( ש)?)\s*/,'').trim()||String(t||'').trim()}
 
 /* ============ reminders ============ */
 function addReminder(o){var r={id:uid(),noteId:o.noteId||null,title:o.title||'',when:o.when,repeat:o.repeat||'none',fired:false,done:false};S.rem.push(r);saveRem();return r}
-function nextRepeat(r,now){var step=r.repeat==='daily'?864e5:7*864e5,w=r.when;while(w<=now)w+=step;return w}
+function nextRepeat(r,now){var d=new Date(r.when),st=r.repeat==='daily'?1:7;while(d.getTime()<=now)d.setDate(d.getDate()+st);return d.getTime()}
 var alarmQ=[];
 function checkReminders(){
  var now=Date.now(),due=[];
@@ -411,7 +452,7 @@ function showSysNotif(r){try{if(!('Notification' in window)||Notification.permis
 var AC=null;
 function audioCtx(){try{if(!AC){var C=window.AudioContext||window.webkitAudioContext;if(C)AC=new C()}if(AC&&AC.state==='suspended')AC.resume()}catch(e){}return AC}
 function beep(){if(!S.set.beep)return;var c=audioCtx();if(!c)return;try{[0,.35,.7].forEach(function(d){var o=c.createOscillator(),g=c.createGain();o.type='sine';o.frequency.value=880;g.gain.setValueAtTime(.0001,c.currentTime+d);g.gain.exponentialRampToValueAtTime(.3,c.currentTime+d+.02);g.gain.exponentialRampToValueAtTime(.0001,c.currentTime+d+.28);o.connect(g);g.connect(c.destination);o.start(c.currentTime+d);o.stop(c.currentTime+d+.3)})}catch(e){}}
-function speakText(t,force){if((!S.set.speak&&!force)||!('speechSynthesis' in window))return;try{speechSynthesis.cancel();var u=new SpeechSynthesisUtterance(t);u.lang=curLang==='he'?'he-IL':'en-US';u.rate=.95;speechSynthesis.speak(u)}catch(e){}}
+function speakText(t,force){if((!S.set.speak&&!force)||!('speechSynthesis' in window))return;try{speechSynthesis.cancel();var u=new SpeechSynthesisUtterance(t);u.lang=/[\u0590-\u05FF]/.test(t)?'he-IL':'en-US';u.rate=.95;speechSynthesis.speak(u)}catch(e){}}
 function showAlarm(){
  if(!alarmQ.length)return;var a=alarmQ[0];
  var late=Date.now()-a.when>120000;
@@ -420,7 +461,7 @@ function showAlarm(){
   '<div class="btns"><button class="btn pri" data-act="alDone" data-id="'+esc(a.id)+'">✓ '+esc(T('done'))+'</button><button class="btn" data-act="alSnooze" data-id="'+esc(a.id)+'">⏳ '+esc(T('snooze'))+'</button><button class="btn" data-act="alSpeak" data-id="'+esc(a.id)+'">🔊 '+esc(T('speakNow'))+'</button><button class="btn" data-act="alClose">'+esc(T('dismiss'))+'</button></div>',
   {center:true,sticky:true,noFocus:true,onClose:function(){alarmQ.shift();if(alarmQ.length)setTimeout(showAlarm,150)}});
  beep();if(S.set.vib)vibrate([300,150,300,150,300]);speakText(a.title)}
-function remDone(id){var r=remById(id);if(r){r.done=true;r.fired=true;saveRem()}}
+function remDone(id){var r=remById(id);if(!r)return;if(r.repeat&&r.repeat!=='none'){var now=Date.now();if(r.when<=now)r.when=nextRepeat(r,now);else{var d=new Date(r.when);d.setDate(d.getDate()+(r.repeat==='daily'?1:7));r.when=d.getTime()}r.fired=false;r.done=false}else{r.done=true;r.fired=true}saveRem()}
 function remSnooze(id,mins){var r=remById(id);if(r){r.when=Date.now()+mins*6e4;r.fired=false;r.done=false;saveRem()}}
 /* ICS export — the "always arrives" path (phone calendar) */
 function icsDate(ts){var d=new Date(ts);return d.getUTCFullYear()+pad(d.getUTCMonth()+1)+pad(d.getUTCDate())+'T'+pad(d.getUTCHours())+pad(d.getUTCMinutes())+pad(d.getUTCSeconds())+'Z'}
@@ -432,66 +473,94 @@ function buildIcs(list){var L=['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//AppNes
  L.push('END:VCALENDAR');return L.join('\r\n')}
 function exportIcs(list){if(!list.length){toast(T('calNone'));return}dl(new Blob([buildIcs(list)],{type:'text/calendar'}),list.length===1?'reminder.ics':'reminders.ics')}
 
-/* ============ recording + live transcript ============ */
-var R={on:false,busy:false,t0:0,iv:0,stream:null,mr:null,chunks:[],mime:'',sr:null,base:'',sf:'',si:'',srErr:'',srEnd:null,restarts:0,gotRes:false,wl:null,live:false,aud:false};
+/* ============ recording + live transcript (+ pause/resume, crash-safe chunks) ============ */
+var R={on:false,busy:false,paused:false,t0:0,pAt:0,pTot:0,iv:0,stream:null,mr:null,chunks:[],mime:'',sr:null,base:'',sf:'',si:'',srErr:'',srEnd:null,restarts:0,gotRes:false,wl:null,live:false,aud:false,draft:'',dn:0};
+function recMs(){return (R.paused?R.pAt:Date.now())-R.t0-R.pTot}
 function pickMime(){var c=['audio/webm;codecs=opus','audio/webm','audio/mp4','audio/ogg;codecs=opus'];for(var i=0;i<c.length;i++){try{if(window.MediaRecorder&&MediaRecorder.isTypeSupported(c[i]))return c[i]}catch(e){}}return ''}
 function liveText(){return (R.base+' '+R.sf+' '+R.si).replace(/\s+/g,' ').trim()}
+function dbRange(store,prefix){return dbReq(store,'readonly',function(s){return s.getAll(IDBKeyRange.bound(prefix,prefix+'￿'))}).then(function(r){return r||[]}).catch(function(){return []})}
+function dbDelPrefix(store,prefix){return dbReq(store,'readwrite',function(s){return s.delete(IDBKeyRange.bound(prefix,prefix+'￿'))}).catch(function(){})}
 function startSR(){
  var SR=window.SpeechRecognition||window.webkitSpeechRecognition;if(!SR)return false;
  var sr=new SR();sr.lang=S.set.recLang;sr.continuous=true;sr.interimResults=true;sr.maxAlternatives=1;R.sr=sr;
  sr.onresult=function(ev){var f='',i='';for(var k=0;k<ev.results.length;k++){var r=ev.results[k];if(r.isFinal)f+=' '+r[0].transcript;else i+=' '+r[0].transcript}R.sf=f;R.si=i;R.gotRes=true;updateLive()};
- sr.onerror=function(ev){R.srErr=ev.error||'err';if(ev.error==='no-speech'||ev.error==='aborted')R.srErr=''};
+ sr.onerror=function(ev){var e=ev.error||'err';R.srErr=(e==='no-speech'||e==='aborted')?'':e;
+  if(R.on&&!R.gotRes&&/^(not-allowed|service-not-allowed)$/.test(e))toast(T('srDeny'),4500);
+  else if(R.on&&e==='network')toast(T('srNet'),4000)};
  sr.onend=function(){R.base=(R.base+' '+R.sf+' '+R.si).replace(/\s+/g,' ').trim();R.sf='';R.si='';
-  if(R.on&&!/^(not-allowed|service-not-allowed|audio-capture|language-not-supported)$/.test(R.srErr)&&R.restarts<200){R.restarts++;setTimeout(function(){if(R.on&&R.sr===sr){try{sr.start()}catch(e){}}},250)}
+  if(R.on&&!R.paused&&R.sr===sr&&!/^(not-allowed|service-not-allowed|audio-capture|language-not-supported)$/.test(R.srErr)&&R.restarts<300){R.restarts++;setTimeout(function(){if(R.on&&!R.paused&&R.sr===sr){try{sr.start()}catch(e){}}},250)}
   else if(R.srEnd){R.srEnd();R.srEnd=null}};
  try{sr.start();return true}catch(e){R.srErr='start';return false}}
-function updateLive(){var el=$('#live');if(!el)return;var t=liveText();el.innerHTML=t?esc(R.base+' '+R.sf)+'<i> '+esc(R.si)+'</i>':'<i>'+esc(T('listening'))+'</i>'}
-function tickTimer(){var el=$('#timer');if(el)el.textContent=fmtDur(Date.now()-R.t0)}
+function updateLive(){var el=$('#live');if(!el)return;var t=liveText();el.innerHTML=t?esc(R.base+' '+R.sf)+'<i> '+esc(R.si)+'</i>':'<i>'+esc(R.paused?T('recPaused'):T('listening'))+'</i>'}
+function tickTimer(){var t=fmtDur(Math.max(0,recMs()));$$('.rt').forEach(function(el){el.textContent=t})}
 async function startRec(){
  if(R.on||R.busy)return;R.busy=true;
  var mode=S.set.mode,SR=window.SpeechRecognition||window.webkitSpeechRecognition,needLive=mode!=='audio',needAud=mode!=='live';
  if(needLive&&!SR){needLive=false;needAud=true;toast(T('noSR'),4200)}
- R.base='';R.sf='';R.si='';R.srErr='';R.restarts=0;R.gotRes=false;R.chunks=[];R.mr=null;R.stream=null;R.live=needLive;R.aud=needAud;
+ R.base='';R.sf='';R.si='';R.srErr='';R.restarts=0;R.gotRes=false;R.chunks=[];R.mr=null;R.stream=null;R.live=needLive;R.aud=needAud;R.paused=false;R.pTot=0;R.draft=uid();R.dn=0;
  try{
   if(needAud){
    R.stream=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true}});
    R.mime=pickMime();R.mr=R.mime?new MediaRecorder(R.stream,{mimeType:R.mime}):new MediaRecorder(R.stream);
-   R.mr.ondataavailable=function(e){if(e.data&&e.data.size)R.chunks.push(e.data)};R.mr.start(1000)}
- }catch(e){R.busy=false;R.stream&&R.stream.getTracks().forEach(function(t){t.stop()});toast(T('micDenied'),4000);return}
+   var dr=R.draft,t0=Date.now();
+   R.mr.ondataavailable=function(e){if(e.data&&e.data.size){R.chunks.push(e.data);var k='d:'+dr+':'+('00000'+(R.dn++)).slice(-6);dbPut('audio',{id:k,blob:e.data,mime:R.mime,ts:t0})}};R.mr.start(1000)}
+ }catch(e){R.busy=false;try{R.stream&&R.stream.getTracks().forEach(function(t){t.stop()})}catch(x){}var nm=e&&e.name;toast(nm==='NotAllowedError'||nm==='SecurityError'?T('micDenied'):nm==='NotFoundError'?T('micNone'):T('micFail',nm||(e&&e.message)||''),5000);return}
  R.on=true;R.busy=false;R.t0=Date.now();
  if(needLive)startSR();
  try{if(navigator.wakeLock)navigator.wakeLock.request('screen').then(function(l){R.wl=l}).catch(function(){})}catch(e){}
- clearInterval(R.iv);R.iv=setInterval(tickTimer,250);refresh(true);updateLive()}
+ clearInterval(R.iv);R.iv=setInterval(tickTimer,250);refresh(true);updateLive();
+ setTimeout(function(){if(R.on&&R.live&&!R.paused&&!R.gotRes)toast(T('noSpeechYet'),6000)},7000)}
+function pauseRec(){
+ if(!R.on||R.paused)return;R.paused=true;R.pAt=Date.now();
+ try{if(R.mr&&R.mr.state==='recording')R.mr.pause()}catch(e){}
+ if(R.live&&R.sr){try{R.sr.stop()}catch(e){}}
+ refresh(true);updateLive();tickTimer()}
+function resumeRec(){
+ if(!R.on||!R.paused)return;R.paused=false;R.pTot+=Date.now()-R.pAt;
+ try{if(R.mr&&R.mr.state==='paused')R.mr.resume()}catch(e){}
+ if(R.live){R.srErr='';R.restarts=0;startSR()}
+ refresh(true);updateLive();tickTimer()}
 async function stopRec(){
- if(!R.on)return;R.on=false;clearInterval(R.iv);var dur=Date.now()-R.t0;
- var srDone=R.live&&R.sr?new Promise(function(res){R.srEnd=res;setTimeout(res,900);try{R.sr.stop()}catch(e){res()}}):Promise.resolve();
+ if(!R.on)return;var dur=Math.max(0,recMs()),wasPaused=R.paused;R.on=false;R.paused=false;clearInterval(R.iv);
+ var srDone=(R.live&&R.sr&&!wasPaused)?new Promise(function(res){R.srEnd=res;setTimeout(res,900);try{R.sr.stop()}catch(e){res()}}):Promise.resolve();
  var blob=null;
  if(R.mr&&R.mr.state!=='inactive'){blob=await new Promise(function(res){R.mr.onstop=function(){res(R.chunks.length?new Blob(R.chunks,{type:R.mime||R.mr.mimeType||'audio/webm'}):null)};try{R.mr.stop()}catch(e){res(null)}})}
  try{R.stream&&R.stream.getTracks().forEach(function(t){t.stop()})}catch(e){}
  try{R.wl&&R.wl.release();R.wl=null}catch(e){}
  await srDone;
  var text=(R.base+' '+R.sf+' '+R.si).replace(/\s+/g,' ').trim();
- var err=R.srErr,wasLive=R.live,hadAud=R.aud;R.sr=null;
+ var err=R.srErr,both=R.live&&R.aud,draft=R.draft;R.sr=null;
  refresh();
- if(!text&&!blob){toast(T('nothing'));return}
- await finalizeCapture(text,blob,dur,err,wasLive&&hadAud);}
+ if(!text&&!blob){toast(T('nothing'));dbDelPrefix('audio','d:'+draft+':');return}
+ await finalizeCapture(text,blob,dur,err,both,draft)}
 function hasKey(){return !!(S.set.provider==='openai'?S.set.keyO:S.set.keyG)}
-async function finalizeCapture(text,blob,dur,srErr,both){
- var tgt=S.set.target,folder='ideas',whenTs=null;
- if(tgt!=='auto'&&folderOf(tgt)&&folderOf(tgt).id===tgt){folder=tgt;if(tgt==='tasks'){var w=parseWhen(text);if(w)whenTs=w.ts}}
- else if(S.set.auto&&text){var c=classify(text);folder=c.folder;whenTs=c.when}
+async function finalizeCapture(text,blob,dur,srErr,both,draft){
+ var tgt=S.set.target,explicit=tgt!=='auto'&&folderOf(tgt).id===tgt,folder='ideas';
+ if(explicit)folder=tgt;else if(S.set.auto&&text)folder=classify(text).folder;
+ var whenTs=reminderFor(text,folder,explicit);
  var n={id:uid(),ts:Date.now(),folder:folder,text:text,dur:dur,aud:!!blob,mime:blob?blob.type:'',tr:text?'live':'none'};
- S.notes.unshift(n);await saveNote(n);if(blob)await dbPut('audio',{id:n.id,blob:blob,mime:blob.type});
+ S.notes.unshift(n);var ok=await saveNote(n);if(blob)await dbPut('audio',{id:n.id,blob:blob,mime:blob.type});
+ if(draft)dbDelPrefix('audio','d:'+draft+':');
+ if(ok===false){refresh();return}
  var f=folderOf(folder),msg=T('saved',f.icon+' '+fName(f));
- if(whenTs&&folder!=='songs'&&folder!=='shop'){var r=addReminder({noteId:n.id,title:cleanTitle(text),when:whenTs});n.remId=r.id;saveNote(n);msg=T('remSet',fmtWhen(whenTs))}
+ if(whenTs){var r=addReminder({noteId:n.id,title:cleanTitle(text),when:whenTs});n.remId=r.id;saveNote(n);msg=T('remSet',fmtWhen(whenTs))+' · '+f.icon+' '+fName(f)}
  toast(msg,5000,T('change'),function(){openNote(n.id)});
- if(!text&&blob){ if(S.set.autoAI&&hasKey())aiTranscribeNote(n.id,true); else if(srErr&&both)setTimeout(function(){toast(T('conflict'),6000)},300) }
- else if(both&&srErr&&/audio-capture/.test(srErr))setTimeout(function(){toast(T('conflict'),6000)},300);
+ var conflict=both&&blob&&!text;
+ if(conflict){var useAI=hasKey();S.set.mode=useAI?'audio':'live';saveSet();setTimeout(function(){toast(T('autoSwitched',T(useAI?'m_audio':'m_live')),7000)},1200)}
+ if(!text&&blob){if(S.set.autoAI&&hasKey())aiTranscribeNote(n.id,true)}
  else if(srErr==='network')setTimeout(function(){toast(T('srNet'),4000)},300);
- else if(/not-allowed|service-not-allowed/.test(srErr))setTimeout(function(){toast(T('srDeny'),4000)},300);
+ else if(text)aiRefine(n);
  refresh()}
+async function recoverDrafts(){
+ var all=await dbRange('audio','d:');if(!all.length)return 0;
+ var groups={};all.forEach(function(x){var p=x.id.split(':'),g=p[1];(groups[g]=groups[g]||[]).push(x)});
+ var cnt=0;
+ for(var g in groups){var ch=groups[g].sort(function(a,b){return a.id<b.id?-1:1}),blob=new Blob(ch.map(function(c){return c.blob}),{type:ch[0].mime||'audio/webm'});
+  var n={id:uid(),ts:ch[0].ts||Date.now(),folder:'ideas',text:'',dur:ch.length*1000,aud:true,mime:blob.type,tr:'none',rec:true};
+  S.notes.push(n);await saveNote(n);await dbPut('audio',{id:n.id,blob:blob,mime:blob.type});await dbDelPrefix('audio','d:'+g+':');cnt++}
+ S.notes.sort(function(a,b){return b.ts-a.ts});return cnt}
 
-/* ============ AI transcription (BYOK, optional) ============ */
+/* ============ AI (BYOK, optional) ============ */
 var DEAD_MODELS=['gemini-1.5-flash','gemini-1.5-pro','gemini-2.0-flash','gemini-2.0-flash-lite','gemini-2.5-flash','gemini-3-flash','gemini-pro'];
 var G_CHAIN=['gemini-flash-latest','gemini-3.6-flash','gemini-3.5-flash','gemini-flash-lite-latest'];
 var TR_PROMPT='Transcribe this audio exactly as spoken, in the language that is spoken (Hebrew is expected). Return ONLY the transcript text, with no preface, no quotes and no explanations. Do not translate. Do not add words that were not said. If there is no speech, return an empty string.';
@@ -535,6 +604,7 @@ async function aiTranscribeBlob(blob){
  var wav=await toWav16k(blob);
  if(S.set.provider==='openai')return openaiTranscribe(wav);
  var b64=await blobToB64(wav);return geminiRun([{text:TR_PROMPT},{inline_data:{mime_type:'audio/wav',data:b64}}])}
+
 var aiBusy={};
 async function aiTranscribeNote(id,quiet){
  var n=noteById(id);if(!n)return;
@@ -544,11 +614,32 @@ async function aiTranscribeNote(id,quiet){
  aiBusy[id]=1;refresh();refreshEditor(id);
  try{var tx=await aiTranscribeBlob(rec.blob);
   if(tx){var wasEmpty=!n.text;if(n.text&&n.text!==tx)n.alt=n.text;n.text=tx;n.tr='ai';
-   if(wasEmpty&&S.set.auto&&S.set.target==='auto'){var c=classify(tx);n.folder=c.folder;if(c.when&&c.folder==='tasks'&&!n.remId){var r=addReminder({noteId:n.id,title:cleanTitle(tx),when:c.when});n.remId=r.id;toast(T('remSet',fmtWhen(c.when)),5000)}}
-   await saveNote(n);if(!quiet||true)toast(T('aiDone'))}
+   if(wasEmpty&&S.set.auto&&S.set.target==='auto'&&!n.manual){n.folder=classify(tx).folder;var w=reminderFor(tx,n.folder,false);if(w&&!n.remId){var r=addReminder({noteId:n.id,title:cleanTitle(tx),when:w});n.remId=r.id;toast(T('remSet',fmtWhen(w)),5000)}}
+   await saveNote(n);toast(T('aiDone'));aiRefine(n)}
   else toast(T('nothing'))}
  catch(e){var m=e&&e.message==='LONG'?T('aiLong'):T('aiFail',(e&&e.message)||e);toast(m,5500)}
  delete aiBusy[id];refresh();refreshEditor(id)}
+/* AI sorting: refines the keyword-based guess (folder + reminder). Sends only the transcript text. */
+async function openaiChat(prompt){
+ var r=await fetch('https://api.openai.com/v1/chat/completions',{method:'POST',headers:{'Content-Type':'application/json',Authorization:'Bearer '+S.set.keyO},body:JSON.stringify({model:'gpt-4o-mini',temperature:0,messages:[{role:'user',content:prompt}]})}),j=null;try{j=await r.json()}catch(e){}
+ if(!r.ok)throw new Error(apiMsg(j,r.status));return String(j.choices[0].message.content||'')}
+async function aiClassify(text){
+ var now=new Date(),iso=new Date(now.getTime()-now.getTimezoneOffset()*6e4).toISOString().slice(0,16),days=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'][now.getDay()];
+ var prompt='You sort a spoken note (Hebrew speech-to-text, may contain errors) into exactly one folder and detect a reminder.\nCurrent local date/time: '+iso+' ('+days+', Asia/Jerusalem).\nFolders (id = name):\n'+S.folders.map(function(f){return f.id+' = '+fName(f)}).join('\n')+'\n\nNote: """'+text+'"""\n\nReturn ONLY JSON: {"folder":"<folder id>","reminder":"YYYY-MM-DDTHH:MM or null","title":"short reminder title or null"}.\nRules: things to buy / grocery items -> shop. A lyric line, verse, chorus, rhyme or song idea -> songs. A task or event at a specific time -> set "reminder" in local time (date only -> 09:00). Everything else -> ideas. A note may belong to any folder AND also have a reminder. Use only listed folder ids.';
+ var tx=S.set.provider==='openai'?await openaiChat(prompt):await geminiRun([{text:prompt}]);
+ var m=String(tx).match(/\{[\s\S]*\}/);if(!m)throw new Error('json');var o=JSON.parse(m[0]);
+ var out={folder:null,ts:null,title:o.title||''};
+ if(o.folder&&S.folders.some(function(f){return f.id===o.folder}))out.folder=o.folder;
+ if(o.reminder&&/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}/.test(o.reminder)){var t=new Date(o.reminder).getTime();if(t>Date.now()+3e4)out.ts=t}
+ return out}
+async function aiRefine(n){
+ if(!(S.set.autoAI&&hasKey()&&S.set.auto&&S.set.target==='auto'&&n.text&&!n.manual))return;
+ try{var r=await aiClassify(n.text),msgs=[];
+  if(n.manual)return;
+  if(r.folder&&r.folder!==n.folder){n.folder=r.folder;var f=folderOf(r.folder);msgs.push(T('movedTo',f.icon+' '+fName(f)))}
+  if(r.ts&&!n.remId){var rm=addReminder({noteId:n.id,title:r.title||cleanTitle(n.text),when:r.ts});n.remId=rm.id;msgs.push(T('remSet',fmtWhen(r.ts)))}
+  if(msgs.length){await saveNote(n);toast(msgs.join(' · '),5000,T('change'),function(){openNote(n.id)});refresh()}}
+ catch(e){}}
 
 /* ============ UI ============ */
 var ACT={};
@@ -579,8 +670,9 @@ function renderBars(){
  if(isTab(curSc)){h='<h1>My<b>Thoughts</b>Nest <span class="muted" style="font-weight:400;font-size:.8rem">· '+esc(T('app'))+'</span></h1>'+(R.on&&curSc!=='home'?'<button class="ib" data-act="tab" data-sc="home" style="color:var(--red)" aria-label="rec">●</button>':'')+'<button class="ib" data-act="themeCycle" aria-label="'+esc(T('theme'))+'">🎨</button>'}
  else{var prev=navStack.length>1?navStack[navStack.length-2]:{sc:'home'};h='<button class="back" data-act="back">'+(curLang==='he'?'→':'←')+' '+esc(scTitle(prev.sc,prev.p))+'</button><h1 style="text-align:center">'+esc(scTitle(curSc,curP))+'</h1><span style="width:42px"></span>'}
  top.innerHTML=h;
- var tb=[['home',IC.home,T('tHome')],['notes',IC.notes,T('tNotes')],['remind',IC.bell,T('tRem')],['more',IC.more,T('tMore')]],cur=tabOf(curSc);
- $('#tabs').innerHTML=tb.map(function(t){return '<button class="tab'+(cur===t[0]?' on':'')+'" data-act="tab" data-sc="'+t[0]+'" aria-label="'+esc(t[2])+'">'+t[1]+'<span>'+esc(t[2])+'</span></button>'}).join('')}
+ var tb=[['home',IC.home,T('tHome')],['notes',IC.notes,T('tNotes')],['rec',null,T('tRec')],['remind',IC.bell,T('tRem')],['more',IC.more,T('tMore')]],cur=tabOf(curSc);
+ $('#tabs').innerHTML=tb.map(function(t){if(t[0]==='rec')return '<button class="tab trec'+(R.on?' on':'')+'" data-act="rec" aria-label="'+esc(R.on?T('stopRec'):T('tRec'))+'"><span class="rc">'+(R.on?IC.stop:IC.mic)+'</span><span>'+esc(R.on?T('stopRec'):T('tRec'))+'</span></button>';return '<button class="tab'+(cur===t[0]?' on':'')+'" data-act="tab" data-sc="'+t[0]+'" aria-label="'+esc(t[2])+'">'+t[1]+'<span>'+esc(t[2])+'</span></button>'}).join('');
+ var rb=$('#recbar');if(rb){var show=R.on&&curSc!=='home';rb.className=show?'on':'';rb.innerHTML=show?'<span class="rd"></span><span class="rt">'+fmtDur(Math.max(0,recMs()))+'</span><button class="btn sm" data-act="recPause">'+(R.paused?'▶ '+esc(T('resume')):'⏸ '+esc(T('pause')))+'</button><button class="btn sm dng" data-act="rec">■ '+esc(T('stopRec'))+'</button>':''}}
 var SCR={home:vHome,notes:vNotes,remind:vRemind,more:vMore,folder:vFolder,settings:vSettings,backup:vBackup,about:vAbout,diag:vDiag};
 function render(){
  var main=$('#main'),st=main.scrollTop;renderBars();main.innerHTML=(SCR[curSc]||vHome)(curP);
@@ -606,7 +698,7 @@ function metaOf(n){
  return m.join('<span>·</span>')}
 function noteCard(n,showFolder){
  var f=folderOf(n.folder),body;
- if(n.items&&n.items.length){body='<ul class="items">'+n.items.map(function(it,i){return '<li class="'+(it.d?'done':'')+'" data-act="tgItem" data-id="'+esc(n.id)+'" data-i="'+i+'"><span class="box">'+(it.d?'✓':'')+'</span><span>'+esc(it.t)+'</span></li>'}).join('')+'</ul>'}
+ if(n.items&&n.items.length){body='<ul class="items">'+n.items.map(function(it,i){return '<li role="checkbox" aria-checked="'+(it.d?'true':'false')+'" tabindex="0" class="'+(it.d?'done':'')+'" data-act="tgItem" data-id="'+esc(n.id)+'" data-i="'+i+'"><span class="box">'+(it.d?'✓':'')+'</span><span>'+esc(it.t)+'</span></li>'}).join('')+'</ul>'}
  else body='<div class="tx'+(n.text?'':' empty')+'" data-act="open" data-id="'+esc(n.id)+'">'+esc(n.text||T('noText'))+'</div>';
  var play=n.aud?'<button class="ib" style="width:38px;height:38px" data-act="play" data-id="'+esc(n.id)+'" aria-label="'+esc(T('play'))+'">'+(P.id===n.id?'⏸':'▶')+'</button>':'';
  return '<div class="card note" data-id="'+esc(n.id)+'"><div class="ic">'+esc(f.icon)+'</div><div class="bd">'+body+'<div class="mt">'+(showFolder?'<span>'+esc(fName(f))+'</span><span>·</span>':'')+metaOf(n)+'</div></div><div class="acts">'+play+'<button class="ib" style="width:38px;height:38px" data-act="edit" data-id="'+esc(n.id)+'" aria-label="'+esc(T('edit'))+'">✎</button></div></div>'}
@@ -617,7 +709,7 @@ function remCard(r){
 function foot(){return '<div class="appfoot"><b>AppNest</b> · MyThoughtsNest v'+VERSION+'</div>'}
 function vHome(){
  var rec=R.on,u=S.set.user,h='';
- h+='<div class="mic-wrap"><div class="muted">'+esc(u?T('helloU',u):T('hello'))+'</div><button class="mic'+(rec?' rec':'')+'" id="micbtn" data-act="rec" aria-label="'+esc(rec?T('tapStop'):T('tapRec'))+'">'+(rec?IC.stop:IC.mic)+'</button><div class="timer" id="timer">'+(rec?fmtDur(Date.now()-R.t0):'')+'</div><div class="muted">'+esc(rec?T('tapStop'):T('tapRec'))+'</div></div>';
+ h+='<div class="mic-wrap"><div class="muted">'+esc(u?T('helloU',u):T('hello'))+'</div><button class="mic'+(rec?' rec':'')+(rec&&R.paused?' paused':'')+'" id="micbtn" data-act="rec" aria-label="'+esc(rec?T('tapStop'):T('tapRec'))+'">'+(rec?IC.stop:IC.mic)+'</button><div class="timer rt" id="timer">'+(rec?fmtDur(Math.max(0,recMs())):'')+'</div>'+(rec?'<div class="rbtns"><button class="btn" data-act="recPause">'+(R.paused?'▶ '+esc(T('resume')):'⏸ '+esc(T('pause')))+'</button></div>':'')+'<div class="muted">'+esc(rec?T('tapStop'):T('tapRec'))+'</div></div>';
  if(rec)h+='<div class="live" id="live"></div>';
  h+='<h2>'+esc(T('saveTo'))+'</h2><div class="chips">'+targetChips()+'</div>';
  h+='<div class="btns"><button class="btn" data-act="addTxt">⌨️ '+esc(T('typeIdea'))+'</button></div>';
@@ -673,7 +765,7 @@ function vSettings(){
  h+='<label class="f">'+esc(T('lang'))+'</label><select data-set="lang"><option value="he"'+(s.lang==='he'?' selected':'')+'>עברית</option><option value="en"'+(s.lang==='en'?' selected':'')+'>English</option></select>';
  h+='<label class="f">'+esc(T('theme'))+'</label><div class="themes">'+THEMES.map(function(t){return '<button class="th'+(s.theme===t?' on':'')+'" data-act="setTheme" data-t="'+t+'" style="background:'+THCOL[t]+'" aria-label="'+t+'"></button>'}).join('')+'</div>';
  h+='<label class="f">'+esc(T('font'))+'</label><div class="chips">'+[[1,'A'],[1.15,'A+'],[1.3,'A++']].map(function(z){return '<button class="chip'+(s.zoom===z[0]?' on':'')+'" data-act="setZoom" data-z="'+z[0]+'">'+z[1]+'</button>'}).join('')+'</div></div>';
- h+='<h2>🎙 '+esc(T('recMode'))+'</h2><div class="card"><select data-set="mode"><option value="both"'+(s.mode==='both'?' selected':'')+'>'+esc(T('m_both'))+'</option><option value="live"'+(s.mode==='live'?' selected':'')+'>'+esc(T('m_live'))+'</option><option value="audio"'+(s.mode==='audio'?' selected':'')+'>'+esc(T('m_audio'))+'</option></select>';
+ h+='<h2>🎙 '+esc(T('recMode'))+'</h2><div class="card"><select data-set="mode"><option value="both"'+(s.mode==='both'?' selected':'')+'>'+esc(T('m_both'))+'</option><option value="live"'+(s.mode==='live'?' selected':'')+'>'+esc(T('m_live'))+'</option><option value="audio"'+(s.mode==='audio'?' selected':'')+'>'+esc(T('m_audio'))+'</option></select><div class="muted" style="margin-top:8px">'+esc(T('modeHelp'))+'</div>';
  h+='<label class="f">'+esc(T('recLang'))+'</label><select data-set="recLang">'+[['he-IL','עברית'],['en-US','English'],['ru-RU','Русский'],['ar-IL','العربية'],['es-ES','Español']].map(function(l){return '<option value="'+l[0]+'"'+(s.recLang===l[0]?' selected':'')+'>'+l[1]+'</option>'}).join('')+'</select></div>';
  h+='<div class="list">'+sw('auto',T('autoFolder'),T('autoFolderD'))+'</div>';
  h+='<h2>⏰ '+esc(T('remSettings'))+'</h2><div class="list">'+sw('speak',T('speak'),T('setBeepNote'))+sw('beep',T('beep'))+sw('vib',T('vib'))+'</div>';
@@ -684,7 +776,7 @@ function vSettings(){
  h+='<label class="f">'+esc(T('apiKey'))+'</label><input type="password" data-set="'+(g?'keyG':'keyO')+'" value="'+esc(keyv)+'" autocomplete="off" spellcheck="false" dir="ltr">';
  if(g)h+='<label class="f">'+esc(T('model'))+'</label><select data-set="gModel" id="gmodel">'+modelOpts()+'</select>';
  h+='<div class="btns"><button class="btn sm" data-act="aiTest">'+esc(T('test'))+'</button>'+(g?'<button class="btn sm" data-act="aiModels">'+esc(T('refresh'))+'</button>':'')+'<button class="btn sm dng" data-act="aiDisc">'+esc(T('disconnect'))+'</button></div><div class="muted">'+esc(T('keyHow'))+'</div></div>';
- h+='<div class="list">'+sw('autoAI',T('autoAI'))+'</div>';
+ h+='<div class="list">'+sw('autoAI',T('autoAI2'),T('autoAI2d'))+'</div>';
  h+='<div class="btns" style="margin-top:20px"><button class="btn dng" data-act="wipe">🗑 '+esc(T('wipe'))+'</button></div>';
  return h+foot()}
 var liveModels=[];
@@ -741,6 +833,7 @@ ACT.themeCycle=function(){var i=(THEMES.indexOf(S.set.theme)+1)%THEMES.length;S.
 ACT.setTheme=function(el){S.set.theme=el.dataset.t;saveSet();applyPrefs();render()};
 ACT.setZoom=function(el){S.set.zoom=+el.dataset.z;saveSet();applyPrefs();render()};
 ACT.rec=function(){audioCtx();if(R.on)stopRec();else startRec()};
+ACT.recPause=function(){if(R.paused)resumeRec();else pauseRec()};
 ACT.tgt=function(el){S.set.target=el.dataset.f;saveSet();render()};
 ACT.addTxt=function(){openNote(null)};
 ACT.open=function(el){openNote(el.dataset.id)};
@@ -761,7 +854,7 @@ ACT.play=async function(el){
 
 /* note editor */
 ACT.edClose=function(){closeOv('note')};
-ACT.edFolder=function(el){if(!EDN)return;EDN.folder=el.dataset.f;persistNewIfText();saveNote(EDN);refreshEditor(EDN.id)};
+ACT.edFolder=function(el){if(!EDN)return;EDN.folder=el.dataset.f;EDN.manual=true;persistNewIfText();saveNote(EDN);refreshEditor(EDN.id)};
 function persistNewIfText(){if(EDN&&EDN._new&&EDN.text){persistNew(EDN)}}
 ACT.edDel=async function(){if(!EDN)return;var ok=await confirmDlg(T('delNoteAsk'),T('del'),true);if(!ok||!EDN)return;var n=EDN;closeOv('note',true);EDN=null;await deleteNote(n)};
 async function deleteNote(n){
@@ -776,11 +869,14 @@ ACT.edDl=async function(){if(!EDN)return;var rec=await dbGet('audio',EDN.id);if(
 function byline(){return S.set.user?'\n— '+T('byU',S.set.user):''}
 ACT.edCopy=async function(){if(!EDN)return;try{await navigator.clipboard.writeText(EDN.text||'');toast(T('copied'))}catch(e){toast(T('saveFail'))}};
 ACT.edShare=async function(){if(!EDN)return;var txt=(EDN.text||'')+byline();try{if(navigator.share)await navigator.share({text:txt});else{await navigator.clipboard.writeText(txt);toast(T('copied'))}}catch(e){}};
-ACT.edItems=function(){if(!EDN)return;if(EDN.items&&EDN.items.length){EDN.items=null}else{EDN.items=splitItems(EDN.text)}saveNote(EDN);refreshEditor(EDN.id);refresh()};
-function splitItems(t){
- var parts=String(t||'').split(/[\n,،;]+|\s+ו(?=\S)/).map(function(x){return x.replace(/^[\s\-•*]+|\s+$/g,'').replace(/^צריך לקנות\s*/,'').replace(/^לקנות\s*/,'')}).filter(Boolean);
- if(parts.length===1&&/\s/.test(parts[0]))parts=parts[0].split(/\s+/);
- return parts.map(function(x){return {t:x,d:false}})}
+ACT.edItems=function(){if(!EDN)return;if(EDN.items&&EDN.items.length){EDN.itemsPrev=EDN.items;EDN.items=null}else{EDN.items=splitItems(EDN.text,EDN.itemsPrev)}saveNote(EDN);refreshEditor(EDN.id);refresh()};
+var MULTI=['שמן זית','חלב סויה','חלב שקדים','חלב שיבולת שועל','גבינה צהובה','גבינה לבנה','גבינה בולגרית','קמח מלא','נייר טואלט','נייר סופג','אבקת כביסה','חומץ בלסמי','רסק עגבניות','עגבניות שרי','תפוחי אדמה','בטטה מתוקה','שמנת מתוקה','שמנת חמוצה','אבקת אפייה','סוכר חום','מלח ים','פלפל שחור','פלפל חריף','לחם קל','קוטג׳ 5%','מי סודה','משחת שיניים','מרכך כביסה','נוזל כלים'];
+function splitItems(t,prev){
+ var raw=String(t||'').replace(/^\s*(צריך לקנות|צריכה לקנות|לקנות)\s*/,''),parts;
+ if(/[\n,،;]/.test(raw)||/\sו(?=\S)/.test(raw)){parts=raw.split(/[\n,،;]+|\s+ו(?=\S)/).map(function(x){return x.replace(/^[\s\-•*]+|\s+$/g,'')}).filter(Boolean)}
+ else{var w=raw.trim().split(/\s+/).filter(Boolean);parts=[];for(var i=0;i<w.length;i++){var two=w[i]+' '+(w[i+1]||'');if(w[i+1]&&MULTI.indexOf(two)>-1){parts.push(two);i++}else parts.push(w[i])}}
+ var done={};(prev||[]).forEach(function(p){if(p.d)done[p.t]=1});
+ return parts.map(function(x){return {t:x,d:!!done[x]}})}
 ACT.edRemAdd=function(){
  if(!EDN)return;persistNewIfText();if(EDN._new){toast(T('nothing'));return}
  var w=parseWhen(EDN.text),when=w?w.ts:Math.ceil((Date.now()+36e5)/9e5)*9e5;
@@ -864,17 +960,27 @@ ACT.restore=function(){var f=$('#restoreF');if(f){f.value='';f.click()}};
 async function doRestore(file){
  var o;try{o=JSON.parse(await file.text())}catch(e){toast(T('restoreBad'));return}
  if(!o||o.app!=='mythoughtsnest'||!Array.isArray(o.notes)){toast(T('restoreBad'));return}
- var ok=await confirmDlg(T('restoreAsk'),T('ok'),false);if(!ok)return;
- await dbClear('notes');await dbClear('audio');
- var keep={keyG:S.set.keyG,keyO:S.set.keyO};
- S.notes=o.notes.filter(function(n){return n&&n.id});
- for(var i=0;i<S.notes.length;i++){var n=S.notes[i];await saveNote(n);var a=o.audio&&o.audio[n.id];if(a&&a.b64){var bin=atob(a.b64),u=new Uint8Array(bin.length);for(var k=0;k<bin.length;k++)u[k]=bin.charCodeAt(k);await dbPut('audio',{id:n.id,blob:new Blob([u],{type:a.mime||'audio/webm'}),mime:a.mime})}else if(n.aud&&!(o.audio&&o.audio[n.id])){n.aud=false;saveNote(n)}}
+ /* 1) validate + decode EVERYTHING first, before touching current data */
+ var notes=o.notes.filter(function(n){return n&&n.id&&typeof n.ts==='number'}),auds=[];
+ try{for(var i=0;i<notes.length;i++){var n=notes[i],a=o.audio&&o.audio[n.id];if(a&&a.b64){var bin=atob(a.b64),u=new Uint8Array(bin.length);for(var k=0;k<bin.length;k++)u[k]=bin.charCodeAt(k);auds.push({id:n.id,blob:new Blob([u],{type:a.mime||'audio/webm'}),mime:a.mime})}else if(n.aud){n.aud=false}}}
+ catch(e){toast(T('restoreBad'));return}
+ var msg=T('restoreAsk')+(o.withAudio?'':' '+T('restoreNoAudio'));
+ var ok=await confirmDlg(msg,T('ok'),false);if(!ok)return;
+ /* 2) only now replace; keep a snapshot to roll back if writing fails */
+ var oldNotes=S.notes.slice(),oldAud=await dbAll('audio'),keep={keyG:S.set.keyG,keyO:S.set.keyO};
+ try{
+  await dbClear('notes');await dbClear('audio');
+  for(var j=0;j<notes.length;j++){if(await saveNote(notes[j])===false)throw new Error('save')}
+  for(var m=0;m<auds.length;m++){if(await dbPut('audio',auds[m])===false)throw new Error('save')}
+ }catch(e){
+  await dbClear('notes');await dbClear('audio');for(var r1=0;r1<oldNotes.length;r1++)await saveNote(oldNotes[r1]);for(var r2=0;r2<oldAud.length;r2++)await dbPut('audio',oldAud[r2]);S.notes=oldNotes;toast(T('restoreBad'));refresh();return}
+ S.notes=notes;
  S.folders=Array.isArray(o.folders)&&o.folders.length?o.folders:S.folders;S.rem=Array.isArray(o.reminders)?o.reminders:[];
  var set=o.settings||{};for(var k2 in DEF)if(set[k2]!==undefined&&typeof set[k2]===typeof DEF[k2])S.set[k2]=set[k2];S.set.keyG=keep.keyG;S.set.keyO=keep.keyO;
  remainingFoldersFix();S.notes.sort(function(a,b){return b.ts-a.ts});saveSet();saveFolders();saveRem();applyPrefs();render();toast(T('restoreOk'))}
 ACT.wipe=async function(){
  if(!await confirmDlg(T('wipeAsk1'),T('yes'),true))return;if(!await confirmDlg(T('wipeAsk2'),T('yes'),true))return;
- await dbClear('notes');await dbClear('audio');S.notes=[];S.rem=[];S.folders=SYSF.map(function(x){return {id:x.id,sys:x.sys,icon:x.icon}});S.set.target='auto';saveSet();saveFolders();saveRem();stopPlay();render();toast(T('wiped'))};
+ await dbClear('notes');await dbClear('audio');S.notes=[];S.rem=[];S.folders=SYSF.map(function(x){return {id:x.id,sys:x.sys,icon:x.icon}});S.set.target='auto';S.set.keyG='';S.set.keyO='';S.set.gModel='';saveSet();saveFolders();saveRem();stopPlay();render();toast(T('wiped'))};
 ACT.shareApp=async function(){var d={title:'MyThoughtsNest',text:T('app')+' — AppNest',url:location.href.split('#')[0]};try{if(navigator.share)await navigator.share(d);else{await navigator.clipboard.writeText(d.url);toast(T('copied'))}}catch(e){}};
 
 /* guide */
@@ -912,6 +1018,7 @@ document.addEventListener('change',function(e){
   S.set[k]=v2;saveSet();if(k==='mode'||k==='recLang'||k==='gModel'){}}});
 document.addEventListener('keydown',function(e){if(e.key==='Escape'&&topOverlay()){closeOv(topOverlay())}
  if(e.key==='Tab'&&topOverlay()){var ov=ovStack[ovStack.length-1].el,f=$$('button,input,textarea,select,a[href]',ov).filter(function(x){return !x.disabled&&x.offsetParent!==null});if(f.length){var first=f[0],last=f[f.length-1];if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus()}else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus()}}}});
+document.addEventListener('keydown',function(e){if((e.key===' '||e.key==='Enter')&&e.target.matches&&e.target.matches('[role=checkbox]')){e.preventDefault();e.target.click()}});
 document.addEventListener('visibilitychange',function(){if(!document.hidden){checkReminders()}});
 window.addEventListener('focus',checkReminders);window.addEventListener('pageshow',checkReminders);
 
@@ -922,13 +1029,15 @@ async function init(){
  loadSettings();applyPrefs();
  S.dbOk=await dbOpen();
  if(S.dbOk){S.notes=(await dbAll('notes')).sort(function(a,b){return b.ts-a.ts})}else{setTimeout(function(){toast(T('noDb'),6000)},800)}
- remainingFoldersFix();
+remainingFoldersFix();
+ var rec=0;if(S.dbOk){try{rec=await recoverDrafts()}catch(e){}}
  try{if(navigator.storage&&navigator.storage.persist)navigator.storage.persist()}catch(e){}
  handleRemParam();
  if(navigator.serviceWorker&&location.protocol!=='file:'){
   navigator.serviceWorker.register('sw.js').catch(function(){});
   navigator.serviceWorker.addEventListener('message',function(ev){var d=ev.data||{};if(d.type==='rem'){if(d.action==='done')remDone(d.id);else if(d.action==='snooze')remSnooze(d.id,10);refresh()}})}
  render();
+ if(rec){setTimeout(function(){toast(T('recovered'),6000);if(S.set.autoAI&&hasKey())S.notes.filter(function(n){return n.rec&&!n.text}).forEach(function(n){aiTranscribeNote(n.id,true)})},900)}
  setInterval(checkReminders,10000);
  setTimeout(function(){checkReminders()},400);
  if(!S.set.seenGuide&&!S.notes.length)setTimeout(function(){openGuide(0)},500);

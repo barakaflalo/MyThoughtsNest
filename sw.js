@@ -20,7 +20,7 @@ CacheStorage.prototype.match=function(){return sm.apply(this,arguments).then(cle
 })();
 
 /* MyThoughtsNest service worker — bump VERSION on every release */
-var VERSION='mythoughtsnest-v1.0.0';
+var VERSION='mythoughtsnest-v1.1.0';
 var CORE=['./','./manifest.json','./icon-192.png','./icon-512.png','./privacy_policy.html'];
 var OFFLINE='<!doctype html><html lang="he" dir="rtl"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>MyThoughtsNest</title><body style="font-family:system-ui;background:#0b0b0d;color:#f2efe6;display:grid;place-items:center;height:100vh;margin:0;text-align:center"><div><div style="font-size:3rem">🪺</div><h2>אין חיבור כרגע</h2><p>הנתונים שלך שמורים במכשיר.</p><button onclick="location.reload()" style="font-size:1.1rem;padding:12px 22px;border-radius:12px;border:0;background:#d4af37;color:#1a1400;font-weight:800">נסה שוב</button></div></body></html>';
 
@@ -31,7 +31,7 @@ self.addEventListener('install',function(e){
 });
 self.addEventListener('activate',function(e){
   e.waitUntil(caches.keys().then(function(ks){
-    return Promise.all(ks.filter(function(k){return k!==VERSION;}).map(function(k){return caches.delete(k);}));
+    return Promise.all(ks.filter(function(k){return k.indexOf('mythoughtsnest-')===0&&k!==VERSION;}).map(function(k){return caches.delete(k);}));
   }).then(function(){return self.clients.claim();}));
 });
 function timeout(ms){return new Promise(function(_,rej){setTimeout(function(){rej(new Error('timeout'));},ms);});}
@@ -43,8 +43,8 @@ self.addEventListener('fetch',function(e){
   if(req.mode==='navigate'){
     e.respondWith(
       Promise.race([fetch(req.url),timeout(4000)]).then(function(r){
-        if(r&&r.ok){var cp=r.clone();caches.open(VERSION).then(function(c){c.put('./',cp);});}
-        return r;
+        if(r&&r.ok){var cp=r.clone();caches.open(VERSION).then(function(c){c.put('./',cp);});return r;}
+        throw new Error('bad status');
       }).catch(function(){
         return caches.match('./').then(function(m){
           return m||new Response(OFFLINE,{status:200,headers:{'Content-Type':'text/html; charset=utf-8'}});
