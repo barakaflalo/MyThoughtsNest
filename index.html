@@ -163,7 +163,7 @@ pre.diag{white-space:pre-wrap;font-size:.8rem;background:var(--bg2);border:1px s
 <script>
 'use strict';
 /* ============ MyThoughtsNest · AppNest · core ============ */
-var VERSION='1.3.0';
+var VERSION='1.3.1';
 var SUPPORT='appnest55@gmail.com';
 var STORE_URL='https://appnest-store.pages.dev';
 
@@ -220,7 +220,8 @@ he:{
  movedTo:'הועבר ל{0}',recovered:'שוחזרה הקלטה שנקטעה באמצע',micNone:'לא נמצא מיקרופון',micFail:'ההקלטה לא התחילה ({0})',
  restoreNoAudio:'הגיבוי הזה בלי שמע — הקלטות קיימות במכשיר יימחקו.',
  autoSwitchedNo:'התמלול החי לא עבד יחד עם ההקלטה במכשיר הזה, אז עברתי אוטומטית ל: {0}. כדי לקבל תמלול אחרי ההקלטה: הגדרות › תמלול במכשיר (בלי מפתח) או מפתח AI.',
- wO:'עברית קטן ומדויק (Ozen) · ~165MB · מומלץ',dayNight:'מצב יום/לילה',
+ wO:'עברית קטן (Ozen) · ~165MB · חלש מתמלול חי',dayNight:'מצב יום/לילה',
+ howRec:'איך להקליט',mLiveS:'תמלול חי (בלי שמע, הכי מדויק)',mAudS:'שמע + תמלול אחרי',modeBusy:'אפשר להחליף מצב רק כשלא מקליטים.',
  wNoGpu:'המכשיר/הדפדפן לא תומכים ב-WebGPU, שנדרש למודל הזה. בחר מודל אחר.',wH:'עברית מדויק (ivrit.ai) · ~1.6GB · ניסיוני, דורש WebGPU',
  wTitle:'תמלול במכשיר (בלי מפתח)',wDesc:'מנוע Whisper שרץ בטלפון עצמו אחרי ההקלטה. מוריד מודל פעם אחת (עשרות עד מאות MB), אחר כך עובד גם בלי אינטרנט והשמע לא יוצא מהמכשיר. בעברית איכות המודלים הקטנים נמוכה והתמלול איטי יותר.',wOn:'הפעל תמלול במכשיר',wOnD:'אחרי כל הקלטה בלי תמלול חי',wModel:'מודל',wCustom:'מזהה מודל מותאם (HuggingFace)',wPrep:'הורד / הכן את המודל עכשיו',wDel:'מחק מודל שהורד',wDl:'מוריד מודל תמלול {0}',wInit:'מכין את המודל…',wRun:'מתמלל במכשיר…',wReady:'המודל מוכן, תמלול במכשיר הופעל',wLoadFail:'טעינת מודל התמלול נכשלה (צריך אינטרנט בפעם הראשונה, או מודל לא תואם).',wDeleted:'המודל שהורד נמחק',wS:'קטן',wB:'בינוני',wT:'זעיר',
  modeHelp:'אם התמלול החי לא עובד יחד עם ההקלטה בטלפון שלך: בחר "הקלטה בלבד" ותמלל אחרי העצירה (במכשיר או עם AI), או "תמלול חי בלבד" (בלי שמע).',
@@ -277,7 +278,8 @@ en:{
  movedTo:'Moved to {0}',recovered:'Recovered an interrupted recording',micNone:'No microphone found',micFail:'Recording did not start ({0})',
  restoreNoAudio:'This backup has no audio — existing recordings on the device will be deleted.',
  autoSwitchedNo:'Live transcription did not work together with recording on this device, so I switched to: {0}. To get a transcript after recording: Settings › On-device transcription (no key) or an AI key.',
- wO:'Small accurate Hebrew (Ozen) · ~165MB · recommended',dayNight:'Day / night mode',
+ wO:'Small Hebrew (Ozen) · ~165MB · weaker than live',dayNight:'Day / night mode',
+ howRec:'How to record',mLiveS:'Live transcript (no audio, most accurate)',mAudS:'Audio + transcribe after',modeBusy:'You can switch mode only when not recording.',
  wNoGpu:'This device/browser has no WebGPU, which this model needs. Pick another model.',wH:'Accurate Hebrew (ivrit.ai) · ~1.6GB · experimental, needs WebGPU',
  wTitle:'On-device transcription (no key)',wDesc:'A Whisper engine that runs on the phone itself after recording. Downloads a model once (tens to hundreds of MB), then works offline and audio never leaves the device. Small models are weaker in Hebrew and slower.',wOn:'Enable on-device transcription',wOnD:'After each recording that has no live transcript',wModel:'Model',wCustom:'Custom model id (HuggingFace)',wPrep:'Download / prepare model now',wDel:'Delete downloaded model',wDl:'Downloading transcription model {0}',wInit:'Preparing model…',wRun:'Transcribing on device…',wReady:'Model is ready, on-device transcription enabled',wLoadFail:'Could not load the transcription model (needs internet the first time, or incompatible model).',wDeleted:'Downloaded model deleted',wS:'Small',wB:'Base',wT:'Tiny',
  modeHelp:'If live transcription does not work together with recording on your phone: pick "Record only" and transcribe after stopping (on device or with AI), or "Live transcript only" (no audio).',
@@ -784,6 +786,7 @@ function vHome(){
  var rec=R.on,u=S.set.user,h='';
  h+='<div class="mic-wrap"><div class="muted">'+esc(u?T('helloU',u):T('hello'))+'</div><button class="mic'+(rec?' rec':'')+(rec&&R.paused?' paused':'')+'" id="micbtn" data-act="rec" aria-label="'+esc(rec?T('tapStop'):T('tapRec'))+'">'+(rec?IC.stop:IC.mic)+'</button><div class="timer rt" id="timer">'+(rec?fmtDur(Math.max(0,recMs())):'')+'</div>'+(rec?'<div class="rbtns"><button class="btn" data-act="recPause">'+(R.paused?'▶ '+esc(T('resume')):'⏸ '+esc(T('pause')))+'</button></div>':'')+'<div class="muted">'+esc(rec?T('tapStop'):T('tapRec'))+'</div></div>';
  if(rec)h+='<div class="live" id="live"></div>';
+ h+='<h2>'+esc(T('howRec'))+'</h2><div class="chips"><button class="chip'+(S.set.mode==='live'?' on':'')+'" data-act="setMode" data-m="live">📝 '+esc(T('mLiveS'))+'</button><button class="chip'+(S.set.mode!=='live'?' on':'')+'" data-act="setMode" data-m="audio">🎧 '+esc(T('mAudS'))+'</button></div>';
  h+='<h2>'+esc(T('saveTo'))+'</h2><div class="chips">'+targetChips()+'</div>';
  h+='<div class="btns"><button class="btn" data-act="addTxt">⌨️ '+esc(T('typeIdea'))+'</button></div>';
  var rs=S.notes.slice(0,5);
@@ -905,6 +908,7 @@ ACT.tab=function(el){if(curSc===el.dataset.sc){$('#main').scrollTop=0;return}sho
 ACT.back=function(){goBack();syncHistory()};
 ACT.themeCycle=function(){var i=(THEMES.indexOf(S.set.theme)+1)%THEMES.length;S.set.theme=THEMES[i];saveSet();applyPrefs();render()};
 ACT.dayNight=function(){if(S.set.theme==='day'){S.set.theme=(S.set.lastDark&&S.set.lastDark!=='day')?S.set.lastDark:'gold'}else{S.set.lastDark=S.set.theme;S.set.theme='day'}saveSet();applyPrefs();render()};
+ACT.setMode=function(el){if(R.on){toast(T('modeBusy'));return}S.set.mode=el.dataset.m;saveSet();render()};
 ACT.setTheme=function(el){S.set.theme=el.dataset.t;saveSet();applyPrefs();render()};
 ACT.setZoom=function(el){S.set.zoom=+el.dataset.z;saveSet();applyPrefs();render()};
 ACT.rec=function(){audioCtx();if(R.on)stopRec();else startRec()};
