@@ -23,6 +23,8 @@ body[data-theme=day]{--bg:#f5f2ea;--bg2:#ebe7db;--card:#ffffff;--card2:#f0ece0;-
 html,body{margin:0;height:100%;background:var(--bg);color:var(--tx);font-family:system-ui,-apple-system,"Segoe UI",Roboto,"Noto Sans Hebrew",Arial,sans-serif;font-size:16px;line-height:1.45}
 body{overflow:hidden}
 #app{display:flex;flex-direction:column;height:var(--appH,100dvh);max-width:720px;margin:0 auto;position:relative}
+body.recon #appnest-assistant-btn{bottom:calc(env(safe-area-inset-bottom) + 150px)!important}
+body.fixbar #appnest-assistant-btn{bottom:calc(env(safe-area-inset-bottom) + 96px)!important}
 body.fixbar #tabs{position:fixed;left:0;right:0;bottom:0;z-index:60}
 body.fixbar #main{padding-bottom:110px}
 #top{flex-shrink:0;display:flex;align-items:center;gap:8px;padding:calc(env(safe-area-inset-top) + 10px) 14px 10px;background:var(--bg);border-bottom:1px solid var(--line)}
@@ -163,7 +165,7 @@ pre.diag{white-space:pre-wrap;font-size:.8rem;background:var(--bg2);border:1px s
 <script>
 'use strict';
 /* ============ MyThoughtsNest · AppNest · core ============ */
-var VERSION='1.4.0';
+var VERSION='1.5.0';
 var SUPPORT='appnest55@gmail.com';
 var STORE_URL='https://appnest-store.pages.dev';
 
@@ -360,7 +362,8 @@ function isTab(s){return TABS.indexOf(s)>-1}
 function syncHistory(){var need=!exitArm;if(need&&!hist.guard){try{history.pushState({g:1},'')}catch(e){}hist.guard=true}else if(!need&&hist.guard){hist.guard=false;hist.ignore++;history.back()}}
 window.addEventListener('popstate',function(){
  if(hist.ignore>0){hist.ignore--;return}hist.guard=false;
- if(topOverlay()){closeOv(topOverlay())}
+ if(window.AppNestAssistant&&window.AppNestAssistant.isOpen()){window.AppNestAssistant.close()}
+ else if(topOverlay()){closeOv(topOverlay())}
  else if(!isTab(curSc)){goBack()}
  else if(curSc!=='home'){showSc('home')}
  else{toast(T('pressExit'),2000);exitArm=setTimeout(function(){exitArm=0;syncHistory()},2000);return}
@@ -749,7 +752,7 @@ function renderBars(){
  top.innerHTML=h;
  var tb=[['home',IC.home,T('tHome')],['notes',IC.notes,T('tNotes')],['rec',null,T('tRec')],['remind',IC.bell,T('tRem')],['more',IC.more,T('tMore')]],cur=tabOf(curSc);
  $('#tabs').innerHTML=tb.map(function(t){if(t[0]==='rec')return '<button class="tab trec'+(R.on?' on':'')+'" data-act="rec" aria-label="'+esc(R.on?T('stopRec'):T('tRec'))+'"><span class="rc">'+(R.on?IC.stop:IC.mic)+'</span><span>'+esc(R.on?T('stopRec'):T('tRec'))+'</span></button>';return '<button class="tab'+(cur===t[0]?' on':'')+'" data-act="tab" data-sc="'+t[0]+'" aria-label="'+esc(t[2])+'">'+t[1]+'<span>'+esc(t[2])+'</span></button>'}).join('');
- var rb=$('#recbar');if(rb){var show=R.on&&curSc!=='home';rb.className=show?'on':'';rb.innerHTML=show?'<span class="rd"></span><span class="rt">'+fmtDur(Math.max(0,recMs()))+'</span><button class="btn sm" data-act="recPause">'+(R.paused?'▶ '+esc(T('resume')):'⏸ '+esc(T('pause')))+'</button><button class="btn sm dng" data-act="rec">■ '+esc(T('stopRec'))+'</button>':''}}
+ var rb=$('#recbar');if(rb){var show=R.on&&curSc!=='home';document.body.classList.toggle('recon',!!show);rb.className=show?'on':'';rb.innerHTML=show?'<span class="rd"></span><span class="rt">'+fmtDur(Math.max(0,recMs()))+'</span><button class="btn sm" data-act="recPause">'+(R.paused?'▶ '+esc(T('resume')):'⏸ '+esc(T('pause')))+'</button><button class="btn sm dng" data-act="rec">■ '+esc(T('stopRec'))+'</button>':''}}
 var SCR={home:vHome,notes:vNotes,remind:vRemind,more:vMore,folder:vFolder,settings:vSettings,backup:vBackup,about:vAbout,diag:vDiag};
 function render(){
  var main=$('#main'),st=main.scrollTop;renderBars();main.innerHTML=(SCR[curSc]||vHome)(curP);
@@ -1115,8 +1118,8 @@ window.addEventListener('focus',checkReminders);window.addEventListener('pagesho
 /* ============ init ============ */
 function handleRemParam(){
  try{var u=new URL(location.href),id=u.searchParams.get('rem'),act=u.searchParams.get('act');if(id){if(act==='done')remDone(id);else if(act==='snooze')remSnooze(id,10);history.replaceState(null,'',u.pathname)}}catch(e){}}
-async function quickNote(text,src){
- var folder=S.set.auto?classify(text).folder:'ideas',whenTs=reminderFor(text,folder,false);
+async function quickNote(text,src,fid){
+ var folder=fid||(S.set.auto?classify(text).folder:'ideas'),whenTs=reminderFor(text,folder,false);
  var n={id:uid(),ts:Date.now(),folder:folder,text:text,dur:0,aud:false,tr:'typed',src:src||''};
  S.notes.unshift(n);await saveNote(n);
  if(whenTs){var r=addReminder({noteId:n.id,title:cleanTitle(text),when:whenTs});n.remId=r.id;await saveNote(n)}
@@ -1172,6 +1175,188 @@ remainingFoldersFix();
 }
 window.addEventListener('error',function(e){try{console.error('MTN error',e.message)}catch(x){}});
 init();
+
+
+/* ============ AppNest Assistant: map + local brain (works with no key) ============ */
+(function(){
+function nz(s){return String(s||'').toLowerCase().replace(/[֑-ׇ]/g,'').replace(/[״"׳'`.,!?:;()\[\]{}]/g,' ').replace(/\s+/g,' ').trim()}
+function hasAny(t,arr){for(var i=0;i<arr.length;i++)if(t.indexOf(arr[i])>-1)return true;return false}
+var AL={shop:['קניות','קנייה','סופר','מצרכים'],songs:['שירים','שיר','פזמונים','פזמון','סונו'],ideas:['רעיונות','רעיון'],tasks:['משימות','משימה']};
+function folderFrom(txt){
+ var tk=nz(txt).split(' ');
+ for(var i=0;i<tk.length;i++){var w=tk[i],vs=[w];if(w.length>3&&/^[הלבו]/.test(w))vs.push(w.slice(1));
+  for(var v=0;v<vs.length;v++){
+   for(var k in AL){if(AL[k].indexOf(vs[v])>-1&&S.folders.some(function(f){return f.id===k}))return k}
+   for(var j=0;j<S.folders.length;j++){var f=S.folders[j];if(!f.sys&&nz(f.name)===vs[v])return f.id}}}
+ return null}
+var SCR_AL={home:['בית','ראשי','מסך ראשי','דף הבית'],notes:['הערות','כל ההערות'],remind:['תזכורות','יומן'],more:['עוד','תפריט'],settings:['הגדרות'],backup:['גיבוי','שחזור','גיבויים'],about:['אודות','על האפליקציה'],diag:['אבחון','בדיקה','בדיקת מערכת'],guide:['מדריך','הדרכה','הסבר']};
+var SCR_NAME={home:'בית',notes:'הערות',remind:'תזכורות',more:'עוד',settings:'הגדרות',backup:'גיבוי',about:'אודות',diag:'אבחון',guide:'מדריך'};
+function screenFrom(txt){
+ var t=nz(txt);var tk=t.split(' ');var cand=[t];tk.forEach(function(w){cand.push(w);if(w.length>3&&/^[הלבו]/.test(w))cand.push(w.slice(1))});
+ for(var c=0;c<cand.length;c++)for(var k in SCR_AL)if(SCR_AL[k].indexOf(cand[c])>-1)return k;
+ return null}
+function snip(t,n){t=String(t||'').replace(/\s+/g,' ').trim();return t.length>n?t.slice(0,n)+'…':t}
+function fdate(ts){try{return new Date(ts).toLocaleDateString('he-IL',{day:'numeric',month:'numeric'})}catch(e){return ''}}
+function fLabel(id){var f=folderOf(id);return f.icon+' '+fName(f)}
+function upcoming(){var now=Date.now();return S.rem.filter(function(r){return !r.done&&r.when>now-6e4}).sort(function(a,b){return a.when-b.when})}
+var CHIPS_MAIN=['תזכיר לי מחר בשעה 5 להתקשר לדני','תרשום לחם, חלב וביצים','מה התזכורות שלי?','איך מפעילים תמלול במכשיר?','פתח את ההגדרות'];
+
+/* knowledge base: [keywords], answer, go (screen) */
+var KB=[
+ {k:['תמלול חי','שמע','יחד','בו זמנית','בלי שמע','אין שמע','נעלם השמע','לא נשמר שמע','הקלטה','תמלול'],a:'בטלפונים אנדרואיד רבים תמלול חי והקלטת שמע לא יכולים לרוץ יחד, כי המיקרופון נתון רק לאחד מהם.\n• "תמלול חי" נותן את הטקסט המדויק ביותר, בלי שמע.\n• "שמע + תמלול אחרי" שומר את ההקלטה ומתמלל אחרי העצירה (עם מפתח AI או תמלול במכשיר).\nאת הבחירה עושים במסך הבית, מעל "שמור אל".',go:'home',gl:'בית',w:['לא יחד','שניהם','גם וגם']},
+ {k:['תמלול במכשיר','מודל','ozen','whisper','להוריד מודל','בלי מפתח','בלי אינטרנט','מקומי'],a:'תמלול במכשיר רץ בטלפון בלי מפתח. בהגדרות › "תמלול במכשיר" מפעילים את המתג, בוחרים מודל ולוחצים "הורד / הכן את המודל" (פעם אחת, על Wi-Fi). אחר כך ההקלטות מתומללות אחרי העצירה. הדיוק בעברית נמוך מתמלול חי או מ-Gemini.',go:'settings',gl:'הגדרות'},
+ {k:['מפתח','gemini','ג׳מיני','גמיני','api','חינם','איך משיגים','לקבל מפתח'],a:'מפתח AI אישי נותן תמלול ועזרה מדויקים יותר. אפשר לקבל מפתח Gemini בחינם ב-Google AI Studio (aistudio.google.com), ואז להדביק אותו בהגדרות › "תמלול AI". המפתח נשמר רק במכשיר שלך.',go:'settings',gl:'הגדרות'},
+ {k:['תזכורת','לא מצלצלת','לא קופצת','סגורה','התראה','התראות','לא קיבלתי','לא הגיעה'],a:'התזכורות מצלצלות ומקריאות כשהאפליקציה פתוחה או ברקע. כשהיא סגורה לגמרי אנדרואיד לא מבטיח שהיא תתעורר. לתזכורת חשובה אפשר לייצא אותה ליומן (ICS) מתוך ההערה, והיומן יתריע בוודאות.',go:'remind',gl:'תזכורות'},
+ {k:['גיבוי','גיבויים','שחזור','לגבות','מגבים','לגבות','לשחזר','לאבד','גיבוי נתונים','לגבות נתונים'],a:'בגיבוי שומרים קובץ עם כל ההערות והשמע, ובשחזור טוענים אותו חזרה. מומלץ לגבות מדי פעם, כי הכול נשמר רק במכשיר. מפתחות AI לא נכללים בגיבוי.',go:'backup',gl:'גיבוי'},
+ {k:['וואטסאפ','whatsapp','לשתף','שיתוף','הודעה קולית','להעביר'],a:'אפשר לשתף לאפליקציה הודעה קולית או טקסט מוואטסאפ: לחיצה ארוכה על ההודעה, "שתף", ובוחרים "המחשבות שלי". אם זה לא מופיע ברשימה, מסירים את האפליקציה ומתקינים אותה מחדש.'},
+ {k:['תיקייה','תיקיות','להוסיף תיקייה','לשנות תיקייה','סיווג','מיון','בתיקייה הלא נכונה','לא נכון'],a:'הסיווג אוטומטי לפי תוכן ההערה. כדי לשנות תיקייה: פותחים את ההערה ובוחרים תיקייה אחרת (הבחירה שלך לא נדרסת). תיקייה חדשה מוסיפים במסך ההערות בכפתור "תיקייה חדשה". לפני ההקלטה אפשר לבחור יעד קבוע ב"שמור אל".',go:'notes',gl:'הערות'},
+ {k:['השהה','להשהות','לעצור','להמשיך','פאוז','pause','להפסיק רגע'],a:'בזמן הקלטה יש כפתור "השהה" ו"המשך", וכפתור עצירה בפס שמופיע על כל מסך. הטיימר לא סופר את זמן ההשהיה.'},
+ {k:['צבע','ערכת','נושא','עיצוב','יום','לילה','כהה','בהיר','גודל','פונט'],a:'כפתור ☀️/🌙 בראש המסך עובר בין מצב יום ללילה. ערכות צבע וגודל כתב נמצאים בהגדרות.',go:'settings',gl:'הגדרות'},
+ {k:['להתקין','התקנה','מסך הבית','אייקון','להוסיף למסך'],a:'בכרום לוחצים על שלוש הנקודות ובוחרים "התקן אפליקציה" / "הוסף למסך הבית". אחרי ההתקנה יש גם קיצורי דרך בלחיצה ארוכה על האייקון, ואפשר לשתף אליה מאפליקציות אחרות.'},
+ {k:['פרטיות','איפה נשמר','איפה שמור','מי רואה','מאובטח','בטוח'],a:'הכול נשמר רק במכשיר שלך, בלי שרת ובלי חשבון. אם מפעילים AI עם מפתח, האודיו או הטקסט נשלחים ישירות מהמכשיר לספק שבחרת, ורק לפי ההגדרה שלך.'},
+ {k:['למחוק','מחיקה','לערוך','עריכה','לעדכן הערה','לשנות הערה'],a:'לחיצה על ✏️ בהערה פותחת עריכה, ושם אפשר לשנות טקסט, תיקייה ותזכורת או למחוק (עם אפשרות ביטול).'},
+ {k:['אנגלית','שפה','english','עברית'],a:'אפשר להחליף שפת ממשק בהגדרות. שפת הזיהוי הקולי נקבעת שם בנפרד ("שפת זיהוי").',go:'settings',gl:'הגדרות'}
+];
+function kbAnswer(t){
+ var best=null,bs=0;
+ KB.forEach(function(e){var s=0;e.k.forEach(function(w){var nw=nz(w);if(nw&&t.indexOf(nw)>-1)s+=nw.length>4?2:1});if(s>bs){bs=s;best=e}});
+ return bs>=2?best:null}
+function diagReply(){
+ var L=[];var has=hasKeyNow(),loc=!!S.set.localAI;
+ L.push('בדקתי את ההגדרות שלך:');
+ L.push('• מצב הקלטה: '+(S.set.mode==='live'?'תמלול חי (בלי שמע)':S.set.mode==='audio'?'שמע + תמלול אחרי':'שניהם יחד'));
+ L.push('• מפתח AI: '+(has?'מחובר':'אין'));
+ L.push('• תמלול במכשיר: '+(loc?'מופעל ('+wModelId().split('/').pop()+')':'כבוי'));
+ if(S.set.mode==='live')L.push('\nבמצב תמלול חי אין שמע לתמלל אחרי. אם אין טקסט בכלל: בדוק הרשאת מיקרופון, אינטרנט, ושדיברת בעברית.');
+ else if(!has&&!loc)L.push('\nאין שום מנוע תמלול פעיל, לכן הקלטות נשמרות בלי תמלול. הפעל "תמלול במכשיר" או חבר מפתח בהגדרות, או עבור ל"תמלול חי".');
+ else L.push('\nהכול מוגדר. אם עדיין אין תמלול, פתח את ההערה ולחץ "תמלל" וראה איזו הודעה מופיעה.');
+ return L.join('\n')}
+function hasKeyNow(){try{return hasKey()}catch(e){return false}}
+
+async function brain(raw,ctx){
+ var m=String(raw||'').trim();if(!m)return null;
+ var t=nz(m),r;
+ /* greetings / thanks / help */
+ if(/^(היי|הי|שלום|אהלן|בוקר טוב|ערב טוב|מה נשמע)( |$)/.test(t)&&t.split(' ').length<=3)return {text:'היי! אני יכול להוסיף הערות ותזכורות, לחפש, לפתוח מסכים ולענות על שאלות על האפליקציה.',chips:CHIPS_MAIN};
+ if(/^(תודה|תודה רבה|אחלה|מעולה|סבבה|יופי)( |$)/.test(t)&&t.split(' ').length<=3)return {text:'בכיף 🙂'};
+ if(hasAny(t,['מה אתה יכול','מה את יכולה','מה אפשר לעשות','עזרה','תעזור לי','איך משתמשים','מה אתה עושה'])&&t.split(' ').length<=6)
+  return {text:'אני יכול:\n• להוסיף תזכורת: "תזכיר לי מחר בשעה 5 להתקשר לדני"\n• לרשום הערה: "תרשום לחם, חלב וביצים"\n• לחפש: "חפש הערות על ים"\n• לפתוח: "פתח את הקניות", "עבור להגדרות"\n• להקריא: "הקרא את ההערה האחרונה"\n• לענות: "למה אין שמע?", "איך מגבים?"',chips:CHIPS_MAIN};
+
+ /* add reminder */
+ r=m.match(/^(?:בבקשה\s+)?(?:תזכיר(?:י)?\s+לי|הוסף\s+תזכורת|תוסיף\s+תזכורת|צור\s+תזכורת|תקבע\s+תזכורת|קבע\s+תזכורת|תגדיר\s+תזכורת|הגדר\s+תזכורת)\s*(.*)$/);
+ if(r){var rest=r[1].trim();
+  if(!rest)return {text:'מה להזכיר ומתי? לדוגמה: "תזכיר לי מחר בשעה 5 להתקשר לדני".'};
+  var w=parseWhen(rest);
+  if(!w)return {text:'לא הבנתי מתי להזכיר. נסה למשל "מחר בשעה 17:30", "בעוד שעה" או "ביום ראשון בבוקר".',chips:['תזכיר לי מחר בשעה 9 '+rest.replace(/^ש\s*/,'')]};
+  var n=await quickNote('תזכיר לי '+rest,'assistant');
+  if(n.remId){var rm=remById(n.remId);return {text:'סגור ✓ אזכיר לך ב-'+fmtWhen(rm.when)+'.\nנשמר ב'+fLabel(n.folder)+'.'}}
+  var rm2=addReminder({noteId:n.id,title:cleanTitle(rest),when:w.ts});n.remId=rm2.id;await saveNote(n);refresh();
+  return {text:'סגור ✓ אזכיר לך ב-'+fmtWhen(w.ts)+'.'}}
+
+ /* creative writing needs a real AI */
+ if(/^(?:תכתוב|כתוב|תנסח|נסח|תחבר|חבר|תמציא|המצא|תסכם|סכם)\s/.test(t)&&!/הערה/.test(t)){if(ctx&&ctx.noAI)return {text:'ניסוח שירים, סיכומים ויצירה חופשית דורשים AI. חבר מפתח בהגדרות (Gemini חינמי), ואז אוכל גם לכתוב שורות לשיר ולשמור אותן.',actions:[{action:'navigate',target:'הגדרות'}]};return null}
+ /* add note / items */
+ r=m.match(/^(?:בבקשה\s+)?(?:תרשום|רשום|תשמור|שמור|תוסיף\s+הערה|הוסף\s+הערה|תוסיף\s+רעיון|הוסף\s+רעיון|תכניס|הכנס|תוסיף|הוסף)(?:\s+לי)?(?:\s+את|\s+ש)?\s+(.+)$/);
+ if(r){var body=r[1].trim(),fid=null,m2=body.match(/^(.+?)\s+(?:אל\s+|ל|ב)(?:רשימת\s+|תיקיית\s+|תיקיה\s+)?(\S+)$/);
+  if(m2&&folderFrom(m2[2])){fid=folderFrom(m2[2]);body=m2[1].trim()}
+  if(body){var n2=await quickNote(body,'assistant',fid);var tx='שמרתי ב'+fLabel(n2.folder)+': "'+snip(body,60)+'"';if(n2.remId)tx+='\nותזכורת ל-'+fmtWhen(remById(n2.remId).when);return {text:tx,actions:[]}}}
+
+ /* search */
+ r=m.match(/^(?:תחפש|חפש|תמצא|מצא|חפשי)(?:\s+לי)?(?:\s+הערות|\s+את\s+ההערות)?(?:\s+על|\s+את|\s+של|\s+עם)?\s+(.+)$/);
+ if(r){var q=nz(r[1]);var hits=S.notes.filter(function(x){return nz(x.text).indexOf(q)>-1});
+  if(!hits.length)return {text:'לא מצאתי הערות עם "'+r[1].trim()+'".'};
+  var out=hits.slice(0,6).map(function(x){return '• '+folderOf(x.folder).icon+' '+snip(x.text,70)+' ('+fdate(x.ts)+')'}).join('\n');
+  return {text:'מצאתי '+hits.length+' הערות:\n'+out+(hits.length>6?'\n…ועוד.':'')}}
+
+ /* read aloud */
+ if(/(הקרא|תקריא|קרא לי|תקרא לי)/.test(t)){
+  var tgt=S.notes.filter(function(x){return x.text})[0];
+  var ff=folderFrom(t);if(ff)tgt=S.notes.filter(function(x){return x.text&&x.folder===ff})[0];
+  if(!tgt)return {text:'אין הערה להקריא.'};
+  speakText(tgt.text,true);return {text:'מקריא: "'+snip(tgt.text,80)+'"'}}
+
+ /* last note */
+ if(/(מה|הראה|תראה|ספר).*(אחרונה|אחרון)/.test(t)&&hasAny(t,['הערה','רעיון','הקלטה','שיר','קניות','שמרתי','רשמתי'])){
+  var ln=S.notes[0];if(!ln)return {text:'עדיין אין הערות.'};
+  return {text:fLabel(ln.folder)+' · '+fdate(ln.ts)+':\n'+(ln.text||'(הקלטה בלי תמלול)')}}
+
+ /* counts */
+ if(/^כמה\s/.test(t)||/כמה (הערות|רעיונות|שירים|קניות|משימות)/.test(t)){
+  if(t.indexOf('תזכורות')>-1){var u=upcoming();return {text:'יש לך '+u.length+' תזכורות פעילות.'}}
+  var fc=folderFrom(t);
+  if(fc){var c=S.notes.filter(function(x){return x.folder===fc}).length;return {text:'ב'+fLabel(fc)+' יש '+c+' הערות.'}}
+  return {text:'בסך הכול '+S.notes.length+' הערות: '+S.folders.map(function(f){return fLabel(f.id)+' '+S.notes.filter(function(x){return x.folder===f.id}).length}).join(' · ')}}
+
+ /* reminders list */
+ if(t.indexOf('תזכורות')>-1&&/^(מה|איזה|אילו|יש לי|מתי|מה יש|תזכורות)/.test(t)&&!/^(פתח|עבור|תפתח|תעבור)/.test(t)){
+  var up=upcoming().slice(0,6);
+  if(!up.length)return {text:'אין לך תזכורות קרובות.',chips:['תזכיר לי מחר בשעה 9 לבדוק מייל']};
+  return {text:'התזכורות הקרובות:\n'+up.map(function(x){return '• '+fmtWhen(x.when)+' · '+snip(x.title,50)}).join('\n'),actions:[{action:'navigate',target:'תזכורות'}]}}
+
+ /* navigation */
+ r=m.match(/^(?:בבקשה\s+)?(?:תפתח|פתח|עבור|תעבור|לך|תעביר\s+אותי|העבר\s+אותי|קח\s+אותי|תראה|הצג|תציג|היכנס|תיכנס|כנס)(?:\s+אותי|\s+לי)?(?:\s+אל|\s+את|\s+ל)?\s*(.+)$/);
+ if(r){var tg=r[1].trim(),fo=folderFrom(tg),sc=screenFrom(tg);
+  if(sc&&!(fo&&tg.indexOf('תזכורות')<0&&sc==='remind'))return {text:'',actions:[{action:'navigate',target:SCR_NAME[sc]}]};
+  if(fo)return {text:'',actions:[{action:'navigate',target:fName(folderOf(fo))}]}}
+
+ /* settings via chat */
+ if(/מצב\s+(לילה|חושך)|ערכה?\s+(כהה|לילה)/.test(t)){if(S.set.theme==='day')ACT.dayNight();return {text:'עברתי למצב לילה 🌙'}}
+ if(/מצב\s+יום|ערכה?\s+בהירה/.test(t)){if(S.set.theme!=='day')ACT.dayNight();return {text:'עברתי למצב יום ☀️'}}
+ if(/(עבור|תעבור|העבר|החלף|שנה|תחליף|הגדר).*תמלול חי/.test(t)){if(R.on)return {text:'אי אפשר להחליף מצב באמצע הקלטה.'};S.set.mode='live';saveSet();render();return {text:'עברתי ל"תמלול חי" (בלי שמע, הכי מדויק).'}}
+ if(/(עבור|תעבור|העבר|החלף|שנה|תחליף|הגדר).*(הקלטת שמע|שמע)/.test(t)){if(R.on)return {text:'אי אפשר להחליף מצב באמצע הקלטה.'};S.set.mode='audio';saveSet();render();return {text:'עברתי ל"שמע + תמלול אחרי".'}}
+ if(/(הפעל|תפעיל|תדליק|הדלק).*תמלול במכשיר/.test(t)){S.set.localAI=true;saveSet();render();return {text:'הפעלתי. כדי שזה יעבוד צריך להוריד את המודל פעם אחת: הגדרות › "הורד / הכן את המודל".',actions:[{action:'navigate',target:'הגדרות'}]}}
+
+ /* diagnosis */
+ if(t.indexOf('תמלול')>-1&&hasAny(t,['לא עובד','לא מתמלל','לא מצליח','בעיה','תקוע','לא מופיע','אין תמלול','לא עובדת','נכשל'])||(t.indexOf('אין')>-1&&t.indexOf('תמלול')>-1))
+  return {text:diagReply(),chips:['איך מפעילים תמלול במכשיר?','איך משיגים מפתח?']};
+
+ /* FAQ */
+ var kb=kbAnswer(t);
+ if(kb)return {text:kb.a,actions:kb.go?[{action:'navigate',target:SCR_NAME[kb.go]}]:[]};
+
+ /* nothing matched */
+ if(ctx&&ctx.noAI)return {text:'לא בטוח שהבנתי. אני עוזר מקומי שפועל בלי מפתח: אני מבין פקודות על ההערות והתזכורות ועונה על שאלות על האפליקציה. לשיחה חופשית (למשל ניסוח שורות לשיר) אפשר לחבר מפתח AI בהגדרות.',chips:CHIPS_MAIN};
+ return null}
+
+/* ---- AI-mode actions (used when a key is connected) ---- */
+function actions(){return {
+ addNote:{desc:'שומר הערה חדשה (מסווגת לתיקייה אוטומטית; אם יש בה זמן עתידי נוצרת גם תזכורת)',args:'{"text":"תוכן ההערה"}',run:async function(a){if(!a||!a.text)return null;var n=await quickNote(String(a.text),'assistant',a.folder&&folderOf(a.folder)?a.folder:null);return 'שמרתי ב'+fLabel(n.folder)+(n.remId?' ועשיתי תזכורת ל-'+fmtWhen(remById(n.remId).when):'')+'.'}},
+ addReminder:{desc:'יוצר תזכורת. הטקסט חייב לכלול מתי (למשל "מחר בשעה 5 להתקשר")',args:'{"text":"תיאור + זמן בשפה טבעית"}',run:async function(a){if(!a||!a.text)return null;var w=parseWhen(String(a.text));if(!w)return 'לא הצלחתי להבין את הזמן.';var n=await quickNote('תזכיר לי '+a.text,'assistant');if(!n.remId){var rr=addReminder({noteId:n.id,title:cleanTitle(a.text),when:w.ts});n.remId=rr.id;await saveNote(n);refresh()}return 'תזכורת ל-'+fmtWhen(w.ts)+' ✓'}},
+ search:{desc:'מחפש הערות לפי טקסט ומציג תוצאות',args:'{"q":"מילת חיפוש"}',run:function(a){var q=nz(a&&a.q);if(!q)return null;var h=S.notes.filter(function(x){return nz(x.text).indexOf(q)>-1});return h.length?h.slice(0,6).map(function(x){return '• '+folderOf(x.folder).icon+' '+snip(x.text,70)}).join('\n'):'לא נמצאו הערות.'}},
+ readNote:{desc:'מקריא בקול את ההערה האחרונה (או האחרונה בתיקייה)',args:'{"folder":"מזהה תיקייה אופציונלי"}',run:function(a){var x=S.notes.filter(function(y){return y.text&&(!a||!a.folder||y.folder===a.folder)})[0];if(!x)return 'אין הערה להקריא.';speakText(x.text,true);return 'מקריא.'}},
+ setMode:{desc:'מחליף מצב הקלטה: live (תמלול חי בלי שמע) או audio (שמע + תמלול אחרי)',args:'{"mode":"live|audio"}',run:function(a){if(R.on)return 'אי אפשר להחליף באמצע הקלטה.';if(a&&(a.mode==='live'||a.mode==='audio')){S.set.mode=a.mode;saveSet();render();return 'המצב עודכן.'}return null}}
+}}
+
+window.APPNEST_ASSISTANT_CONFIG={
+ appName:'המחשבות שלי',
+ appDescription:'MyThoughtsNest ("המחשבות שלי") היא אפליקציה להקלטת רעיונות ומחשבות בקול עם תמלול, ושמירה בתיקיות (רעיונות, שירים לסונו, קניות, משימות ותזכורות), ויומן תזכורות מוקראות. כל הנתונים נשמרים רק במכשיר. עזור למשתמש לרשום הערות, ליצור תזכורות, לחפש, ולמצוא את דרכו באפליקציה. כשהמשתמש מבקש לרשום משהו או להזכיר לו — בצע זאת בעזרת appAction (addNote / addReminder) ולא רק תענה. אל תמציא פעולות שאינן ברשימה.',
+ welcome:'היי! אני העוזר של "המחשבות שלי". אני יכול להוסיף הערות ותזכורות, לחפש, לפתוח מסכים ולענות על שאלות. אפשר לכתוב או ללחוץ על הצעה.',
+ ui:{btnBottom:'calc(env(safe-area-inset-bottom) + 86px)',btnLeft:'12px',btnText:'🪄',btnPad:'10px 13px',panelBottom:'calc(env(safe-area-inset-bottom) + 138px)',panelMaxH:'calc(100dvh - 210px)'},
+ readAiConfig:function(){
+  var p=S.set.provider||'gemini';
+  if(p==='gemini'&&S.set.keyG)return {provider:'gemini',keys:{gemini:S.set.keyG}};
+  if(p==='openai'&&S.set.keyO)return {provider:'openai',keys:{openai:S.set.keyO}};
+  return null},
+ navigate:function(sc){
+  if(sc==='guide'){ACT.guide();return}
+  if(String(sc).indexOf('folder:')===0){showSc('folder',String(sc).slice(7));return}
+  if(TABS.indexOf(sc)>-1){ACT.tab({dataset:{sc:sc}});return}
+  showSc(sc)},
+ get tabs(){
+  var a=Object.keys(SCR_NAME).map(function(k){return {name:SCR_NAME[k],screen:k}});
+  S.folders.forEach(function(f){a.push({name:fName(f),screen:'folder:'+f.id})});
+  return a},
+ fields:[],
+ readState:function(){
+  var u=upcoming().slice(0,5).map(function(x){return fmtWhen(x.when)+' '+snip(x.title,40)}).join('; ');
+  return 'הערות: '+S.notes.length+' ('+S.folders.map(function(f){return fName(f)+' '+S.notes.filter(function(x){return x.folder===f.id}).length}).join(', ')+'). תזכורות קרובות: '+(u||'אין')+'. מצב הקלטה: '+S.set.mode+'. תמלול במכשיר: '+(S.set.localAI?'פעיל':'כבוי')+'.'},
+ get actions(){return actions()},
+ localBrain:brain,
+ onToggle:function(o){window.__asstOpen=o},
+ suggestions:CHIPS_MAIN
+};
+})();
 </script>
+<script src="appnest-assistant.js"></script>
 </body>
 </html>
