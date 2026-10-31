@@ -126,6 +126,8 @@ body.no-anim *{animation:none!important;transition:none!important}
 .ov.c{align-items:center}
 .sheet h3{margin:0 0 10px;font-size:1.15rem;display:flex;align-items:center;gap:8px}
 .sheet h3 .x{margin-inline-start:auto}
+#wst{position:fixed;inset-inline:14px;bottom:calc(env(safe-area-inset-bottom) + 150px);z-index:91;display:none;justify-content:center;pointer-events:none;text-align:center;background:var(--card);border:1px solid var(--ac);border-radius:12px;padding:10px 14px;font-size:14px;color:var(--tx)}
+#wst.on{display:flex}
 #toast{position:fixed;inset-inline:14px;bottom:calc(env(safe-area-inset-bottom) + 84px);z-index:90;display:flex;justify-content:center;pointer-events:none}
 body.ov-open #toast{bottom:auto;top:calc(env(safe-area-inset-top) + 12px)}
 #toast div{background:var(--card2);border:1px solid var(--ac);color:var(--tx);padding:12px 16px;border-radius:14px;box-shadow:0 8px 24px rgba(0,0,0,.5);display:flex;gap:14px;align-items:center;pointer-events:auto;max-width:100%}
@@ -151,7 +153,7 @@ pre.diag{white-space:pre-wrap;font-size:.8rem;background:var(--bg2);border:1px s
 <div id="app">
   <header id="top"></header>
   <main id="main" tabindex="-1"></main>
-  <div id="recbar"></div>
+  <div id="recbar"></div><div id="wst" role="status" aria-live="polite"></div>
   <nav id="tabs" aria-label="ניווט ראשי"></nav>
 </div>
 <div id="ovroot"></div>
@@ -159,7 +161,7 @@ pre.diag{white-space:pre-wrap;font-size:.8rem;background:var(--bg2);border:1px s
 <script>
 'use strict';
 /* ============ MyThoughtsNest · AppNest · core ============ */
-var VERSION='1.1.0';
+var VERSION='1.2.0';
 var SUPPORT='appnest55@gmail.com';
 var STORE_URL='https://appnest-store.pages.dev';
 
@@ -178,7 +180,7 @@ he:{
  srNet:'התמלול החי דורש אינטרנט.',srDeny:'אין הרשאה לתמלול קולי.',
  noText:'🎧 הקלטה בלי תמלול',editNote:'עריכת הערה',newNote:'הערה חדשה',noteText:'הטקסט',folder:'תיקייה',close:'סגור',del:'מחק',edit:'ערוך',
  play:'נגן',pause:'השהה',dl:'הורד שמע',share:'שתף',copy:'העתק',copied:'הועתק',
- aiTr:'תמלל עם AI',aiBusy:'מתמלל…',aiDone:'התמלול עודכן',aiRestore:'שחזר תמלול קודם',aiNoKey:'כדי לתמלל עם AI צריך להזין מפתח בהגדרות › AI.',aiFail:'התמלול נכשל: {0}',aiLong:'ההקלטה ארוכה מדי לתמלול AI (מעל 6 דקות).',aiNoAudio:'אין שמע שמור להערה הזו.',
+ aiTr:'תמלל עם AI',aiBusy:'מתמלל…',aiDone:'התמלול עודכן',aiRestore:'שחזר תמלול קודם',aiNoKey:'כדי לתמלל צריך להפעיל "תמלול במכשיר" או להזין מפתח AI בהגדרות.',aiFail:'התמלול נכשל: {0}',aiLong:'ההקלטה ארוכה מדי לתמלול AI (מעל 6 דקות).',aiNoAudio:'אין שמע שמור להערה הזו.',
  rem:'תזכורת',remAdd:'הוסף תזכורת',remNew:'תזכורת חדשה',remEdit:'עריכת תזכורת',remTitle:'על מה להזכיר?',remWhen:'מתי',remRepeat:'חזרה',r_none:'פעם אחת',r_daily:'כל יום',r_weekly:'כל שבוע',
  remHonest:'התראה מתוך האפליקציה מגיעה כשהיא פתוחה או פועלת ברקע. לתזכורת שמגיעה תמיד, גם כשהאפליקציה סגורה לגמרי — הוסף ליומן של הטלפון (📅).',
  remNotif:'הפעל התראות מערכת',remNotifOn:'התראות מערכת פעילות',remNotifNo:'ההתראות חסומות בדפדפן. אפשר לאשר בהגדרות האתר.',
@@ -187,7 +189,7 @@ he:{
  shopList:'המר לרשימה',shopText:'הצג כטקסט',songCopy:'העתק את כל השורות',songMode:'כל השורות כשיר אחד',exportTxt:'ייצא לטקסט',
  settings:'הגדרות',backup:'גיבוי וייצוא',guide:'מדריך',diag:'אבחון',about:'אודות',
  userName:'שם משתמש',lang:'שפה',theme:'עיצוב',font:'גודל טקסט',
- recMode:'מצב הקלטה',m_both:'הקלטה + תמלול חי',m_live:'תמלול חי בלבד (בלי שמע)',m_audio:'הקלטה בלבד (תמלול ב-AI)',
+ recMode:'מצב הקלטה',m_both:'הקלטה + תמלול חי',m_live:'תמלול חי בלבד (בלי שמע)',m_audio:'הקלטה בלבד (תמלול אחרי העצירה)',
  recLang:'שפת הדיבור',autoFolder:'סיווג אוטומטי לתיקיות',autoFolderD:'לפי מילים בהערה (קניות, שירים, תזכורות)',
  remSettings:'תזכורות',speak:'הקרא תזכורות בקול',beep:'צליל התראה',vib:'רטט',defTime:'שעה ברירת מחדל כשלא אמרת שעה',testSpeak:'נסה הקראה',
  ai:'תמלול AI (אופציונלי)',aiD:'עובד גם בלי. מי שרוצה דיוק גבוה יותר מחבר מפתח אישי. השמע נשלח לספק שבחרת, ישירות מהמכשיר.',
@@ -211,11 +213,13 @@ he:{
  setBeepNote:'צליל והקראה עובדים רק אחרי שנגעת באפליקציה פעם אחת מאז שנפתחה.',quick:'הקלטה מהירה',len:'{0}',items:'פריטים',manual:'ידני',live:'תמלול חי',ai_:'AI',
  permNotif:'נדרשת הרשאת התראות',
  tRec:'הקלטה',pause:'השהה',resume:'המשך',stopRec:'עצור',recPaused:'מושהה — לחץ המשך',
- noSpeechYet:'עדיין לא נקלט דיבור. אם זה נמשך: הגדרות › מצב הקלטה.',
+ noSpeechYet:'אין תמלול חי. בטלפונים רבים הוא לא עובד יחד עם הקלטת שמע. השמע נשמר, ובסיום האפליקציה תעבור למצב הקלטה ותתמלל אחרי העצירה.',
  autoSwitched:'התמלול החי לא עבד יחד עם ההקלטה במכשיר הזה, אז עברתי אוטומטית למצב: {0}. אפשר לשנות בהגדרות.',
  movedTo:'הועבר ל{0}',recovered:'שוחזרה הקלטה שנקטעה באמצע',micNone:'לא נמצא מיקרופון',micFail:'ההקלטה לא התחילה ({0})',
  restoreNoAudio:'הגיבוי הזה בלי שמע — הקלטות קיימות במכשיר יימחקו.',
- modeHelp:'אם התמלול החי לא עובד יחד עם ההקלטה בטלפון שלך: בחר "תמלול חי בלבד" (בלי שמע) או "הקלטה בלבד" ותמלל עם AI.',
+ autoSwitchedNo:'התמלול החי לא עבד יחד עם ההקלטה במכשיר הזה, אז עברתי אוטומטית ל: {0}. כדי לקבל תמלול אחרי ההקלטה: הגדרות › תמלול במכשיר (בלי מפתח) או מפתח AI.',
+ wTitle:'תמלול במכשיר (בלי מפתח)',wDesc:'מנוע Whisper שרץ בטלפון עצמו אחרי ההקלטה. מוריד מודל פעם אחת (עשרות עד מאות MB), אחר כך עובד גם בלי אינטרנט והשמע לא יוצא מהמכשיר. בעברית איכות המודלים הקטנים נמוכה והתמלול איטי יותר.',wOn:'הפעל תמלול במכשיר',wOnD:'אחרי כל הקלטה בלי תמלול חי',wModel:'מודל',wCustom:'מזהה מודל מותאם (HuggingFace)',wPrep:'הורד / הכן את המודל עכשיו',wDel:'מחק מודל שהורד',wDl:'מוריד מודל תמלול {0}',wInit:'מכין את המודל…',wRun:'מתמלל במכשיר…',wReady:'המודל מוכן',wLoadFail:'טעינת מודל התמלול נכשלה (צריך אינטרנט בפעם הראשונה, או מודל לא תואם).',wDeleted:'המודל שהורד נמחק',wS:'קטן',wB:'בינוני',wT:'זעיר',
+ modeHelp:'אם התמלול החי לא עובד יחד עם ההקלטה בטלפון שלך: בחר "הקלטה בלבד" ותמלל אחרי העצירה (במכשיר או עם AI), או "תמלול חי בלבד" (בלי שמע).',
  autoAI2:'שימוש אוטומטי ב-AI: תמלול כשאין תמלול חי + סיווג לתיקיות ותזכורות',autoAI2d:'השמע (לתמלול) והטקסט (לסיווג) נשלחים לספק שחיברת',
 },
 en:{
@@ -231,7 +235,7 @@ en:{
  srNet:'Live transcription needs internet.',srDeny:'Speech recognition permission denied.',
  noText:'🎧 Recording without transcript',editNote:'Edit note',newNote:'New note',noteText:'Text',folder:'Folder',close:'Close',del:'Delete',edit:'Edit',
  play:'Play',pause:'Pause',dl:'Download audio',share:'Share',copy:'Copy',copied:'Copied',
- aiTr:'Transcribe with AI',aiBusy:'Transcribing…',aiDone:'Transcript updated',aiRestore:'Restore previous transcript',aiNoKey:'To transcribe with AI add a key in Settings › AI.',aiFail:'Transcription failed: {0}',aiLong:'Recording is too long for AI transcription (over 6 min).',aiNoAudio:'This note has no saved audio.',
+ aiTr:'Transcribe with AI',aiBusy:'Transcribing…',aiDone:'Transcript updated',aiRestore:'Restore previous transcript',aiNoKey:'To transcribe, turn on "On-device transcription" or add an AI key in Settings.',aiFail:'Transcription failed: {0}',aiLong:'Recording is too long for AI transcription (over 6 min).',aiNoAudio:'This note has no saved audio.',
  rem:'Reminder',remAdd:'Add reminder',remNew:'New reminder',remEdit:'Edit reminder',remTitle:'Remind me about',remWhen:'When',remRepeat:'Repeat',r_none:'Once',r_daily:'Daily',r_weekly:'Weekly',
  remHonest:'In-app alerts arrive while the app is open or running in the background. For a reminder that always arrives, even when the app is fully closed, add it to your phone calendar (📅).',
  remNotif:'Enable system notifications',remNotifOn:'System notifications are on',remNotifNo:'Notifications are blocked in the browser. Allow them in site settings.',
@@ -240,7 +244,7 @@ en:{
  shopList:'Convert to list',shopText:'Show as text',songCopy:'Copy all lines',songMode:'All lines as one song',exportTxt:'Export to text',
  settings:'Settings',backup:'Backup & export',guide:'Guide',diag:'Diagnostics',about:'About',
  userName:'User name',lang:'Language',theme:'Theme',font:'Text size',
- recMode:'Recording mode',m_both:'Record + live transcript',m_live:'Live transcript only (no audio)',m_audio:'Record only (transcribe with AI)',
+ recMode:'Recording mode',m_both:'Record + live transcript',m_live:'Live transcript only (no audio)',m_audio:'Record only (transcribe after stopping)',
  recLang:'Spoken language',autoFolder:'Auto-sort into folders',autoFolderD:'By words in the note (shopping, songs, reminders)',
  remSettings:'Reminders',speak:'Read reminders aloud',beep:'Alert sound',vib:'Vibration',defTime:'Default time when no time is said',testSpeak:'Test speech',
  ai:'AI transcription (optional)',aiD:'Works without it. For higher accuracy connect your own key. Audio goes straight from your device to the provider you pick.',
@@ -264,11 +268,13 @@ en:{
  setBeepNote:'Sound and speech only work after you touched the app once since it opened.',quick:'Quick record',len:'{0}',items:'items',manual:'manual',live:'live',ai_:'AI',
  permNotif:'Notification permission needed',
  tRec:'Record',pause:'Pause',resume:'Resume',stopRec:'Stop',recPaused:'Paused — tap Resume',
- noSpeechYet:'No speech picked up yet. If this continues: Settings › Recording mode.',
+ noSpeechYet:'No live transcript. On many phones it cannot run together with audio recording. The audio is kept, and after you stop the app switches to record mode and transcribes afterwards.',
  autoSwitched:'Live transcription did not work together with recording on this device, so I switched to: {0}. You can change it in Settings.',
  movedTo:'Moved to {0}',recovered:'Recovered an interrupted recording',micNone:'No microphone found',micFail:'Recording did not start ({0})',
  restoreNoAudio:'This backup has no audio — existing recordings on the device will be deleted.',
- modeHelp:'If live transcription does not work together with recording on your phone: pick "Live transcript only" (no audio) or "Record only" and transcribe with AI.',
+ autoSwitchedNo:'Live transcription did not work together with recording on this device, so I switched to: {0}. To get a transcript after recording: Settings › On-device transcription (no key) or an AI key.',
+ wTitle:'On-device transcription (no key)',wDesc:'A Whisper engine that runs on the phone itself after recording. Downloads a model once (tens to hundreds of MB), then works offline and audio never leaves the device. Small models are weaker in Hebrew and slower.',wOn:'Enable on-device transcription',wOnD:'After each recording that has no live transcript',wModel:'Model',wCustom:'Custom model id (HuggingFace)',wPrep:'Download / prepare model now',wDel:'Delete downloaded model',wDl:'Downloading transcription model {0}',wInit:'Preparing model…',wRun:'Transcribing on device…',wReady:'Model is ready',wLoadFail:'Could not load the transcription model (needs internet the first time, or incompatible model).',wDeleted:'Downloaded model deleted',wS:'Small',wB:'Base',wT:'Tiny',
+ modeHelp:'If live transcription does not work together with recording on your phone: pick "Record only" and transcribe after stopping (on device or with AI), or "Live transcript only" (no audio).',
  autoAI2:'Automatic AI: transcribe when there is no live transcript + sort into folders and reminders',autoAI2d:'Audio (for transcription) and text (for sorting) are sent to the provider you connected',
 }};
 var curLang='he';
@@ -294,7 +300,7 @@ function dl(blob,name){var a=document.createElement('a');a.href=URL.createObject
 function vibrate(p){try{if(navigator.vibrate)navigator.vibrate(p)}catch(e){}}
 
 /* ---------- state ---------- */
-var DEF={lang:'he',theme:'gold',zoom:1,user:'',mode:'both',recLang:'he-IL',auto:true,target:'auto',speak:true,beep:true,vib:true,defTime:'09:00',provider:'gemini',keyG:'',keyO:'',gModel:'',autoAI:true,lastBackup:0,seenGuide:0,lastNag:''};
+var DEF={localAI:false,wModel:'onnx-community/whisper-small',wCustom:'',lang:'he',theme:'gold',zoom:1,user:'',mode:'both',recLang:'he-IL',auto:true,target:'auto',speak:true,beep:true,vib:true,defTime:'09:00',provider:'gemini',keyG:'',keyO:'',gModel:'',autoAI:true,lastBackup:0,seenGuide:0,lastNag:''};
 var SYSF=[{id:'ideas',sys:'ideas',icon:'💡'},{id:'songs',sys:'songs',icon:'🎵'},{id:'shop',sys:'shop',icon:'🛒'},{id:'tasks',sys:'tasks',icon:'⏰'}];
 var S={set:{},folders:[],notes:[],rem:[],dbOk:false};
 function loadSettings(){var s=safeParse('mtn_set',{});S.set={};for(var k in DEF)S.set[k]=(s[k]!==undefined&&typeof s[k]===typeof DEF[k])?s[k]:DEF[k];
@@ -534,6 +540,7 @@ async function stopRec(){
  if(!text&&!blob){toast(T('nothing'));dbDelPrefix('audio','d:'+draft+':');return}
  await finalizeCapture(text,blob,dur,err,both,draft)}
 function hasKey(){return !!(S.set.provider==='openai'?S.set.keyO:S.set.keyG)}
+function canAI(){return hasKey()||!!S.set.localAI}
 async function finalizeCapture(text,blob,dur,srErr,both,draft){
  var tgt=S.set.target,explicit=tgt!=='auto'&&folderOf(tgt).id===tgt,folder='ideas';
  if(explicit)folder=tgt;else if(S.set.auto&&text)folder=classify(text).folder;
@@ -546,8 +553,8 @@ async function finalizeCapture(text,blob,dur,srErr,both,draft){
  if(whenTs){var r=addReminder({noteId:n.id,title:cleanTitle(text),when:whenTs});n.remId=r.id;saveNote(n);msg=T('remSet',fmtWhen(whenTs))+' · '+f.icon+' '+fName(f)}
  toast(msg,5000,T('change'),function(){openNote(n.id)});
  var conflict=both&&blob&&!text;
- if(conflict){var useAI=hasKey();S.set.mode=useAI?'audio':'live';saveSet();setTimeout(function(){toast(T('autoSwitched',T(useAI?'m_audio':'m_live')),7000)},1200)}
- if(!text&&blob){if(S.set.autoAI&&hasKey())aiTranscribeNote(n.id,true)}
+ if(conflict){S.set.mode='audio';saveSet();setTimeout(function(){toast(T(canAI()?'autoSwitched':'autoSwitchedNo',T('m_audio')),8000)},1200)}
+ if(!text&&blob){if(S.set.autoAI&&canAI())aiTranscribeNote(n.id,true)}
  else if(srErr==='network')setTimeout(function(){toast(T('srNet'),4000)},300);
  else if(text)aiRefine(n);
  refresh()}
@@ -605,14 +612,52 @@ async function aiTranscribeBlob(blob){
  if(S.set.provider==='openai')return openaiTranscribe(wav);
  var b64=await blobToB64(wav);return geminiRun([{text:TR_PROMPT},{inline_data:{mime_type:'audio/wav',data:b64}}])}
 
+
+/* ============ Local transcription (Whisper in the browser, no key) ============ */
+var WH={pipe:null,id:'',lid:'',loading:null};
+var TF_URL='https://cdn.jsdelivr.net/npm/@huggingface/transformers@3.7.0/+esm';
+var W_LANG={'he-IL':'hebrew','en-US':'english','ru-RU':'russian','ar-IL':'arabic','es-ES':'spanish'};
+function wModelId(){var m=S.set.wModel;if(m==='custom')return (S.set.wCustom||'').trim()||'onnx-community/whisper-small';return m||'onnx-community/whisper-small'}
+function wStatus(t){var e=document.getElementById('wst');if(!e)return;e.textContent=t||'';e.className=t?'on':''}
+async function toPcm16k(blob,maxSec){
+ var ab=await blob.arrayBuffer(),C=window.AudioContext||window.webkitAudioContext,ctx=new C(),buf;
+ try{buf=await ctx.decodeAudioData(ab)}finally{try{ctx.close()}catch(e){}}
+ if(buf.duration>maxSec)throw new Error('LONG');
+ var oc=new OfflineAudioContext(1,Math.max(1,Math.ceil(buf.duration*16000)),16000),src=oc.createBufferSource();src.buffer=buf;src.connect(oc.destination);src.start();
+ return (await oc.startRendering()).getChannelData(0)}
+async function wLoad(){
+ var id=wModelId();
+ if(WH.pipe&&WH.id===id)return WH.pipe;
+ if(WH.loading&&WH.lid===id)return WH.loading;
+ WH.lid=id;var files={};
+ function prog(d){if(!d)return;if(d.status==='progress'&&d.total){files[d.file]=[d.loaded,d.total];var l=0,t=0;for(var k in files){l+=files[k][0];t+=files[k][1]}wStatus(T('wDl',Math.round(l/t*100)+'%'))}else if(d.status==='initiate'||d.status==='download')wStatus(T('wDl','…'));else if(d.status==='ready')wStatus(T('wInit'))}
+ WH.loading=(async function(){
+  try{
+   wStatus(T('wDl','…'));
+   var tf=await import(TF_URL);
+   try{tf.env.allowLocalModels=false}catch(e){}
+   var p;
+   try{p=await tf.pipeline('automatic-speech-recognition',id,{dtype:'q8',device:'wasm',progress_callback:prog})}
+   catch(e1){files={};p=await tf.pipeline('automatic-speech-recognition',id,{device:'wasm',progress_callback:prog})}
+   WH.pipe=p;WH.id=id;return p}
+  finally{WH.loading=null;wStatus('')}})();
+ return WH.loading}
+async function localTranscribeBlob(blob){
+ var pcm=await toPcm16k(blob,600),p;
+ try{p=await wLoad()}catch(e){throw new Error(T('wLoadFail'))}
+ wStatus(T('wRun'));
+ try{var o=await p(pcm,{language:W_LANG[S.set.recLang]||'hebrew',task:'transcribe',chunk_length_s:30,stride_length_s:5,return_timestamps:false});
+  return String(o&&o.text||'').trim()}
+ finally{wStatus('')}}
+
 var aiBusy={};
 async function aiTranscribeNote(id,quiet){
  var n=noteById(id);if(!n)return;
- if(!hasKey()){if(!quiet)toast(T('aiNoKey'),4500);return}
+ if(!canAI()){if(!quiet)toast(T('aiNoKey'),5500);return}
  if(aiBusy[id])return;
  var rec=n.aud?await dbGet('audio',id):null;if(!rec||!rec.blob){toast(T('aiNoAudio'));return}
  aiBusy[id]=1;refresh();refreshEditor(id);
- try{var tx=await aiTranscribeBlob(rec.blob);
+ try{var tx;if(hasKey()){try{tx=await aiTranscribeBlob(rec.blob)}catch(e0){if(!S.set.localAI||(e0&&e0.message==='LONG'))throw e0;tx=await localTranscribeBlob(rec.blob)}}else tx=await localTranscribeBlob(rec.blob);
   if(tx){var wasEmpty=!n.text;if(n.text&&n.text!==tx)n.alt=n.text;n.text=tx;n.tr='ai';
    if(wasEmpty&&S.set.auto&&S.set.target==='auto'&&!n.manual){n.folder=classify(tx).folder;var w=reminderFor(tx,n.folder,false);if(w&&!n.remId){var r=addReminder({noteId:n.id,title:cleanTitle(tx),when:w});n.remId=r.id;toast(T('remSet',fmtWhen(w)),5000)}}
    await saveNote(n);toast(T('aiDone'));aiRefine(n)}
@@ -776,6 +821,7 @@ function vSettings(){
  h+='<label class="f">'+esc(T('apiKey'))+'</label><input type="password" data-set="'+(g?'keyG':'keyO')+'" value="'+esc(keyv)+'" autocomplete="off" spellcheck="false" dir="ltr">';
  if(g)h+='<label class="f">'+esc(T('model'))+'</label><select data-set="gModel" id="gmodel">'+modelOpts()+'</select>';
  h+='<div class="btns"><button class="btn sm" data-act="aiTest">'+esc(T('test'))+'</button>'+(g?'<button class="btn sm" data-act="aiModels">'+esc(T('refresh'))+'</button>':'')+'<button class="btn sm dng" data-act="aiDisc">'+esc(T('disconnect'))+'</button></div><div class="muted">'+esc(T('keyHow'))+'</div></div>';
+ h+='<h2>🧠 '+esc(T('wTitle'))+'</h2><div class="card"><div class="muted">'+esc(T('wDesc'))+'</div></div><div class="list">'+sw('localAI',T('wOn'),T('wOnD'))+'</div><div class="card"><label class="f">'+esc(T('wModel'))+'</label><select data-set="wModel">'+[['onnx-community/whisper-tiny',T('wT')+' · ~40MB'],['onnx-community/whisper-base',T('wB')+' · ~80MB'],['onnx-community/whisper-small',T('wS')+' · ~250MB'],['custom','Custom']].map(function(o){return '<option value="'+o[0]+'"'+(s.wModel===o[0]?' selected':'')+'>'+esc(o[1])+'</option>'}).join('')+'</select>'+(s.wModel==='custom'?'<label class="f">'+esc(T('wCustom'))+'</label><input type="text" data-set="wCustom" value="'+esc(s.wCustom)+'" dir="ltr" spellcheck="false" placeholder="user/whisper-model-onnx">':'')+'<div class="btns"><button class="btn sm" data-act="wPrep">⬇ '+esc(T('wPrep'))+'</button><button class="btn sm" data-act="wDel">🗑 '+esc(T('wDel'))+'</button></div></div>';
  h+='<div class="list">'+sw('autoAI',T('autoAI2'),T('autoAI2d'))+'</div>';
  h+='<div class="btns" style="margin-top:20px"><button class="btn dng" data-act="wipe">🗑 '+esc(T('wipe'))+'</button></div>';
  return h+foot()}
@@ -930,6 +976,10 @@ ACT.alDone=function(el){remDone(el.dataset.id);closeOv('alarm');refresh()};
 ACT.alSnooze=function(el){remSnooze(el.dataset.id,10);closeOv('alarm');refresh()};
 ACT.alSpeak=function(el){var r=remById(el.dataset.id);audioCtx();speakText(r?r.title:'',true)};
 ACT.alClose=function(){closeOv('alarm')};
+ACT.wPrep=async function(){
+ if(WH.pipe&&WH.id===wModelId()){toast(T('wReady'));return}
+ try{await wLoad();toast(T('wReady'),4000)}catch(e){toast(T('wLoadFail'),6000)}}
+ACT.wDel=async function(){try{WH.pipe=null;WH.id='';var ks=await caches.keys();for(var i=0;i<ks.length;i++)if(ks[i].indexOf('transformers')===0)await caches.delete(ks[i]);toast(T('wDeleted'))}catch(e){toast(T('wDeleted'))}}
 ACT.testSpeak=function(){audioCtx();speakText(T('testSpeak'),true);beep()};
 
 /* AI settings */
@@ -1037,7 +1087,7 @@ remainingFoldersFix();
   navigator.serviceWorker.register('sw.js').catch(function(){});
   navigator.serviceWorker.addEventListener('message',function(ev){var d=ev.data||{};if(d.type==='rem'){if(d.action==='done')remDone(d.id);else if(d.action==='snooze')remSnooze(d.id,10);refresh()}})}
  render();
- if(rec){setTimeout(function(){toast(T('recovered'),6000);if(S.set.autoAI&&hasKey())S.notes.filter(function(n){return n.rec&&!n.text}).forEach(function(n){aiTranscribeNote(n.id,true)})},900)}
+ if(rec){setTimeout(function(){toast(T('recovered'),6000);if(S.set.autoAI&&canAI())S.notes.filter(function(n){return n.rec&&!n.text}).forEach(function(n){aiTranscribeNote(n.id,true)})},900)}
  setInterval(checkReminders,10000);
  setTimeout(function(){checkReminders()},400);
  if(!S.set.seenGuide&&!S.notes.length)setTimeout(function(){openGuide(0)},500);
