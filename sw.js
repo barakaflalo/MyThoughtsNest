@@ -20,13 +20,13 @@ CacheStorage.prototype.match=function(){return sm.apply(this,arguments).then(cle
 })();
 
 /* MyThoughtsNest service worker — bump VERSION on every release */
-var VERSION='mythoughtsnest-v1.6.1';
-var CORE=['./','./appnest-assistant.js','./manifest.json','./icon-192.png','./icon-512.png','./privacy_policy.html'];
+var VERSION='mythoughtsnest-v1.6.2';
+var CORE=['./','./appnest-assistant.js?v=161','./manifest.json','./icon-192.png','./icon-512.png','./privacy_policy.html'];
 var OFFLINE='<!doctype html><html lang="he" dir="rtl"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>MyThoughtsNest</title><body style="font-family:system-ui;background:#0b0b0d;color:#f2efe6;display:grid;place-items:center;height:100vh;margin:0;text-align:center"><div><div style="font-size:3rem">🪺</div><h2>אין חיבור כרגע</h2><p>הנתונים שלך שמורים במכשיר.</p><button onclick="location.reload()" style="font-size:1.1rem;padding:12px 22px;border-radius:12px;border:0;background:#d4af37;color:#1a1400;font-weight:800">נסה שוב</button></div></body></html>';
 
 self.addEventListener('install',function(e){
   e.waitUntil(caches.open(VERSION).then(function(c){
-    return Promise.allSettled(CORE.map(function(u){return c.add(u);}));
+    return Promise.allSettled(CORE.map(function(u){return c.add(new Request(u,{cache:'reload'}));}));
   }).then(function(){return self.skipWaiting();}));
 });
 self.addEventListener('activate',function(e){
