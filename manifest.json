@@ -12,11 +12,85 @@
   "lang": "he",
   "dir": "rtl",
   "icons": [
-    {"src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any"},
-    {"src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any"},
-    {"src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable"}
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
   ],
   "shortcuts": [
-    {"name": "הקלטה מהירה", "short_name": "הקלטה", "url": "./?quick=1", "icons": [{"src": "icon-192.png", "sizes": "192x192"}]}
-  ]
+    {
+      "name": "הקלטה מהירה",
+      "short_name": "הקלטה",
+      "url": "./?quick=1",
+      "icons": [
+        {
+          "src": "icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
+      "name": "הקלד רעיון",
+      "short_name": "הקלדה",
+      "url": "./?act=type",
+      "icons": [
+        {
+          "src": "icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
+      "name": "תזכורות",
+      "short_name": "תזכורות",
+      "url": "./?act=remind",
+      "icons": [
+        {
+          "src": "icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    }
+  ],
+  "share_target": {
+    "action": "./share",
+    "method": "POST",
+    "enctype": "multipart/form-data",
+    "params": {
+      "title": "title",
+      "text": "text",
+      "url": "url",
+      "files": [
+        {
+          "name": "media",
+          "accept": [
+            "audio/*",
+            ".opus",
+            ".ogg",
+            ".oga",
+            ".m4a",
+            ".aac",
+            ".mp3",
+            ".wav",
+            ".amr",
+            ".3gp"
+          ]
+        }
+      ]
+    }
+  }
 }

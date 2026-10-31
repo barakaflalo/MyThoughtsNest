@@ -163,7 +163,7 @@ pre.diag{white-space:pre-wrap;font-size:.8rem;background:var(--bg2);border:1px s
 <script>
 'use strict';
 /* ============ MyThoughtsNest · AppNest · core ============ */
-var VERSION='1.3.1';
+var VERSION='1.4.0';
 var SUPPORT='appnest55@gmail.com';
 var STORE_URL='https://appnest-store.pages.dev';
 
@@ -222,6 +222,7 @@ he:{
  autoSwitchedNo:'התמלול החי לא עבד יחד עם ההקלטה במכשיר הזה, אז עברתי אוטומטית ל: {0}. כדי לקבל תמלול אחרי ההקלטה: הגדרות › תמלול במכשיר (בלי מפתח) או מפתח AI.',
  wO:'עברית קטן (Ozen) · ~165MB · חלש מתמלול חי',dayNight:'מצב יום/לילה',
  howRec:'איך להקליט',mLiveS:'תמלול חי (בלי שמע, הכי מדויק)',mAudS:'שמע + תמלול אחרי',modeBusy:'אפשר להחליף מצב רק כשלא מקליטים.',
+ shareAud:'התקבל קובץ שמע, מתמלל…',shareAudNo:'הקובץ נשמר כהערה. כדי לתמלל אותו: הגדרות › תמלול במכשיר, או מפתח AI.',shareTxt:'הטקסט נשמר כהערה',shareFail:'לא הצלחתי לקלוט את מה ששיתפת. נסה שוב.',
  wNoGpu:'המכשיר/הדפדפן לא תומכים ב-WebGPU, שנדרש למודל הזה. בחר מודל אחר.',wH:'עברית מדויק (ivrit.ai) · ~1.6GB · ניסיוני, דורש WebGPU',
  wTitle:'תמלול במכשיר (בלי מפתח)',wDesc:'מנוע Whisper שרץ בטלפון עצמו אחרי ההקלטה. מוריד מודל פעם אחת (עשרות עד מאות MB), אחר כך עובד גם בלי אינטרנט והשמע לא יוצא מהמכשיר. בעברית איכות המודלים הקטנים נמוכה והתמלול איטי יותר.',wOn:'הפעל תמלול במכשיר',wOnD:'אחרי כל הקלטה בלי תמלול חי',wModel:'מודל',wCustom:'מזהה מודל מותאם (HuggingFace)',wPrep:'הורד / הכן את המודל עכשיו',wDel:'מחק מודל שהורד',wDl:'מוריד מודל תמלול {0}',wInit:'מכין את המודל…',wRun:'מתמלל במכשיר…',wReady:'המודל מוכן, תמלול במכשיר הופעל',wLoadFail:'טעינת מודל התמלול נכשלה (צריך אינטרנט בפעם הראשונה, או מודל לא תואם).',wDeleted:'המודל שהורד נמחק',wS:'קטן',wB:'בינוני',wT:'זעיר',
  modeHelp:'אם התמלול החי לא עובד יחד עם ההקלטה בטלפון שלך: בחר "הקלטה בלבד" ותמלל אחרי העצירה (במכשיר או עם AI), או "תמלול חי בלבד" (בלי שמע).',
@@ -280,6 +281,7 @@ en:{
  autoSwitchedNo:'Live transcription did not work together with recording on this device, so I switched to: {0}. To get a transcript after recording: Settings › On-device transcription (no key) or an AI key.',
  wO:'Small Hebrew (Ozen) · ~165MB · weaker than live',dayNight:'Day / night mode',
  howRec:'How to record',mLiveS:'Live transcript (no audio, most accurate)',mAudS:'Audio + transcribe after',modeBusy:'You can switch mode only when not recording.',
+ shareAud:'Audio received, transcribing…',shareAudNo:'Saved as a note. To transcribe it: Settings › On-device transcription, or an AI key.',shareTxt:'Text saved as a note',shareFail:'Could not receive what you shared. Try again.',
  wNoGpu:'This device/browser has no WebGPU, which this model needs. Pick another model.',wH:'Accurate Hebrew (ivrit.ai) · ~1.6GB · experimental, needs WebGPU',
  wTitle:'On-device transcription (no key)',wDesc:'A Whisper engine that runs on the phone itself after recording. Downloads a model once (tens to hundreds of MB), then works offline and audio never leaves the device. Small models are weaker in Hebrew and slower.',wOn:'Enable on-device transcription',wOnD:'After each recording that has no live transcript',wModel:'Model',wCustom:'Custom model id (HuggingFace)',wPrep:'Download / prepare model now',wDel:'Delete downloaded model',wDl:'Downloading transcription model {0}',wInit:'Preparing model…',wRun:'Transcribing on device…',wReady:'Model is ready, on-device transcription enabled',wLoadFail:'Could not load the transcription model (needs internet the first time, or incompatible model).',wDeleted:'Downloaded model deleted',wS:'Small',wB:'Base',wT:'Tiny',
  modeHelp:'If live transcription does not work together with recording on your phone: pick "Record only" and transcribe after stopping (on device or with AI), or "Live transcript only" (no audio).',
@@ -1113,6 +1115,36 @@ window.addEventListener('focus',checkReminders);window.addEventListener('pagesho
 /* ============ init ============ */
 function handleRemParam(){
  try{var u=new URL(location.href),id=u.searchParams.get('rem'),act=u.searchParams.get('act');if(id){if(act==='done')remDone(id);else if(act==='snooze')remSnooze(id,10);history.replaceState(null,'',u.pathname)}}catch(e){}}
+async function quickNote(text,src){
+ var folder=S.set.auto?classify(text).folder:'ideas',whenTs=reminderFor(text,folder,false);
+ var n={id:uid(),ts:Date.now(),folder:folder,text:text,dur:0,aud:false,tr:'typed',src:src||''};
+ S.notes.unshift(n);await saveNote(n);
+ if(whenTs){var r=addReminder({noteId:n.id,title:cleanTitle(text),when:whenTs});n.remId=r.id;await saveNote(n)}
+ aiRefine(n);refresh();return n}
+function audioDur(blob){return new Promise(function(res){try{var a=new Audio(),u=URL.createObjectURL(blob),done=function(v){try{URL.revokeObjectURL(u)}catch(e){}res(v)};a.preload='metadata';a.onloadedmetadata=function(){done(isFinite(a.duration)?Math.round(a.duration*1000):0)};a.onerror=function(){done(0)};setTimeout(function(){done(0)},2500);a.src=u}catch(e){res(0)}})}
+async function handleShared(id){
+ try{
+  if(id==='err'||!window.caches){toast(T('shareFail'),5000);return}
+  var c=await caches.open('mtn-share'),mr=await c.match('/__share/'+id+'/meta');
+  if(!mr){toast(T('shareFail'),5000);return}
+  var meta=await mr.json(),made=[],txt=((meta.title||'')+(meta.title&&meta.text?'\n':'')+(meta.text||'')).trim();
+  if(meta.url&&txt.indexOf(meta.url)<0)txt=(txt+'\n'+meta.url).trim();
+  for(var i=0;i<meta.files.length;i++){
+   var f=meta.files[i],r=await c.match(f.k);if(!r)continue;
+   var b=await r.blob(),ty=(f.type||b.type||'').toLowerCase();
+   if(!/^audio\//.test(ty)){if(/\.(opus|ogg|oga|m4a|aac|mp3|wav|amr|3gp)$/i.test(f.name||'')||ty==='application/octet-stream'||!ty)ty='audio/ogg';else continue}
+   if(ty==='audio/opus')ty='audio/ogg';
+   var blob=new Blob([b],{type:ty}),dur=await audioDur(blob);
+   var n={id:uid(),ts:Date.now()+i,folder:'ideas',text:'',dur:dur,aud:true,mime:ty,tr:'none',src:'share'};
+   S.notes.unshift(n);await saveNote(n);await dbPut('audio',{id:n.id,blob:blob,mime:ty});made.push(n)}
+  var keys=await c.keys();for(var k=0;k<keys.length;k++)if(keys[k].url.indexOf('/__share/'+id+'/')>=0)await c.delete(keys[k]);
+  if(made.length){
+   refresh();
+   if(canAI()){toast(T('shareAud'),5000);made.forEach(function(n){aiTranscribeNote(n.id,true)})}
+   else toast(T('shareAudNo'),8000,T('change'),function(){openNote(made[0].id)})}
+  else if(txt){var tn=await quickNote(txt,'share');toast(T('shareTxt'),4500,T('change'),function(){openNote(tn.id)})}
+  else toast(T('shareFail'),5000)
+ }catch(e){toast(T('shareFail'),5000)}}
 async function init(){
  loadSettings();applyPrefs();
  S.dbOk=await dbOpen();
@@ -1129,7 +1161,11 @@ remainingFoldersFix();
  setInterval(checkReminders,10000);
  setTimeout(function(){checkReminders()},400);
  if(!S.set.seenGuide&&!S.notes.length)setTimeout(function(){openGuide(0)},500);
- try{var q=new URL(location.href).searchParams;if(q.get('quick')==='1'){setTimeout(function(){startRec()},600)}}catch(e){}
+ try{var q=new URL(location.href).searchParams;
+  if(q.get('quick')==='1'){setTimeout(function(){startRec()},600)}
+  else if(q.get('act')==='type'){setTimeout(function(){ACT.addTxt()},500)}
+  else if(q.get('act')==='remind'){setTimeout(function(){showSc('remind')},300)}
+  else if(q.get('shared')){var sid=q.get('shared');try{history.replaceState(null,'',location.pathname)}catch(e2){}setTimeout(function(){handleShared(sid)},700)}}catch(e){}
  var day=new Date().toISOString().slice(0,10);
  if(S.notes.length>=10&&S.set.lastBackup&&Date.now()-S.set.lastBackup>14*864e5&&S.set.lastNag!==day){S.set.lastNag=day;saveSet();setTimeout(function(){toast(T('backupRemind'),6000)},1500)}
  else if(S.notes.length>=10&&!S.set.lastBackup&&S.set.lastNag!==day){S.set.lastNag=day;saveSet();setTimeout(function(){toast(T('backupRemind'),6000)},1500)}

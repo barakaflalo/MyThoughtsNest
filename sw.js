@@ -20,7 +20,7 @@ CacheStorage.prototype.match=function(){return sm.apply(this,arguments).then(cle
 })();
 
 /* MyThoughtsNest service worker — bump VERSION on every release */
-var VERSION='mythoughtsnest-v1.3.1';
+var VERSION='mythoughtsnest-v1.4.0';
 var CORE=['./','./manifest.json','./icon-192.png','./icon-512.png','./privacy_policy.html'];
 var OFFLINE='<!doctype html><html lang="he" dir="rtl"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>MyThoughtsNest</title><body style="font-family:system-ui;background:#0b0b0d;color:#f2efe6;display:grid;place-items:center;height:100vh;margin:0;text-align:center"><div><div style="font-size:3rem">🪺</div><h2>אין חיבור כרגע</h2><p>הנתונים שלך שמורים במכשיר.</p><button onclick="location.reload()" style="font-size:1.1rem;padding:12px 22px;border-radius:12px;border:0;background:#d4af37;color:#1a1400;font-weight:800">נסה שוב</button></div></body></html>';
 
@@ -35,10 +35,29 @@ self.addEventListener('activate',function(e){
   }).then(function(){return self.clients.claim();}));
 });
 function timeout(ms){return new Promise(function(_,rej){setTimeout(function(){rej(new Error('timeout'));},ms);});}
+/* Web Share Target: receive shared audio/text, park it in a cache, redirect into the app */
+function handleShare(req){
+  return req.formData().then(function(fd){
+    var id=Date.now().toString(36)+Math.random().toString(36).slice(2,6);
+    var meta={title:String(fd.get('title')||''),text:String(fd.get('text')||''),url:String(fd.get('url')||''),files:[]};
+    var fs=fd.getAll('media');
+    return caches.open('mtn-share').then(function(c){
+      var p=Promise.resolve();
+      fs.forEach(function(f,i){
+        if(!f||typeof f==='string')return;
+        var key='/__share/'+id+'/'+i;
+        meta.files.push({k:key,name:f.name||'',type:f.type||'',size:f.size||0});
+        p=p.then(function(){return c.put(key,new Response(f,{headers:{'Content-Type':f.type||'application/octet-stream'}}));});
+      });
+      return p.then(function(){return c.put('/__share/'+id+'/meta',new Response(JSON.stringify(meta),{headers:{'Content-Type':'application/json'}}));});
+    }).then(function(){return Response.redirect(new URL('./?shared='+id,self.registration.scope).href,303);});
+  }).catch(function(){return Response.redirect(new URL('./?shared=err',self.registration.scope).href,303);});
+}
 self.addEventListener('fetch',function(e){
   var req=e.request;
-  if(req.method!=='GET')return;
   var url=new URL(req.url);
+  if(req.method==='POST'&&url.origin===location.origin&&/\/share\/?$/.test(url.pathname)){e.respondWith(handleShare(req));return;}
+  if(req.method!=='GET')return;
   if(url.origin!==location.origin)return;               /* never touch AI / API calls */
   if(req.mode==='navigate'){
     e.respondWith(
