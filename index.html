@@ -168,7 +168,7 @@ pre.diag{white-space:pre-wrap;font-size:.8rem;background:var(--bg2);border:1px s
 <script>
 'use strict';
 /* ============ MyThoughtsNest · AppNest · core ============ */
-var VERSION='1.6.2';
+var VERSION='1.7.0';
 var SUPPORT='appnest55@gmail.com';
 var STORE_URL='https://appnest-store.pages.dev';
 
@@ -229,7 +229,7 @@ he:{
  howRec:'איך להקליט',mLiveS:'תמלול חי (בלי שמע, הכי מדויק)',mAudS:'שמע + תמלול אחרי',modeBusy:'אפשר להחליף מצב רק כשלא מקליטים.',
  shareAud:'התקבל קובץ שמע, מתמלל…',shareAudNo:'הקובץ נשמר כהערה. כדי לתמלל אותו: הגדרות › תמלול במכשיר, או מפתח AI.',shareTxt:'הטקסט נשמר כהערה',shareFail:'לא הצלחתי לקלוט את מה ששיתפת. נסה שוב.',
  trash:'סל מחזור',trashInfo:'הערות שנמחקו נשמרות כאן 30 יום ואז נמחקות סופית, כולל ההקלטה.',trashEmpty:'סל המחזור ריק.',trashAll:'רוקן את הסל',trashAllAsk:'למחוק סופית את כל מה שבסל?',trashAsk:'למחוק סופית? אי אפשר לשחזר.',trashRestore:'שחזר',trashPurge:'מחק סופית',trashLeft:'יימחק סופית בעוד {0} ימים',
- asst:'עוזר',toList:'הפוך לרשימה מסומנת / חזרה לטקסט',mergeShop:'מזג לרשימה אחת',merged:'מוזגו {0} הערות לרשימה אחת',mergeNone:'אין מה למזג.',shareList:'שתף רשימה',clearDone:'נקה מסומנים',shopNone:'אין פריטים ברשימה.',shopNone2:'אין פריטים מסומנים.',shopCleared:'הוסרו {0} פריטים',
+ keepDraft:'השמירה נכשלה — טיוטת ההקלטה נשמרה ותוכל לשחזר אותה בפתיחה הבאה.',engLbl:'מנוע תמלול אחרי ההקלטה',engAuto:'אוטומטי (ענן אם יש מפתח, אחרת מקומי)',engLocal:'מקומי בלבד (השמע והטקסט לא יוצאים מהמכשיר)',engCloud:'ענן בלבד (דורש מפתח)',engD:'📱 = תומלל במכשיר, ☁️ = תומלל בענן. במצב "מקומי בלבד" גם הסיווג האוטומטי בענן כבוי.', asst:'עוזר',toList:'הפוך לרשימה מסומנת / חזרה לטקסט',mergeShop:'מזג לרשימה אחת',merged:'מוזגו {0} הערות לרשימה אחת',mergeNone:'אין מה למזג.',shareList:'שתף רשימה',clearDone:'נקה מסומנים',shopNone:'אין פריטים ברשימה.',shopNone2:'אין פריטים מסומנים.',shopCleared:'הוסרו {0} פריטים',
  songBuild:'בנה שיר',songTitle:'שם השיר',songStyle:'סגנון (Style) לסונו',songPick:'בחר שורות',songLyrics:'מילים',songCopyL:'העתק מילים',songCopyS:'העתק סגנון',songCopyA:'העתק הכול',songSave:'שמור',songNone:'אין עדיין שורות בתיקיית השירים.',songSaved:'נשמר',
  sumBtn:'סיכום חכם של השבוע',sumTitle:'סיכום השבוע',sumNoKey:'סיכום חכם דורש מפתח AI בהגדרות.',sumNone:'אין הערות מהשבוע האחרון.',sumBusy:'מסכם…',
  dict:'מילון תיקונים',dictD:'מילים שהתמלול טועה בהן יתוקנו אוטומטית. שורה לכל תיקון, בפורמט: שגוי = נכון (למשל: סוּנוֹ = סונו).',
@@ -293,7 +293,7 @@ en:{
  howRec:'How to record',mLiveS:'Live transcript (no audio, most accurate)',mAudS:'Audio + transcribe after',modeBusy:'You can switch mode only when not recording.',
  shareAud:'Audio received, transcribing…',shareAudNo:'Saved as a note. To transcribe it: Settings › On-device transcription, or an AI key.',shareTxt:'Text saved as a note',shareFail:'Could not receive what you shared. Try again.',
  trash:'Trash',trashInfo:'Deleted notes stay here for 30 days, then are removed for good, including the audio.',trashEmpty:'Trash is empty.',trashAll:'Empty trash',trashAllAsk:'Permanently delete everything in the trash?',trashAsk:'Delete permanently? This cannot be undone.',trashRestore:'Restore',trashPurge:'Delete forever',trashLeft:'Removed for good in {0} days',
- asst:'Assistant',toList:'Checklist / text',mergeShop:'Merge into one list',merged:'Merged {0} notes into one list',mergeNone:'Nothing to merge.',shareList:'Share list',clearDone:'Clear checked',shopNone:'No items in the list.',shopNone2:'No checked items.',shopCleared:'Removed {0} items',
+ keepDraft:'Saving failed — the recording draft was kept and can be recovered on next launch.',engLbl:'Transcription engine after recording',engAuto:'Auto (cloud if key, else local)',engLocal:'Local only (audio and text stay on device)',engCloud:'Cloud only (needs key)',engD:'📱 = on-device, ☁️ = cloud. "Local only" also turns off cloud auto-classification.', asst:'Assistant',toList:'Checklist / text',mergeShop:'Merge into one list',merged:'Merged {0} notes into one list',mergeNone:'Nothing to merge.',shareList:'Share list',clearDone:'Clear checked',shopNone:'No items in the list.',shopNone2:'No checked items.',shopCleared:'Removed {0} items',
  songBuild:'Build a song',songTitle:'Song title',songStyle:'Style (for Suno)',songPick:'Pick lines',songLyrics:'Lyrics',songCopyL:'Copy lyrics',songCopyS:'Copy style',songCopyA:'Copy all',songSave:'Save',songNone:'No lines in the songs folder yet.',songSaved:'Saved',
  sumBtn:'Smart summary of the week',sumTitle:'Weekly summary',sumNoKey:'Smart summary needs an AI key in Settings.',sumNone:'No notes from the last week.',sumBusy:'Summarizing…',
  dict:'Correction dictionary',dictD:'Words the transcript gets wrong are fixed automatically. One per line, format: wrong = right.',
@@ -325,7 +325,7 @@ function dl(blob,name){var a=document.createElement('a');a.href=URL.createObject
 function vibrate(p){try{if(navigator.vibrate)navigator.vibrate(p)}catch(e){}}
 
 /* ---------- state ---------- */
-var DEF={dict:'',localAI:false,wModel:'itayinbar/Ozen-v1',wCustom:'',lang:'he',theme:'gold',zoom:1,user:'',mode:'both',recLang:'he-IL',auto:true,target:'auto',speak:true,beep:true,vib:true,defTime:'09:00',provider:'gemini',keyG:'',keyO:'',gModel:'',autoAI:true,lastBackup:0,seenGuide:0,lastNag:''};
+var DEF={eng:'auto',dict:'',localAI:false,wModel:'itayinbar/Ozen-v1',wCustom:'',lang:'he',theme:'gold',zoom:1,user:'',mode:'both',recLang:'he-IL',auto:true,target:'auto',speak:true,beep:true,vib:true,defTime:'09:00',provider:'gemini',keyG:'',keyO:'',gModel:'',autoAI:true,lastBackup:0,seenGuide:0,lastNag:''};
 var SYSF=[{id:'ideas',sys:'ideas',icon:'💡'},{id:'songs',sys:'songs',icon:'🎵'},{id:'shop',sys:'shop',icon:'🛒'},{id:'tasks',sys:'tasks',icon:'⏰'}];
 var S={set:{},folders:[],notes:[],trash:[],rem:[],dbOk:false};
 function loadSettings(){var s=safeParse('mtn_set',{});S.set={};for(var k in DEF)S.set[k]=(s[k]!==undefined&&typeof s[k]===typeof DEF[k])?s[k]:DEF[k];
@@ -484,7 +484,7 @@ function checkReminders(){
  S.rem.forEach(function(r){if(!r.fired&&!r.done&&r.when<=now)due.push(r)});
  if(!due.length)return;
  due.forEach(function(r){
-  if(r.repeat&&r.repeat!=='none'){alarmQ.push({id:r.id,title:r.title,when:r.when});r.when=nextRepeat(r,now);r.fired=false}
+  if(r.repeat&&r.repeat!=='none'){alarmQ.push({id:r.id,title:r.title,when:r.when});r.when=nextRepeat(r,now);r.fired=false;r.pend=now}
   else{r.fired=true;alarmQ.push({id:r.id,title:r.title,when:r.when})}
   if(document.hidden||!document.hasFocus())showSysNotif(r)});
  saveRem();showAlarm();if(curSc==='remind'||curSc==='home')refresh()}
@@ -502,7 +502,7 @@ function showAlarm(){
   '<div class="btns"><button class="btn pri" data-act="alDone" data-id="'+esc(a.id)+'">✓ '+esc(T('done'))+'</button><button class="btn" data-act="alSnooze" data-id="'+esc(a.id)+'">⏳ '+esc(T('snooze'))+'</button><button class="btn" data-act="alSpeak" data-id="'+esc(a.id)+'">🔊 '+esc(T('speakNow'))+'</button><button class="btn" data-act="alClose">'+esc(T('dismiss'))+'</button></div>',
   {center:true,sticky:true,noFocus:true,onClose:function(){alarmQ.shift();if(alarmQ.length)setTimeout(showAlarm,150)}});
  beep();if(S.set.vib)vibrate([300,150,300,150,300]);speakText(a.title)}
-function remDone(id){var r=remById(id);if(!r)return;if(r.repeat&&r.repeat!=='none'){var now=Date.now();if(r.when<=now)r.when=nextRepeat(r,now);else{var d=new Date(r.when);d.setDate(d.getDate()+(r.repeat==='daily'?1:7));r.when=d.getTime()}r.fired=false;r.done=false}else{r.done=true;r.fired=true}saveRem()}
+function remDone(id){var r=remById(id);if(!r)return;if(r.repeat&&r.repeat!=='none'){var now=Date.now();if(r.when<=now)r.when=nextRepeat(r,now);else if(r.pend&&now-r.pend<864e5){}else{var d=new Date(r.when);d.setDate(d.getDate()+(r.repeat==='daily'?1:7));r.when=d.getTime()}r.fired=false;r.done=false;r.pend=0}else{r.done=true;r.fired=true}saveRem()}
 function remSnooze(id,mins){var r=remById(id);if(r){r.when=Date.now()+mins*6e4;r.fired=false;r.done=false;saveRem()}}
 /* ICS export — the "always arrives" path (phone calendar) */
 function icsDate(ts){var d=new Date(ts);return d.getUTCFullYear()+pad(d.getUTCMonth()+1)+pad(d.getUTCDate())+'T'+pad(d.getUTCHours())+pad(d.getUTCMinutes())+pad(d.getUTCSeconds())+'Z'}
@@ -588,15 +588,15 @@ async function stopRec(){
  if(!text&&!blob){toast(T('nothing'));dbDelPrefix('audio','d:'+draft+':');return}
  await finalizeCapture(text,blob,dur,err,both,draft)}
 function hasKey(){return !!(S.set.provider==='openai'?S.set.keyO:S.set.keyG)}
-function canAI(){return hasKey()||!!S.set.localAI}
+function canAI(){var e=S.set.eng||'auto';return e==='local'?true:e==='cloud'?hasKey():(hasKey()||!!S.set.localAI)}
 async function finalizeCapture(text,blob,dur,srErr,both,draft){
  text=applyDict(text);
  var tgt=S.set.target,explicit=tgt!=='auto'&&folderOf(tgt).id===tgt,folder='ideas';
  if(explicit)folder=tgt;else if(S.set.auto&&text)folder=classify(text).folder;
  var whenTs=reminderFor(text,folder,explicit);
  var n={id:uid(),ts:Date.now(),folder:folder,text:text,dur:dur,aud:!!blob,mime:blob?blob.type:'',tr:text?'live':'none'};
- S.notes.unshift(n);var ok=await saveNote(n);if(blob)await dbPut('audio',{id:n.id,blob:blob,mime:blob.type});
- if(draft)dbDelPrefix('audio','d:'+draft+':');
+ S.notes.unshift(n);var ok=await saveNote(n),aok=true;if(blob)aok=await dbPut('audio',{id:n.id,blob:blob,mime:blob.type});
+ if(ok!==false&&aok!==false){if(draft)dbDelPrefix('audio','d:'+draft+':')}else{toast(T('keepDraft'),9000)}
  if(ok===false){refresh();return}
  var f=folderOf(folder),msg=T('saved',f.icon+' '+fName(f));
  if(whenTs){var r=addReminder({noteId:n.id,title:cleanTitle(text),when:whenTs});n.remId=r.id;saveNote(n);msg=T('remSet',fmtWhen(whenTs))+' · '+f.icon+' '+fName(f)}
@@ -613,7 +613,7 @@ async function recoverDrafts(){
  var cnt=0;
  for(var g in groups){var ch=groups[g].sort(function(a,b){return a.id<b.id?-1:1}),blob=new Blob(ch.map(function(c){return c.blob}),{type:ch[0].mime||'audio/webm'});
   var n={id:uid(),ts:ch[0].ts||Date.now(),folder:'ideas',text:'',dur:ch.length*1000,aud:true,mime:blob.type,tr:'none',rec:true};
-  S.notes.push(n);await saveNote(n);await dbPut('audio',{id:n.id,blob:blob,mime:blob.type});await dbDelPrefix('audio','d:'+g+':');cnt++}
+  S.notes.push(n);await saveNote(n);var ao=await dbPut('audio',{id:n.id,blob:blob,mime:blob.type});if(ao!==false)await dbDelPrefix('audio','d:'+g+':');cnt++}
  S.notes.sort(function(a,b){return b.ts-a.ts});return cnt}
 
 /* ============ AI (BYOK, optional) ============ */
@@ -715,7 +715,7 @@ async function aiTranscribeNote(id,quiet){
  if(aiBusy[id])return;
  var rec=n.aud?await dbGet('audio',id):null;if(!rec||!rec.blob){toast(T('aiNoAudio'));return}
  aiBusy[id]=1;refresh();refreshEditor(id);
- try{var tx;if(hasKey()){try{tx=await aiTranscribeBlob(rec.blob)}catch(e0){if(!S.set.localAI||(e0&&e0.message==='LONG'))throw e0;tx=await localTranscribeBlob(rec.blob)}}else tx=await localTranscribeBlob(rec.blob);
+ try{var tx,eg=S.set.eng||'auto';if(eg==='local'||(!hasKey()&&eg!=='cloud')){tx=await localTranscribeBlob(rec.blob);n.eng='local'}else if(hasKey()){try{tx=await aiTranscribeBlob(rec.blob);n.eng='cloud'}catch(e0){if(eg==='cloud'||!S.set.localAI||(e0&&e0.message==='LONG'))throw e0;tx=await localTranscribeBlob(rec.blob);n.eng='local'}}else throw new Error('NO_AI');
   if(tx){tx=applyDict(tx);var wasEmpty=!n.text;if(n.text&&n.text!==tx)n.alt=n.text;n.text=tx;n.tr='ai';
    if(wasEmpty&&S.set.auto&&S.set.target==='auto'&&!n.manual){n.folder=classify(tx).folder;var w=reminderFor(tx,n.folder,false);if(w&&!n.remId){var r=addReminder({noteId:n.id,title:cleanTitle(tx),when:w});n.remId=r.id;toast(T('remSet',fmtWhen(w)),5000)}}
    await saveNote(n);toast(T('aiDone'));aiRefine(n)}
@@ -736,7 +736,7 @@ async function aiClassify(text){
  if(o.reminder&&/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}/.test(o.reminder)){var t=new Date(o.reminder).getTime();if(t>Date.now()+3e4)out.ts=t}
  return out}
 async function aiRefine(n){
- if(!(S.set.autoAI&&hasKey()&&S.set.auto&&S.set.target==='auto'&&n.text&&!n.manual))return;
+ if(!(S.set.autoAI&&hasKey()&&S.set.eng!=='local'&&S.set.auto&&S.set.target==='auto'&&n.text&&!n.manual))return;
  try{var r=await aiClassify(n.text),msgs=[];
   if(n.manual)return;
   if(r.folder&&r.folder!==n.folder){n.folder=r.folder;var f=folderOf(r.folder);msgs.push(T('movedTo',f.icon+' '+fName(f)))}
@@ -795,7 +795,7 @@ function targetChips(){
  S.folders.forEach(function(f){h+='<button class="chip'+(S.set.target===f.id?' on':'')+'" data-act="tgt" data-f="'+esc(f.id)+'">'+esc(f.icon)+' '+esc(fName(f))+'</button>'});return h}
 function metaOf(n){
  var m=[esc(fmtDate(n.ts)+' '+fmtTime(n.ts))];if(n.dur)m.push('🎙 '+esc(fmtDur(n.dur)));
- if(n.tr==='ai')m.push('✨ AI');
+ if(n.tr==='ai')m.push('✨ AI'+(n.eng==='local'?' 📱':n.eng==='cloud'?' ☁️':''));
  var r=n.remId&&remById(n.remId);if(r&&!r.done)m.push('⏰ '+esc(fmtWhen(r.when)));
  if(aiBusy[n.id])m.push('<span class="spin"></span> '+esc(T('aiBusy')));
  return m.join('<span>·</span>')}
@@ -883,7 +883,7 @@ function vSettings(){
  if(g)h+='<label class="f">'+esc(T('model'))+'</label><select data-set="gModel" id="gmodel">'+modelOpts()+'</select>';
  h+='<div class="btns"><button class="btn sm" data-act="aiTest">'+esc(T('test'))+'</button>'+(g?'<button class="btn sm" data-act="aiModels">'+esc(T('refresh'))+'</button>':'')+'<button class="btn sm dng" data-act="aiDisc">'+esc(T('disconnect'))+'</button></div><div class="muted">'+esc(T('keyHow'))+'</div></div>';
  h+='<h2>📖 '+esc(T('dict'))+'</h2><div class="card"><div class="muted">'+esc(T('dictD'))+'</div><textarea data-dict="1" dir="auto" style="min-height:90px;margin-top:8px" placeholder="סוּנוֹ = סונו">'+esc(s.dict||'')+'</textarea></div>';
- h+='<h2>🧠 '+esc(T('wTitle'))+'</h2><div class="card"><div class="muted">'+esc(T('wDesc'))+'</div></div><div class="list">'+sw('localAI',T('wOn'),T('wOnD'))+'</div><div class="card"><label class="f">'+esc(T('wModel'))+'</label><select data-set="wModel">'+[['itayinbar/Ozen-v1',T('wO')],['onnx-community/whisper-tiny',T('wT')+' · ~40MB'],['onnx-community/whisper-base',T('wB')+' · ~80MB'],['onnx-community/whisper-small',T('wS')+' · ~250MB'],['lial-apps/siman-ivrit-turbo',T('wH')],['custom','Custom']].map(function(o){return '<option value="'+o[0]+'"'+(s.wModel===o[0]?' selected':'')+'>'+esc(o[1])+'</option>'}).join('')+'</select>'+(s.wModel==='custom'?'<label class="f">'+esc(T('wCustom'))+'</label><input type="text" data-set="wCustom" value="'+esc(s.wCustom)+'" dir="ltr" spellcheck="false" placeholder="user/whisper-model-onnx">':'')+'<div class="btns"><button class="btn sm" data-act="wPrep">⬇ '+esc(T('wPrep'))+'</button><button class="btn sm" data-act="wDel">🗑 '+esc(T('wDel'))+'</button></div></div>';
+ h+='<h2>🧠 '+esc(T('wTitle'))+'</h2><div class="card"><div class="muted">'+esc(T('wDesc'))+'</div></div><div class="list">'+sw('localAI',T('wOn'),T('wOnD'))+'</div><div class="card"><label class="f">'+esc(T('engLbl'))+'</label><select data-set="eng">'+[['auto',T('engAuto')],['local',T('engLocal')],['cloud',T('engCloud')]].map(function(o){return '<option value="'+o[0]+'"'+((s.eng||'auto')===o[0]?' selected':'')+'>'+esc(o[1])+'</option>'}).join('')+'</select><div class="muted">'+esc(T('engD'))+'</div></div><div class="card"><label class="f">'+esc(T('wModel'))+'</label><select data-set="wModel">'+[['itayinbar/Ozen-v1',T('wO')],['onnx-community/whisper-tiny',T('wT')+' · ~40MB'],['onnx-community/whisper-base',T('wB')+' · ~80MB'],['onnx-community/whisper-small',T('wS')+' · ~250MB'],['lial-apps/siman-ivrit-turbo',T('wH')],['custom','Custom']].map(function(o){return '<option value="'+o[0]+'"'+(s.wModel===o[0]?' selected':'')+'>'+esc(o[1])+'</option>'}).join('')+'</select>'+(s.wModel==='custom'?'<label class="f">'+esc(T('wCustom'))+'</label><input type="text" data-set="wCustom" value="'+esc(s.wCustom)+'" dir="ltr" spellcheck="false" placeholder="user/whisper-model-onnx">':'')+'<div class="btns"><button class="btn sm" data-act="wPrep">⬇ '+esc(T('wPrep'))+'</button><button class="btn sm" data-act="wDel">🗑 '+esc(T('wDel'))+'</button></div></div>';
  h+='<div class="list">'+sw('autoAI',T('autoAI2'),T('autoAI2d'))+'</div>';
  h+='<div class="btns" style="margin-top:20px"><button class="btn dng" data-act="wipe">🗑 '+esc(T('wipe'))+'</button></div>';
  return h+foot()}
@@ -981,11 +981,11 @@ function byline(){return S.set.user?'\n— '+T('byU',S.set.user):''}
 ACT.edCopy=async function(){if(!EDN)return;try{await navigator.clipboard.writeText(EDN.text||'');toast(T('copied'))}catch(e){toast(T('saveFail'))}};
 ACT.edShare=async function(){if(!EDN)return;var txt=(EDN.text||'')+byline();try{if(navigator.share)await navigator.share({text:txt});else{await navigator.clipboard.writeText(txt);toast(T('copied'))}}catch(e){}};
 ACT.edItems=function(){if(!EDN)return;if(EDN.items&&EDN.items.length){EDN.itemsPrev=EDN.items;EDN.items=null}else{EDN.items=splitItems(EDN.text,EDN.itemsPrev)}saveNote(EDN);refreshEditor(EDN.id);refresh()};
-var MULTI=['שמן זית','חלב סויה','חלב שקדים','חלב שיבולת שועל','גבינה צהובה','גבינה לבנה','גבינה בולגרית','קמח מלא','נייר טואלט','נייר סופג','אבקת כביסה','חומץ בלסמי','רסק עגבניות','עגבניות שרי','תפוחי אדמה','בטטה מתוקה','שמנת מתוקה','שמנת חמוצה','אבקת אפייה','סוכר חום','מלח ים','פלפל שחור','פלפל חריף','לחם קל','קוטג׳ 5%','מי סודה','משחת שיניים','מרכך כביסה','נוזל כלים'];
+var MULTI=['בקבוק מים','מים מינרליים','בקבוק מים מינרליים','שמן קנולה','שמן זית','מיץ תפוזים','חלב שוקולד','שקיות זבל','סבון כלים','משחת שיניים','מברשת שיניים','קפה שחור','תה ירוק','קורנפלקס שוקולד','חלב סויה','חלב שקדים','חלב שיבולת שועל','גבינה צהובה','גבינה לבנה','גבינה בולגרית','קמח מלא','נייר טואלט','נייר סופג','אבקת כביסה','חומץ בלסמי','רסק עגבניות','עגבניות שרי','תפוחי אדמה','בטטה מתוקה','שמנת מתוקה','שמנת חמוצה','אבקת אפייה','סוכר חום','מלח ים','פלפל שחור','פלפל חריף','לחם קל','קוטג׳ 5%','מי סודה','משחת שיניים','מרכך כביסה','נוזל כלים'];
 function splitItems(t,prev){
  var raw=String(t||'').replace(/^\s*(?:(?:תוסיף|הוסף|תכניס|הכנס|תרשום|רשום)\s+)?(?:(?:ל|אל\s+)?(?:רשימת\s+(?:ה)?קניות|רשימה|קניות)\s*[:\-]?\s*)/,'').replace(/^\s*(צריך לקנות|צריכה לקנות|לקנות)\s*/,'').replace(/\.{2,}|…/g,','),parts;
  if(/[\n,،;]/.test(raw)||/\sו(?=\S)/.test(raw)){parts=raw.split(/[\n,،;]+|\s+ו(?=\S)/).map(function(x){return x.replace(/^[\s\-•*]+|\s+$/g,'')}).filter(Boolean)}
- else{var w=raw.trim().split(/\s+/).filter(Boolean);parts=[];for(var i=0;i<w.length;i++){var two=w[i]+' '+(w[i+1]||'');if(w[i+1]&&MULTI.indexOf(two)>-1){parts.push(two);i++}else parts.push(w[i])}}
+ else{var w=raw.trim().split(/\s+/).filter(Boolean);parts=[];for(var i=0;i<w.length;i++){var thr=w[i]+' '+(w[i+1]||'')+' '+(w[i+2]||''),two=w[i]+' '+(w[i+1]||'');if(w[i+2]&&MULTI.indexOf(thr)>-1){parts.push(thr);i+=2}else if(w[i+1]&&MULTI.indexOf(two)>-1){parts.push(two);i++}else parts.push(w[i])}}
  var done={};(prev||[]).forEach(function(p){if(p.d)done[p.t]=1});
  return parts.map(function(x){return {t:x,d:!!done[x]}})}
 ACT.edRemAdd=function(){
@@ -1100,7 +1100,7 @@ async function doRestore(file){
  remainingFoldersFix();S.notes.sort(function(a,b){return b.ts-a.ts});saveSet();saveFolders();saveRem();applyPrefs();render();toast(T('restoreOk'))}
 ACT.wipe=async function(){
  if(!await confirmDlg(T('wipeAsk1'),T('yes'),true))return;if(!await confirmDlg(T('wipeAsk2'),T('yes'),true))return;
- await dbClear('notes');await dbClear('audio');S.notes=[];S.trash=[];S.rem=[];S.folders=SYSF.map(function(x){return {id:x.id,sys:x.sys,icon:x.icon}});S.set.target='auto';S.set.keyG='';S.set.keyO='';S.set.gModel='';saveSet();saveFolders();saveRem();stopPlay();render();toast(T('wiped'))};
+ await dbClear('notes');await dbClear('audio');S.notes=[];S.trash=[];S.rem=[];S.folders=SYSF.map(function(x){return {id:x.id,sys:x.sys,icon:x.icon}});S.set.target='auto';S.set.keyG='';S.set.keyO='';S.set.gModel='';try{Object.keys(localStorage).forEach(function(k){if(k.indexOf('appnest_asst_hist')===0)localStorage.removeItem(k)})}catch(e){}try{if(window.caches)caches.delete('mtn-share')}catch(e){}saveSet();saveFolders();saveRem();stopPlay();render();toast(T('wiped'))};
 ACT.shareApp=async function(){var d={title:'MyThoughtsNest',text:T('app')+' — AppNest',url:location.href.split('#')[0]};try{if(navigator.share)await navigator.share(d);else{await navigator.clipboard.writeText(d.url);toast(T('copied'))}}catch(e){}};
 
 /* guide */
@@ -1206,7 +1206,7 @@ init();
 
 
 /* ============ v1.6 features: trash, shopping share, song builder, dictionary, smart summary ============ */
-var SG={sel:{},title:'',style:''};
+var SG={sel:{},title:'',style:'',lyr:null};
 function applyDict(t){var d=S.set.dict;if(!d||!t)return t;
  d.split(/\n/).forEach(function(l){var m=l.match(/^\s*(.+?)\s*(?:=>|->|→|=)\s*(.+?)\s*$/);if(!m)return;
   var a=m[1].replace(/[.*+?^${}()|[\]\\]/g,'\\$&'),b=m[2];
@@ -1240,7 +1240,7 @@ ACT.clearDone=async function(){var cnt=0,ns=S.notes.filter(function(n){return n.
   if(!left.length){await deleteNote(n)}else{n.items=left;n.text=left.map(function(x){return x.t}).join('\n');await saveNote(n)}}
  refresh();toast(cnt?T('shopCleared',cnt):T('shopNone2'))};
 /* ---- song builder ---- */
-function songLines(){return S.notes.filter(function(n){return n.folder==='songs'&&n.text}).slice().reverse()}
+function songLines(){return S.notes.filter(function(n){return n.folder==='songs'&&n.text&&n.src!=='songcard'}).slice().reverse()}
 function sgBuild(){return songLines().filter(function(n){return SG.sel[n.id]!==false}).map(function(n){return n.text.trim()}).join('\n')}
 ACT.songBuild=function(){
  var ls=songLines();if(!ls.length){toast(T('songNone'));return}
@@ -1248,20 +1248,22 @@ ACT.songBuild=function(){
  h+='<label class="f">'+esc(T('songTitle'))+'</label><input id="sgT" type="text" value="'+esc(SG.title)+'">';
  h+='<label class="f">'+esc(T('songStyle'))+'</label><input id="sgS" type="text" dir="ltr" placeholder="pop, acoustic, warm male vocals" value="'+esc(SG.style)+'">';
  h+='<label class="f">'+esc(T('songPick'))+'</label><ul class="items" id="sgList">'+ls.map(function(n){var on=SG.sel[n.id]!==false;return '<li role="checkbox" aria-checked="'+on+'" tabindex="0" data-act="sgTg" data-id="'+esc(n.id)+'"><span class="box" style="'+(on?'background:var(--ac);color:var(--acx);border-color:var(--ac)':'')+'">'+(on?'✓':'')+'</span><span>'+esc(snipS(n.text,80))+'</span></li>'}).join('')+'</ul>';
- h+='<label class="f">'+esc(T('songLyrics'))+'</label><textarea id="sgL" style="min-height:160px">'+esc(sgBuild())+'</textarea>';
+ h+='<label class="f">'+esc(T('songLyrics'))+'</label><textarea id="sgL" style="min-height:160px">'+esc(SG.lyr!==null?SG.lyr:sgBuild())+'</textarea>';
  h+='<div class="btns"><button class="btn sm" data-act="sgCopyL">📋 '+esc(T('songCopyL'))+'</button><button class="btn sm" data-act="sgCopyS">📋 '+esc(T('songCopyS'))+'</button><button class="btn sm" data-act="sgCopyA">📋 '+esc(T('songCopyA'))+'</button></div><div class="btns"><button class="btn pri" data-act="sgSave">💾 '+esc(T('songSave'))+'</button><button class="btn" data-act="sgClose">'+esc(T('close'))+'</button></div>';
  openOv('song',h)};
 function snipS(t,n){t=String(t||'').replace(/\s+/g,' ').trim();return t.length>n?t.slice(0,n)+'…':t}
-function sgRead(){var a=$('#sgT'),b=$('#sgS');if(a)SG.title=a.value.trim();if(b)SG.style=b.value.trim()}
+function sgRead(){var a=$('#sgT'),b=$('#sgS'),l=$('#sgL');if(l&&l.value!==sgBuild())SG.lyr=l.value;if(a)SG.title=a.value.trim();if(b)SG.style=b.value.trim()}
 ACT.sgClose=function(){sgRead();closeOv('song')};
-ACT.sgTg=function(el){sgRead();var id=el.dataset.id;SG.sel[id]=SG.sel[id]===false;ACT.songBuild()};
+ACT.sgTg=function(el){sgRead();var id=el.dataset.id,n=S.notes.filter(function(x){return x.id===id})[0],was=SG.sel[id]!==false;SG.sel[id]=!was;
+ if(SG.lyr!==null&&n){var t=n.text.trim();if(was){var i=SG.lyr.indexOf(t);if(i>-1)SG.lyr=(SG.lyr.slice(0,i)+SG.lyr.slice(i+t.length)).replace(/\n{3,}/g,'\n\n').replace(/^\n+|\n+$/g,'')}else SG.lyr=(SG.lyr?SG.lyr+'\n':'')+t}
+ ACT.songBuild()};
 async function sgCopy(t){try{await navigator.clipboard.writeText(t);toast(T('copied'))}catch(e){toast(T('saveFail'))}}
 ACT.sgCopyL=function(){sgRead();sgCopy(($('#sgL')||{}).value||'')};
 ACT.sgCopyS=function(){sgRead();sgCopy(SG.style)};
 ACT.sgCopyA=function(){sgRead();sgCopy('Title: '+SG.title+'\nStyle: '+SG.style+'\n\nLyrics:\n'+(($('#sgL')||{}).value||''))};
 ACT.sgSave=async function(){sgRead();var l=($('#sgL')||{}).value||'';if(!l.trim())return;
  var txt=(SG.title?SG.title+'\n\n':'')+l+(SG.style?'\n\n['+SG.style+']':'');
- var n={id:uid(),ts:Date.now(),folder:'songs',text:txt,dur:0,aud:false,tr:'typed',src:'songcard'};S.notes.unshift(n);await saveNote(n);closeOv('song');refresh();toast(T('songSaved'))};
+ var n={id:uid(),ts:Date.now(),folder:'songs',text:txt,dur:0,aud:false,tr:'typed',src:'songcard'};S.notes.unshift(n);await saveNote(n);closeOv('song');SG.lyr=null;SG.sel={};refresh();toast(T('songSaved'))};
 /* ---- smart summary (needs a key) ---- */
 async function aiText(prompt){return S.set.provider==='openai'?await openaiChat(prompt):await geminiRun([{text:prompt}])}
 ACT.summarize=async function(){
