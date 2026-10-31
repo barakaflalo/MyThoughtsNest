@@ -351,7 +351,7 @@
     var row = el('div', 'display:flex;flex-wrap:wrap;gap:6px;justify-content:flex-end;margin:4px 0 8px;');
     list.forEach(function (s) {
       var chip = el('button', 'background:#1e1e26;color:#C9A84C;border:1px solid #C9A84C55;border-radius:14px;padding:6px 11px;font:13px "Segoe UI",sans-serif;cursor:pointer;direction:rtl;', s);
-      chip.onclick = function () { if (busy) return; inp.value = s; row.remove(); send(inp); };
+      chip.onclick = function () { if (busy) return; inp.value = s; row.remove(); if (CFG.chipsFill) { inp.focus(); try { inp.setSelectionRange(s.length, s.length); } catch (e) {} } else send(inp); };
       row.appendChild(chip);
     });
     bodyEl.appendChild(row); bodyEl.scrollTop = bodyEl.scrollHeight;
@@ -362,7 +362,7 @@
     var row = el('div', 'display:flex;flex-wrap:wrap;gap:6px;justify-content:flex-end;margin:4px 0 8px;');
     sugg.forEach(function (s) {
       var chip = el('button', 'background:#1e1e26;color:#C9A84C;border:1px solid #C9A84C55;border-radius:14px;padding:6px 11px;font:13px "Segoe UI",sans-serif;cursor:pointer;direction:rtl;', s);
-      chip.onclick = function () { inp.value = s; row.remove(); send(inp); };
+      chip.onclick = function () { inp.value = s; row.remove(); if (CFG.chipsFill) { inp.focus(); try { inp.setSelectionRange(s.length, s.length); } catch (e) {} } else send(inp); };
       row.appendChild(chip);
     });
     bodyEl.appendChild(row); bodyEl.scrollTop = bodyEl.scrollHeight;
@@ -457,6 +457,7 @@
   function addButton() {
     if (document.getElementById('appnest-assistant-btn')) return;
     var UI = CFG.ui || {};
+    if (UI.noFab) return;
     var b = el('button', 'position:fixed;bottom:' + (UI.btnBottom || '16px') + ';left:' + (UI.btnLeft || '16px') + ';z-index:100000;background:#C9A84C;color:#0B0B0F;border:none;' +
       'border-radius:24px;padding:' + (UI.btnPad || '10px 18px') + ';font:600 15px "Segoe UI",sans-serif;cursor:pointer;box-shadow:0 4px 16px rgba(0,0,0,.4);', UI.btnText || '🪄 עוזר');
     b.setAttribute('aria-label', 'עוזר ' + (CFG.appName || ''));
