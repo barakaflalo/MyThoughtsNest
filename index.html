@@ -161,7 +161,7 @@ pre.diag{white-space:pre-wrap;font-size:.8rem;background:var(--bg2);border:1px s
 <script>
 'use strict';
 /* ============ MyThoughtsNest · AppNest · core ============ */
-var VERSION='1.2.0';
+var VERSION='1.2.1';
 var SUPPORT='appnest55@gmail.com';
 var STORE_URL='https://appnest-store.pages.dev';
 
@@ -180,7 +180,7 @@ he:{
  srNet:'התמלול החי דורש אינטרנט.',srDeny:'אין הרשאה לתמלול קולי.',
  noText:'🎧 הקלטה בלי תמלול',editNote:'עריכת הערה',newNote:'הערה חדשה',noteText:'הטקסט',folder:'תיקייה',close:'סגור',del:'מחק',edit:'ערוך',
  play:'נגן',pause:'השהה',dl:'הורד שמע',share:'שתף',copy:'העתק',copied:'הועתק',
- aiTr:'תמלל עם AI',aiBusy:'מתמלל…',aiDone:'התמלול עודכן',aiRestore:'שחזר תמלול קודם',aiNoKey:'כדי לתמלל צריך להפעיל "תמלול במכשיר" או להזין מפתח AI בהגדרות.',aiFail:'התמלול נכשל: {0}',aiLong:'ההקלטה ארוכה מדי לתמלול AI (מעל 6 דקות).',aiNoAudio:'אין שמע שמור להערה הזו.',
+ aiTr:'תמלל',aiBusy:'מתמלל…',aiDone:'התמלול עודכן',aiRestore:'שחזר תמלול קודם',aiNoKey:'כדי לתמלל צריך להפעיל "תמלול במכשיר" או להזין מפתח AI בהגדרות.',aiFail:'התמלול נכשל: {0}',aiLong:'ההקלטה ארוכה מדי לתמלול AI (מעל 6 דקות).',aiNoAudio:'אין שמע שמור להערה הזו.',
  rem:'תזכורת',remAdd:'הוסף תזכורת',remNew:'תזכורת חדשה',remEdit:'עריכת תזכורת',remTitle:'על מה להזכיר?',remWhen:'מתי',remRepeat:'חזרה',r_none:'פעם אחת',r_daily:'כל יום',r_weekly:'כל שבוע',
  remHonest:'התראה מתוך האפליקציה מגיעה כשהיא פתוחה או פועלת ברקע. לתזכורת שמגיעה תמיד, גם כשהאפליקציה סגורה לגמרי — הוסף ליומן של הטלפון (📅).',
  remNotif:'הפעל התראות מערכת',remNotifOn:'התראות מערכת פעילות',remNotifNo:'ההתראות חסומות בדפדפן. אפשר לאשר בהגדרות האתר.',
@@ -218,7 +218,7 @@ he:{
  movedTo:'הועבר ל{0}',recovered:'שוחזרה הקלטה שנקטעה באמצע',micNone:'לא נמצא מיקרופון',micFail:'ההקלטה לא התחילה ({0})',
  restoreNoAudio:'הגיבוי הזה בלי שמע — הקלטות קיימות במכשיר יימחקו.',
  autoSwitchedNo:'התמלול החי לא עבד יחד עם ההקלטה במכשיר הזה, אז עברתי אוטומטית ל: {0}. כדי לקבל תמלול אחרי ההקלטה: הגדרות › תמלול במכשיר (בלי מפתח) או מפתח AI.',
- wTitle:'תמלול במכשיר (בלי מפתח)',wDesc:'מנוע Whisper שרץ בטלפון עצמו אחרי ההקלטה. מוריד מודל פעם אחת (עשרות עד מאות MB), אחר כך עובד גם בלי אינטרנט והשמע לא יוצא מהמכשיר. בעברית איכות המודלים הקטנים נמוכה והתמלול איטי יותר.',wOn:'הפעל תמלול במכשיר',wOnD:'אחרי כל הקלטה בלי תמלול חי',wModel:'מודל',wCustom:'מזהה מודל מותאם (HuggingFace)',wPrep:'הורד / הכן את המודל עכשיו',wDel:'מחק מודל שהורד',wDl:'מוריד מודל תמלול {0}',wInit:'מכין את המודל…',wRun:'מתמלל במכשיר…',wReady:'המודל מוכן',wLoadFail:'טעינת מודל התמלול נכשלה (צריך אינטרנט בפעם הראשונה, או מודל לא תואם).',wDeleted:'המודל שהורד נמחק',wS:'קטן',wB:'בינוני',wT:'זעיר',
+ wTitle:'תמלול במכשיר (בלי מפתח)',wDesc:'מנוע Whisper שרץ בטלפון עצמו אחרי ההקלטה. מוריד מודל פעם אחת (עשרות עד מאות MB), אחר כך עובד גם בלי אינטרנט והשמע לא יוצא מהמכשיר. בעברית איכות המודלים הקטנים נמוכה והתמלול איטי יותר.',wOn:'הפעל תמלול במכשיר',wOnD:'אחרי כל הקלטה בלי תמלול חי',wModel:'מודל',wCustom:'מזהה מודל מותאם (HuggingFace)',wPrep:'הורד / הכן את המודל עכשיו',wDel:'מחק מודל שהורד',wDl:'מוריד מודל תמלול {0}',wInit:'מכין את המודל…',wRun:'מתמלל במכשיר…',wReady:'המודל מוכן, תמלול במכשיר הופעל',wLoadFail:'טעינת מודל התמלול נכשלה (צריך אינטרנט בפעם הראשונה, או מודל לא תואם).',wDeleted:'המודל שהורד נמחק',wS:'קטן',wB:'בינוני',wT:'זעיר',
  modeHelp:'אם התמלול החי לא עובד יחד עם ההקלטה בטלפון שלך: בחר "הקלטה בלבד" ותמלל אחרי העצירה (במכשיר או עם AI), או "תמלול חי בלבד" (בלי שמע).',
  autoAI2:'שימוש אוטומטי ב-AI: תמלול כשאין תמלול חי + סיווג לתיקיות ותזכורות',autoAI2d:'השמע (לתמלול) והטקסט (לסיווג) נשלחים לספק שחיברת',
 },
@@ -235,7 +235,7 @@ en:{
  srNet:'Live transcription needs internet.',srDeny:'Speech recognition permission denied.',
  noText:'🎧 Recording without transcript',editNote:'Edit note',newNote:'New note',noteText:'Text',folder:'Folder',close:'Close',del:'Delete',edit:'Edit',
  play:'Play',pause:'Pause',dl:'Download audio',share:'Share',copy:'Copy',copied:'Copied',
- aiTr:'Transcribe with AI',aiBusy:'Transcribing…',aiDone:'Transcript updated',aiRestore:'Restore previous transcript',aiNoKey:'To transcribe, turn on "On-device transcription" or add an AI key in Settings.',aiFail:'Transcription failed: {0}',aiLong:'Recording is too long for AI transcription (over 6 min).',aiNoAudio:'This note has no saved audio.',
+ aiTr:'Transcribe',aiBusy:'Transcribing…',aiDone:'Transcript updated',aiRestore:'Restore previous transcript',aiNoKey:'To transcribe, turn on "On-device transcription" or add an AI key in Settings.',aiFail:'Transcription failed: {0}',aiLong:'Recording is too long for AI transcription (over 6 min).',aiNoAudio:'This note has no saved audio.',
  rem:'Reminder',remAdd:'Add reminder',remNew:'New reminder',remEdit:'Edit reminder',remTitle:'Remind me about',remWhen:'When',remRepeat:'Repeat',r_none:'Once',r_daily:'Daily',r_weekly:'Weekly',
  remHonest:'In-app alerts arrive while the app is open or running in the background. For a reminder that always arrives, even when the app is fully closed, add it to your phone calendar (📅).',
  remNotif:'Enable system notifications',remNotifOn:'System notifications are on',remNotifNo:'Notifications are blocked in the browser. Allow them in site settings.',
@@ -273,7 +273,7 @@ en:{
  movedTo:'Moved to {0}',recovered:'Recovered an interrupted recording',micNone:'No microphone found',micFail:'Recording did not start ({0})',
  restoreNoAudio:'This backup has no audio — existing recordings on the device will be deleted.',
  autoSwitchedNo:'Live transcription did not work together with recording on this device, so I switched to: {0}. To get a transcript after recording: Settings › On-device transcription (no key) or an AI key.',
- wTitle:'On-device transcription (no key)',wDesc:'A Whisper engine that runs on the phone itself after recording. Downloads a model once (tens to hundreds of MB), then works offline and audio never leaves the device. Small models are weaker in Hebrew and slower.',wOn:'Enable on-device transcription',wOnD:'After each recording that has no live transcript',wModel:'Model',wCustom:'Custom model id (HuggingFace)',wPrep:'Download / prepare model now',wDel:'Delete downloaded model',wDl:'Downloading transcription model {0}',wInit:'Preparing model…',wRun:'Transcribing on device…',wReady:'Model is ready',wLoadFail:'Could not load the transcription model (needs internet the first time, or incompatible model).',wDeleted:'Downloaded model deleted',wS:'Small',wB:'Base',wT:'Tiny',
+ wTitle:'On-device transcription (no key)',wDesc:'A Whisper engine that runs on the phone itself after recording. Downloads a model once (tens to hundreds of MB), then works offline and audio never leaves the device. Small models are weaker in Hebrew and slower.',wOn:'Enable on-device transcription',wOnD:'After each recording that has no live transcript',wModel:'Model',wCustom:'Custom model id (HuggingFace)',wPrep:'Download / prepare model now',wDel:'Delete downloaded model',wDl:'Downloading transcription model {0}',wInit:'Preparing model…',wRun:'Transcribing on device…',wReady:'Model is ready, on-device transcription enabled',wLoadFail:'Could not load the transcription model (needs internet the first time, or incompatible model).',wDeleted:'Downloaded model deleted',wS:'Small',wB:'Base',wT:'Tiny',
  modeHelp:'If live transcription does not work together with recording on your phone: pick "Record only" and transcribe after stopping (on device or with AI), or "Live transcript only" (no audio).',
  autoAI2:'Automatic AI: transcribe when there is no live transcript + sort into folders and reminders',autoAI2d:'Audio (for transcription) and text (for sorting) are sent to the provider you connected',
 }};
@@ -978,7 +978,7 @@ ACT.alSpeak=function(el){var r=remById(el.dataset.id);audioCtx();speakText(r?r.t
 ACT.alClose=function(){closeOv('alarm')};
 ACT.wPrep=async function(){
  if(WH.pipe&&WH.id===wModelId()){toast(T('wReady'));return}
- try{await wLoad();toast(T('wReady'),4000)}catch(e){toast(T('wLoadFail'),6000)}}
+ try{await wLoad();S.set.localAI=true;saveSet();refresh();toast(T('wReady'),4000)}catch(e){toast(T('wLoadFail'),6000)}}
 ACT.wDel=async function(){try{WH.pipe=null;WH.id='';var ks=await caches.keys();for(var i=0;i<ks.length;i++)if(ks[i].indexOf('transformers')===0)await caches.delete(ks[i]);toast(T('wDeleted'))}catch(e){toast(T('wDeleted'))}}
 ACT.testSpeak=function(){audioCtx();speakText(T('testSpeak'),true);beep()};
 
