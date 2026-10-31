@@ -23,6 +23,7 @@ body[data-theme=day]{--bg:#f5f2ea;--bg2:#ebe7db;--card:#ffffff;--card2:#f0ece0;-
 html,body{margin:0;height:100%;background:var(--bg);color:var(--tx);font-family:system-ui,-apple-system,"Segoe UI",Roboto,"Noto Sans Hebrew",Arial,sans-serif;font-size:16px;line-height:1.45}
 body{overflow:hidden}
 #app{display:flex;flex-direction:column;height:var(--appH,100dvh);max-width:720px;margin:0 auto;position:relative}
+body.ov-open #appnest-assistant-btn{display:none!important}
 body.recon #appnest-assistant-btn{bottom:calc(env(safe-area-inset-bottom) + 150px)!important}
 body.fixbar #appnest-assistant-btn{bottom:calc(env(safe-area-inset-bottom) + 96px)!important}
 body.fixbar #tabs{position:fixed;left:0;right:0;bottom:0;z-index:60}
@@ -165,7 +166,7 @@ pre.diag{white-space:pre-wrap;font-size:.8rem;background:var(--bg2);border:1px s
 <script>
 'use strict';
 /* ============ MyThoughtsNest · AppNest · core ============ */
-var VERSION='1.5.0';
+var VERSION='1.6.0';
 var SUPPORT='appnest55@gmail.com';
 var STORE_URL='https://appnest-store.pages.dev';
 
@@ -225,6 +226,11 @@ he:{
  wO:'עברית קטן (Ozen) · ~165MB · חלש מתמלול חי',dayNight:'מצב יום/לילה',
  howRec:'איך להקליט',mLiveS:'תמלול חי (בלי שמע, הכי מדויק)',mAudS:'שמע + תמלול אחרי',modeBusy:'אפשר להחליף מצב רק כשלא מקליטים.',
  shareAud:'התקבל קובץ שמע, מתמלל…',shareAudNo:'הקובץ נשמר כהערה. כדי לתמלל אותו: הגדרות › תמלול במכשיר, או מפתח AI.',shareTxt:'הטקסט נשמר כהערה',shareFail:'לא הצלחתי לקלוט את מה ששיתפת. נסה שוב.',
+ trash:'סל מחזור',trashInfo:'הערות שנמחקו נשמרות כאן 30 יום ואז נמחקות סופית, כולל ההקלטה.',trashEmpty:'סל המחזור ריק.',trashAll:'רוקן את הסל',trashAllAsk:'למחוק סופית את כל מה שבסל?',trashAsk:'למחוק סופית? אי אפשר לשחזר.',trashRestore:'שחזר',trashPurge:'מחק סופית',trashLeft:'יימחק סופית בעוד {0} ימים',
+ shareList:'שתף רשימה',clearDone:'נקה מסומנים',shopNone:'אין פריטים ברשימה.',shopNone2:'אין פריטים מסומנים.',shopCleared:'הוסרו {0} פריטים',
+ songBuild:'בנה שיר',songTitle:'שם השיר',songStyle:'סגנון (Style) לסונו',songPick:'בחר שורות',songLyrics:'מילים',songCopyL:'העתק מילים',songCopyS:'העתק סגנון',songCopyA:'העתק הכול',songSave:'שמור',songNone:'אין עדיין שורות בתיקיית השירים.',songSaved:'נשמר',
+ sumBtn:'סיכום חכם של השבוע',sumTitle:'סיכום השבוע',sumNoKey:'סיכום חכם דורש מפתח AI בהגדרות.',sumNone:'אין הערות מהשבוע האחרון.',sumBusy:'מסכם…',
+ dict:'מילון תיקונים',dictD:'מילים שהתמלול טועה בהן יתוקנו אוטומטית. שורה לכל תיקון, בפורמט: שגוי = נכון (למשל: סוּנוֹ = סונו).',
  wNoGpu:'המכשיר/הדפדפן לא תומכים ב-WebGPU, שנדרש למודל הזה. בחר מודל אחר.',wH:'עברית מדויק (ivrit.ai) · ~1.6GB · ניסיוני, דורש WebGPU',
  wTitle:'תמלול במכשיר (בלי מפתח)',wDesc:'מנוע Whisper שרץ בטלפון עצמו אחרי ההקלטה. מוריד מודל פעם אחת (עשרות עד מאות MB), אחר כך עובד גם בלי אינטרנט והשמע לא יוצא מהמכשיר. בעברית איכות המודלים הקטנים נמוכה והתמלול איטי יותר.',wOn:'הפעל תמלול במכשיר',wOnD:'אחרי כל הקלטה בלי תמלול חי',wModel:'מודל',wCustom:'מזהה מודל מותאם (HuggingFace)',wPrep:'הורד / הכן את המודל עכשיו',wDel:'מחק מודל שהורד',wDl:'מוריד מודל תמלול {0}',wInit:'מכין את המודל…',wRun:'מתמלל במכשיר…',wReady:'המודל מוכן, תמלול במכשיר הופעל',wLoadFail:'טעינת מודל התמלול נכשלה (צריך אינטרנט בפעם הראשונה, או מודל לא תואם).',wDeleted:'המודל שהורד נמחק',wS:'קטן',wB:'בינוני',wT:'זעיר',
  modeHelp:'אם התמלול החי לא עובד יחד עם ההקלטה בטלפון שלך: בחר "הקלטה בלבד" ותמלל אחרי העצירה (במכשיר או עם AI), או "תמלול חי בלבד" (בלי שמע).',
@@ -284,6 +290,11 @@ en:{
  wO:'Small Hebrew (Ozen) · ~165MB · weaker than live',dayNight:'Day / night mode',
  howRec:'How to record',mLiveS:'Live transcript (no audio, most accurate)',mAudS:'Audio + transcribe after',modeBusy:'You can switch mode only when not recording.',
  shareAud:'Audio received, transcribing…',shareAudNo:'Saved as a note. To transcribe it: Settings › On-device transcription, or an AI key.',shareTxt:'Text saved as a note',shareFail:'Could not receive what you shared. Try again.',
+ trash:'Trash',trashInfo:'Deleted notes stay here for 30 days, then are removed for good, including the audio.',trashEmpty:'Trash is empty.',trashAll:'Empty trash',trashAllAsk:'Permanently delete everything in the trash?',trashAsk:'Delete permanently? This cannot be undone.',trashRestore:'Restore',trashPurge:'Delete forever',trashLeft:'Removed for good in {0} days',
+ shareList:'Share list',clearDone:'Clear checked',shopNone:'No items in the list.',shopNone2:'No checked items.',shopCleared:'Removed {0} items',
+ songBuild:'Build a song',songTitle:'Song title',songStyle:'Style (for Suno)',songPick:'Pick lines',songLyrics:'Lyrics',songCopyL:'Copy lyrics',songCopyS:'Copy style',songCopyA:'Copy all',songSave:'Save',songNone:'No lines in the songs folder yet.',songSaved:'Saved',
+ sumBtn:'Smart summary of the week',sumTitle:'Weekly summary',sumNoKey:'Smart summary needs an AI key in Settings.',sumNone:'No notes from the last week.',sumBusy:'Summarizing…',
+ dict:'Correction dictionary',dictD:'Words the transcript gets wrong are fixed automatically. One per line, format: wrong = right.',
  wNoGpu:'This device/browser has no WebGPU, which this model needs. Pick another model.',wH:'Accurate Hebrew (ivrit.ai) · ~1.6GB · experimental, needs WebGPU',
  wTitle:'On-device transcription (no key)',wDesc:'A Whisper engine that runs on the phone itself after recording. Downloads a model once (tens to hundreds of MB), then works offline and audio never leaves the device. Small models are weaker in Hebrew and slower.',wOn:'Enable on-device transcription',wOnD:'After each recording that has no live transcript',wModel:'Model',wCustom:'Custom model id (HuggingFace)',wPrep:'Download / prepare model now',wDel:'Delete downloaded model',wDl:'Downloading transcription model {0}',wInit:'Preparing model…',wRun:'Transcribing on device…',wReady:'Model is ready, on-device transcription enabled',wLoadFail:'Could not load the transcription model (needs internet the first time, or incompatible model).',wDeleted:'Downloaded model deleted',wS:'Small',wB:'Base',wT:'Tiny',
  modeHelp:'If live transcription does not work together with recording on your phone: pick "Record only" and transcribe after stopping (on device or with AI), or "Live transcript only" (no audio).',
@@ -312,9 +323,9 @@ function dl(blob,name){var a=document.createElement('a');a.href=URL.createObject
 function vibrate(p){try{if(navigator.vibrate)navigator.vibrate(p)}catch(e){}}
 
 /* ---------- state ---------- */
-var DEF={localAI:false,wModel:'itayinbar/Ozen-v1',wCustom:'',lang:'he',theme:'gold',zoom:1,user:'',mode:'both',recLang:'he-IL',auto:true,target:'auto',speak:true,beep:true,vib:true,defTime:'09:00',provider:'gemini',keyG:'',keyO:'',gModel:'',autoAI:true,lastBackup:0,seenGuide:0,lastNag:''};
+var DEF={dict:'',localAI:false,wModel:'itayinbar/Ozen-v1',wCustom:'',lang:'he',theme:'gold',zoom:1,user:'',mode:'both',recLang:'he-IL',auto:true,target:'auto',speak:true,beep:true,vib:true,defTime:'09:00',provider:'gemini',keyG:'',keyO:'',gModel:'',autoAI:true,lastBackup:0,seenGuide:0,lastNag:''};
 var SYSF=[{id:'ideas',sys:'ideas',icon:'💡'},{id:'songs',sys:'songs',icon:'🎵'},{id:'shop',sys:'shop',icon:'🛒'},{id:'tasks',sys:'tasks',icon:'⏰'}];
-var S={set:{},folders:[],notes:[],rem:[],dbOk:false};
+var S={set:{},folders:[],notes:[],trash:[],rem:[],dbOk:false};
 function loadSettings(){var s=safeParse('mtn_set',{});S.set={};for(var k in DEF)S.set[k]=(s[k]!==undefined&&typeof s[k]===typeof DEF[k])?s[k]:DEF[k];
  var f=safeParse('mtn_folders',null);if(!Array.isArray(f)||!f.length)f=SYSF.map(function(x){return {id:x.id,sys:x.sys,icon:x.icon}});
  SYSF.forEach(function(x){if(!f.some(function(y){return y.id===x.id}))f.push({id:x.id,sys:x.sys,icon:x.icon})});S.folders=f;
@@ -568,6 +579,7 @@ async function stopRec(){
 function hasKey(){return !!(S.set.provider==='openai'?S.set.keyO:S.set.keyG)}
 function canAI(){return hasKey()||!!S.set.localAI}
 async function finalizeCapture(text,blob,dur,srErr,both,draft){
+ text=applyDict(text);
  var tgt=S.set.target,explicit=tgt!=='auto'&&folderOf(tgt).id===tgt,folder='ideas';
  if(explicit)folder=tgt;else if(S.set.auto&&text)folder=classify(text).folder;
  var whenTs=reminderFor(text,folder,explicit);
@@ -693,7 +705,7 @@ async function aiTranscribeNote(id,quiet){
  var rec=n.aud?await dbGet('audio',id):null;if(!rec||!rec.blob){toast(T('aiNoAudio'));return}
  aiBusy[id]=1;refresh();refreshEditor(id);
  try{var tx;if(hasKey()){try{tx=await aiTranscribeBlob(rec.blob)}catch(e0){if(!S.set.localAI||(e0&&e0.message==='LONG'))throw e0;tx=await localTranscribeBlob(rec.blob)}}else tx=await localTranscribeBlob(rec.blob);
-  if(tx){var wasEmpty=!n.text;if(n.text&&n.text!==tx)n.alt=n.text;n.text=tx;n.tr='ai';
+  if(tx){tx=applyDict(tx);var wasEmpty=!n.text;if(n.text&&n.text!==tx)n.alt=n.text;n.text=tx;n.tr='ai';
    if(wasEmpty&&S.set.auto&&S.set.target==='auto'&&!n.manual){n.folder=classify(tx).folder;var w=reminderFor(tx,n.folder,false);if(w&&!n.remId){var r=addReminder({noteId:n.id,title:cleanTitle(tx),when:w});n.remId=r.id;toast(T('remSet',fmtWhen(w)),5000)}}
    await saveNote(n);toast(T('aiDone'));aiRefine(n)}
   else toast(T('nothing'))}
@@ -743,7 +755,7 @@ function applyPrefs(){
 function scTitle(sc,p){
  if(sc==='home')return T('tHome');if(sc==='notes')return T('tNotes');if(sc==='remind')return T('tRem');if(sc==='more')return T('tMore');
  if(sc==='folder'){var f=folderOf(p);return f.icon+' '+fName(f)}
- return T({settings:'settings',backup:'backup',about:'about',diag:'diag'}[sc]||'app')}
+ return T({settings:'settings',backup:'backup',about:'about',diag:'diag',trash:'trash'}[sc]||'app')}
 function tabOf(sc){return sc==='folder'?'notes':(isTab(sc)?sc:'more')}
 function renderBars(){
  var top=$('#top'),h;
@@ -753,7 +765,7 @@ function renderBars(){
  var tb=[['home',IC.home,T('tHome')],['notes',IC.notes,T('tNotes')],['rec',null,T('tRec')],['remind',IC.bell,T('tRem')],['more',IC.more,T('tMore')]],cur=tabOf(curSc);
  $('#tabs').innerHTML=tb.map(function(t){if(t[0]==='rec')return '<button class="tab trec'+(R.on?' on':'')+'" data-act="rec" aria-label="'+esc(R.on?T('stopRec'):T('tRec'))+'"><span class="rc">'+(R.on?IC.stop:IC.mic)+'</span><span>'+esc(R.on?T('stopRec'):T('tRec'))+'</span></button>';return '<button class="tab'+(cur===t[0]?' on':'')+'" data-act="tab" data-sc="'+t[0]+'" aria-label="'+esc(t[2])+'">'+t[1]+'<span>'+esc(t[2])+'</span></button>'}).join('');
  var rb=$('#recbar');if(rb){var show=R.on&&curSc!=='home';document.body.classList.toggle('recon',!!show);rb.className=show?'on':'';rb.innerHTML=show?'<span class="rd"></span><span class="rt">'+fmtDur(Math.max(0,recMs()))+'</span><button class="btn sm" data-act="recPause">'+(R.paused?'▶ '+esc(T('resume')):'⏸ '+esc(T('pause')))+'</button><button class="btn sm dng" data-act="rec">■ '+esc(T('stopRec'))+'</button>':''}}
-var SCR={home:vHome,notes:vNotes,remind:vRemind,more:vMore,folder:vFolder,settings:vSettings,backup:vBackup,about:vAbout,diag:vDiag};
+var SCR={trash:vTrash,home:vHome,notes:vNotes,remind:vRemind,more:vMore,folder:vFolder,settings:vSettings,backup:vBackup,about:vAbout,diag:vDiag};
 function render(){
  var main=$('#main'),st=main.scrollTop;renderBars();main.innerHTML=(SCR[curSc]||vHome)(curP);
  main.scrollTop=st;if(R.on&&curSc==='home'){updateLive();tickTimer()}}
@@ -809,10 +821,12 @@ function notesResults(){
  S.folders.forEach(function(f){var c=S.notes.filter(function(n){return n.folder===f.id}).length;h+='<button class="fcard" data-act="openFolder" data-f="'+esc(f.id)+'"><span class="e">'+esc(f.icon)+'</span><b>'+esc(fName(f))+'</b><span>'+esc(T('notesN',c))+'</span></button>'});
  h+='<button class="fcard" data-act="newFolder"><span class="e">＋</span><b>'+esc(T('newFolder'))+'</b><span>&nbsp;</span></button></div>';
  var rs2=S.notes.slice(0,20);h+='<h2>'+esc(T('all'))+' <small>'+S.notes.length+'</small></h2>'+(rs2.length?rs2.map(function(n){return noteCard(n,true)}).join(''):'<div class="card muted">'+esc(T('noNotes'))+'</div>');return h}
-function vNotes(){return '<input id="q" type="search" placeholder="'+esc(T('search'))+'" value="'+esc(searchQ)+'" aria-label="'+esc(T('search'))+'" style="margin-bottom:12px"><div id="nres">'+notesResults()+'</div>'+foot()}
+function vNotes(){return '<div class="btns" style="margin-bottom:10px"><button class="btn" data-act="summarize">✨ '+esc(T('sumBtn'))+'</button></div><input id="q" type="search" placeholder="'+esc(T('search'))+'" value="'+esc(searchQ)+'" aria-label="'+esc(T('search'))+'" style="margin-bottom:12px"><div id="nres">'+notesResults()+'</div>'+foot()}
 function folderNotes(id){return S.notes.filter(function(n){return n.folder===id})}
 function vFolder(id){
  var f=folderOf(id),ns=folderNotes(f.id),h='<div class="btns">';
+ if(f.sys==='songs')h+='<button class="btn pri" data-act="songBuild">🎵 '+esc(T('songBuild'))+'</button>';
+ if(f.sys==='shop')h+='<button class="btn" data-act="shareShop">↗ '+esc(T('shareList'))+'</button><button class="btn" data-act="clearDone">✓ '+esc(T('clearDone'))+'</button>';
  if(f.sys==='songs')h+='<button class="btn" data-act="copyFolder" data-f="'+esc(f.id)+'">📋 '+esc(T('songCopy'))+'</button>';
  h+='<button class="btn" data-act="expFolder" data-f="'+esc(f.id)+'">⬇ '+esc(T('exportTxt'))+'</button>';
  if(!f.sys||true)h+='<button class="btn" data-act="editFolder" data-f="'+esc(f.id)+'">✎ '+esc(T('editFolder'))+'</button>';
@@ -836,7 +850,7 @@ function vRemind(){
 /* ---- more ---- */
 function vMore(){
  var L=function(act,ic,t,sub){return '<button data-act="'+act+'"><span style="font-size:1.4rem">'+ic+'</span><span>'+esc(t)+(sub||'')+'</span><span class="arr">'+(curLang==='he'?'‹':'›')+'</span></button>'};
- return '<div class="list">'+L('go_settings','⚙️',T('settings'))+L('go_backup','💾',T('backup'))+L('guide','📖',T('guide'))+L('go_diag','🩺',T('diag'))+L('go_about','ℹ️',T('about'))+'</div>'+foot()}
+ return '<div class="list">'+L('go_settings','⚙️',T('settings'))+L('go_backup','💾',T('backup'))+L('go_trash','🗑',T('trash'),S.trash.length?' ('+S.trash.length+')':'')+L('guide','📖',T('guide'))+L('go_diag','🩺',T('diag'))+L('go_about','ℹ️',T('about'))+'</div>'+foot()}
 
 /* ---- settings ---- */
 function sw(key,label,sub){return '<label class="sw"><span class="t">'+esc(label)+(sub?'<small>'+esc(sub)+'</small>':'')+'</span><input type="checkbox" data-set="'+key+'"'+(S.set[key]?' checked':'')+'><span class="k"></span></label>'}
@@ -857,6 +871,7 @@ function vSettings(){
  h+='<label class="f">'+esc(T('apiKey'))+'</label><input type="password" data-set="'+(g?'keyG':'keyO')+'" value="'+esc(keyv)+'" autocomplete="off" spellcheck="false" dir="ltr">';
  if(g)h+='<label class="f">'+esc(T('model'))+'</label><select data-set="gModel" id="gmodel">'+modelOpts()+'</select>';
  h+='<div class="btns"><button class="btn sm" data-act="aiTest">'+esc(T('test'))+'</button>'+(g?'<button class="btn sm" data-act="aiModels">'+esc(T('refresh'))+'</button>':'')+'<button class="btn sm dng" data-act="aiDisc">'+esc(T('disconnect'))+'</button></div><div class="muted">'+esc(T('keyHow'))+'</div></div>';
+ h+='<h2>📖 '+esc(T('dict'))+'</h2><div class="card"><div class="muted">'+esc(T('dictD'))+'</div><textarea data-dict="1" dir="auto" style="min-height:90px;margin-top:8px" placeholder="סוּנוֹ = סונו">'+esc(s.dict||'')+'</textarea></div>';
  h+='<h2>🧠 '+esc(T('wTitle'))+'</h2><div class="card"><div class="muted">'+esc(T('wDesc'))+'</div></div><div class="list">'+sw('localAI',T('wOn'),T('wOnD'))+'</div><div class="card"><label class="f">'+esc(T('wModel'))+'</label><select data-set="wModel">'+[['itayinbar/Ozen-v1',T('wO')],['onnx-community/whisper-tiny',T('wT')+' · ~40MB'],['onnx-community/whisper-base',T('wB')+' · ~80MB'],['onnx-community/whisper-small',T('wS')+' · ~250MB'],['lial-apps/siman-ivrit-turbo',T('wH')],['custom','Custom']].map(function(o){return '<option value="'+o[0]+'"'+(s.wModel===o[0]?' selected':'')+'>'+esc(o[1])+'</option>'}).join('')+'</select>'+(s.wModel==='custom'?'<label class="f">'+esc(T('wCustom'))+'</label><input type="text" data-set="wCustom" value="'+esc(s.wCustom)+'" dir="ltr" spellcheck="false" placeholder="user/whisper-model-onnx">':'')+'<div class="btns"><button class="btn sm" data-act="wPrep">⬇ '+esc(T('wPrep'))+'</button><button class="btn sm" data-act="wDel">🗑 '+esc(T('wDel'))+'</button></div></div>';
  h+='<div class="list">'+sw('autoAI',T('autoAI2'),T('autoAI2d'))+'</div>';
  h+='<div class="btns" style="margin-top:20px"><button class="btn dng" data-act="wipe">🗑 '+esc(T('wipe'))+'</button></div>';
@@ -943,10 +958,11 @@ function persistNewIfText(){if(EDN&&EDN._new&&EDN.text){persistNew(EDN)}}
 ACT.edDel=async function(){if(!EDN)return;var ok=await confirmDlg(T('delNoteAsk'),T('del'),true);if(!ok||!EDN)return;var n=EDN;closeOv('note',true);EDN=null;await deleteNote(n)};
 async function deleteNote(n){
  if(n._new){syncHistory();refresh();return}
- var rec=n.aud?await dbGet('audio',n.id):null,rems=S.rem.filter(function(r){return r.noteId===n.id}),idx=S.notes.indexOf(n);
+ var rems=S.rem.filter(function(r){return r.noteId===n.id}),idx=S.notes.indexOf(n);
  S.notes=S.notes.filter(function(x){return x!==n});S.rem=S.rem.filter(function(r){return r.noteId!==n.id});
- await dbDel('notes',n.id);await dbDel('audio',n.id);saveRem();if(P.id===n.id)stopPlay();syncHistory();refresh();
- toast(T('deleted'),7000,T('undo'),async function(){S.notes.splice(Math.min(idx,S.notes.length),0,n);rems.forEach(function(r){S.rem.push(r)});await saveNote(n);if(rec)await dbPut('audio',rec);saveRem();refresh();toast(T('restored'))})}
+ n.del=Date.now();n.delRems=rems;S.trash.unshift(n);
+ await dbPut('notes',n);saveRem();if(P.id===n.id)stopPlay();syncHistory();refresh();
+ toast(T('deleted'),7000,T('undo'),function(){restoreNote(n.id,idx)})}
 ACT.edAi=function(){if(EDN){persistNewIfText();aiTranscribeNote(EDN.id)}};
 ACT.edAlt=function(){if(!EDN||!EDN.alt)return;var t=EDN.text;EDN.text=EDN.alt;EDN.alt=t;saveNote(EDN);refreshEditor(EDN.id)};
 ACT.edDl=async function(){if(!EDN)return;var rec=await dbGet('audio',EDN.id);if(!rec||!rec.blob){toast(T('aiNoAudio'));return}var ext=/mp4/.test(rec.blob.type)?'m4a':/ogg/.test(rec.blob.type)?'ogg':'webm';dl(rec.blob,'idea-'+new Date(EDN.ts).toISOString().slice(0,16).replace(/[:T]/g,'-')+'.'+ext)};
@@ -1067,13 +1083,13 @@ async function doRestore(file){
   for(var m=0;m<auds.length;m++){if(await dbPut('audio',auds[m])===false)throw new Error('save')}
  }catch(e){
   await dbClear('notes');await dbClear('audio');for(var r1=0;r1<oldNotes.length;r1++)await saveNote(oldNotes[r1]);for(var r2=0;r2<oldAud.length;r2++)await dbPut('audio',oldAud[r2]);S.notes=oldNotes;toast(T('restoreBad'));refresh();return}
- S.notes=notes;
+ S.notes=notes;S.trash=[];
  S.folders=Array.isArray(o.folders)&&o.folders.length?o.folders:S.folders;S.rem=Array.isArray(o.reminders)?o.reminders:[];
  var set=o.settings||{};for(var k2 in DEF)if(set[k2]!==undefined&&typeof set[k2]===typeof DEF[k2])S.set[k2]=set[k2];S.set.keyG=keep.keyG;S.set.keyO=keep.keyO;
  remainingFoldersFix();S.notes.sort(function(a,b){return b.ts-a.ts});saveSet();saveFolders();saveRem();applyPrefs();render();toast(T('restoreOk'))}
 ACT.wipe=async function(){
  if(!await confirmDlg(T('wipeAsk1'),T('yes'),true))return;if(!await confirmDlg(T('wipeAsk2'),T('yes'),true))return;
- await dbClear('notes');await dbClear('audio');S.notes=[];S.rem=[];S.folders=SYSF.map(function(x){return {id:x.id,sys:x.sys,icon:x.icon}});S.set.target='auto';S.set.keyG='';S.set.keyO='';S.set.gModel='';saveSet();saveFolders();saveRem();stopPlay();render();toast(T('wiped'))};
+ await dbClear('notes');await dbClear('audio');S.notes=[];S.trash=[];S.rem=[];S.folders=SYSF.map(function(x){return {id:x.id,sys:x.sys,icon:x.icon}});S.set.target='auto';S.set.keyG='';S.set.keyO='';S.set.gModel='';saveSet();saveFolders();saveRem();stopPlay();render();toast(T('wiped'))};
 ACT.shareApp=async function(){var d={title:'MyThoughtsNest',text:T('app')+' — AppNest',url:location.href.split('#')[0]};try{if(navigator.share)await navigator.share(d);else{await navigator.clipboard.writeText(d.url);toast(T('copied'))}}catch(e){}};
 
 /* guide */
@@ -1120,7 +1136,7 @@ function handleRemParam(){
  try{var u=new URL(location.href),id=u.searchParams.get('rem'),act=u.searchParams.get('act');if(id){if(act==='done')remDone(id);else if(act==='snooze')remSnooze(id,10);history.replaceState(null,'',u.pathname)}}catch(e){}}
 async function quickNote(text,src,fid){
  var folder=fid||(S.set.auto?classify(text).folder:'ideas'),whenTs=reminderFor(text,folder,false);
- var n={id:uid(),ts:Date.now(),folder:folder,text:text,dur:0,aud:false,tr:'typed',src:src||''};
+ text=applyDict(text);var n={id:uid(),ts:Date.now(),folder:folder,text:text,dur:0,aud:false,tr:'typed',src:src||''};
  S.notes.unshift(n);await saveNote(n);
  if(whenTs){var r=addReminder({noteId:n.id,title:cleanTitle(text),when:whenTs});n.remId=r.id;await saveNote(n)}
  aiRefine(n);refresh();return n}
@@ -1151,7 +1167,7 @@ async function handleShared(id){
 async function init(){
  loadSettings();applyPrefs();
  S.dbOk=await dbOpen();
- if(S.dbOk){S.notes=(await dbAll('notes')).sort(function(a,b){return b.ts-a.ts})}else{setTimeout(function(){toast(T('noDb'),6000)},800)}
+ if(S.dbOk){var allN=(await dbAll('notes')).sort(function(a,b){return b.ts-a.ts});S.notes=allN.filter(function(n){return !n.del});S.trash=allN.filter(function(n){return n.del});try{await purgeOld()}catch(e){}}else{setTimeout(function(){toast(T('noDb'),6000)},800)}
 remainingFoldersFix();
  var rec=0;if(S.dbOk){try{rec=await recoverDrafts()}catch(e){}}
  try{if(navigator.storage&&navigator.storage.persist)navigator.storage.persist()}catch(e){}
@@ -1176,6 +1192,81 @@ remainingFoldersFix();
 window.addEventListener('error',function(e){try{console.error('MTN error',e.message)}catch(x){}});
 init();
 
+
+/* ============ v1.6 features: trash, shopping share, song builder, dictionary, smart summary ============ */
+var SG={sel:{},title:'',style:''};
+function applyDict(t){var d=S.set.dict;if(!d||!t)return t;
+ d.split(/\n/).forEach(function(l){var m=l.match(/^\s*(.+?)\s*(?:=>|->|→|=)\s*(.+?)\s*$/);if(!m)return;
+  var a=m[1].replace(/[.*+?^${}()|[\]\\]/g,'\\$&'),b=m[2];
+  try{t=t.replace(new RegExp('(^|[\\s,.!?;:()"\'])'+a+'(?=$|[\\s,.!?;:()"\'])','g'),function(_,p){return p+b})}catch(e){}});
+ return t}
+/* ---- trash ---- */
+async function restoreNote(id,idx){
+ var n=S.trash.filter(function(x){return x.id===id})[0];if(!n)return;
+ S.trash=S.trash.filter(function(x){return x!==n});var rems=n.delRems||[];delete n.del;delete n.delRems;
+ S.notes.push(n);S.notes.sort(function(a,b){return b.ts-a.ts});rems.forEach(function(r){S.rem.push(r)});
+ await dbPut('notes',n);saveRem();refresh();toast(T('restored'))}
+async function purgeNote(id){S.trash=S.trash.filter(function(x){return x.id!==id});await dbDel('notes',id);await dbDel('audio',id)}
+async function purgeOld(){var lim=Date.now()-30*864e5,old=S.trash.filter(function(n){return n.del&&n.del<lim});for(var i=0;i<old.length;i++)await purgeNote(old[i].id)}
+function vTrash(){
+ var h='<div class="warn">'+esc(T('trashInfo'))+'</div>';
+ if(!S.trash.length)return h+'<div class="card muted">'+esc(T('trashEmpty'))+'</div>'+foot();
+ h+='<div class="btns"><button class="btn dng" data-act="trashAll">🗑 '+esc(T('trashAll'))+'</button></div>';
+ return h+S.trash.map(function(n){var f=folderOf(n.folder),days=Math.max(0,30-Math.floor((Date.now()-n.del)/864e5));
+  return '<div class="card note"><div class="ic">'+esc(f.icon)+'</div><div class="bd"><div class="tx'+(n.text?'':' empty')+'">'+esc(n.text||T('noText'))+'</div><div class="mt"><span>'+esc(T('trashLeft',days))+'</span></div><div class="btns" style="margin-top:8px"><button class="btn sm" data-act="trashRestore" data-id="'+esc(n.id)+'">↩ '+esc(T('trashRestore'))+'</button><button class="btn sm dng" data-act="trashPurge" data-id="'+esc(n.id)+'">✕ '+esc(T('trashPurge'))+'</button></div></div></div>'}).join('')+foot()}
+ACT.go_trash=function(){showSc('trash')};
+ACT.trashRestore=function(el){restoreNote(el.dataset.id)};
+ACT.trashPurge=async function(el){if(await confirmDlg(T('trashAsk'),T('del'),true)){await purgeNote(el.dataset.id);refresh()}};
+ACT.trashAll=async function(){if(await confirmDlg(T('trashAllAsk'),T('del'),true)){var ids=S.trash.map(function(n){return n.id});for(var i=0;i<ids.length;i++)await purgeNote(ids[i]);refresh()}};
+/* ---- shopping ---- */
+function shopOpenItems(){var out=[];S.notes.filter(function(n){return n.folder==='shop'}).slice().reverse().forEach(function(n){if(n.items&&n.items.length)n.items.forEach(function(it){if(!it.d)out.push(it.t)});else if(n.text)out.push(n.text)});return out}
+ACT.shareShop=async function(){var it=shopOpenItems();if(!it.length){toast(T('shopNone'));return}
+ var txt='🛒 '+T('f_shop')+'\n'+it.map(function(x){return '• '+x}).join('\n');
+ try{if(navigator.share)await navigator.share({text:txt});else{await navigator.clipboard.writeText(txt);toast(T('copied'))}}catch(e){}};
+ACT.clearDone=async function(){var cnt=0,ns=S.notes.filter(function(n){return n.folder==='shop'&&n.items&&n.items.length});
+ for(var i=0;i<ns.length;i++){var n=ns[i],left=n.items.filter(function(x){return !x.d});cnt+=n.items.length-left.length;if(left.length===n.items.length)continue;
+  if(!left.length){await deleteNote(n)}else{n.items=left;n.text=left.map(function(x){return x.t}).join('\n');await saveNote(n)}}
+ refresh();toast(cnt?T('shopCleared',cnt):T('shopNone2'))};
+/* ---- song builder ---- */
+function songLines(){return S.notes.filter(function(n){return n.folder==='songs'&&n.text}).slice().reverse()}
+function sgBuild(){return songLines().filter(function(n){return SG.sel[n.id]!==false}).map(function(n){return n.text.trim()}).join('\n')}
+ACT.songBuild=function(){
+ var ls=songLines();if(!ls.length){toast(T('songNone'));return}
+ var h='<h3>🎵 '+esc(T('songBuild'))+'<button class="ib x" data-act="sgClose" aria-label="'+esc(T('close'))+'">✕</button></h3>';
+ h+='<label class="f">'+esc(T('songTitle'))+'</label><input id="sgT" type="text" value="'+esc(SG.title)+'">';
+ h+='<label class="f">'+esc(T('songStyle'))+'</label><input id="sgS" type="text" dir="ltr" placeholder="pop, acoustic, warm male vocals" value="'+esc(SG.style)+'">';
+ h+='<label class="f">'+esc(T('songPick'))+'</label><ul class="items" id="sgList">'+ls.map(function(n){var on=SG.sel[n.id]!==false;return '<li role="checkbox" aria-checked="'+on+'" tabindex="0" data-act="sgTg" data-id="'+esc(n.id)+'"><span class="box" style="'+(on?'background:var(--ac);color:var(--acx);border-color:var(--ac)':'')+'">'+(on?'✓':'')+'</span><span>'+esc(snipS(n.text,80))+'</span></li>'}).join('')+'</ul>';
+ h+='<label class="f">'+esc(T('songLyrics'))+'</label><textarea id="sgL" style="min-height:160px">'+esc(sgBuild())+'</textarea>';
+ h+='<div class="btns"><button class="btn sm" data-act="sgCopyL">📋 '+esc(T('songCopyL'))+'</button><button class="btn sm" data-act="sgCopyS">📋 '+esc(T('songCopyS'))+'</button><button class="btn sm" data-act="sgCopyA">📋 '+esc(T('songCopyA'))+'</button></div><div class="btns"><button class="btn pri" data-act="sgSave">💾 '+esc(T('songSave'))+'</button><button class="btn" data-act="sgClose">'+esc(T('close'))+'</button></div>';
+ openOv('song',h)};
+function snipS(t,n){t=String(t||'').replace(/\s+/g,' ').trim();return t.length>n?t.slice(0,n)+'…':t}
+function sgRead(){var a=$('#sgT'),b=$('#sgS');if(a)SG.title=a.value.trim();if(b)SG.style=b.value.trim()}
+ACT.sgClose=function(){sgRead();closeOv('song')};
+ACT.sgTg=function(el){sgRead();var id=el.dataset.id;SG.sel[id]=SG.sel[id]===false;ACT.songBuild()};
+async function sgCopy(t){try{await navigator.clipboard.writeText(t);toast(T('copied'))}catch(e){toast(T('saveFail'))}}
+ACT.sgCopyL=function(){sgRead();sgCopy(($('#sgL')||{}).value||'')};
+ACT.sgCopyS=function(){sgRead();sgCopy(SG.style)};
+ACT.sgCopyA=function(){sgRead();sgCopy('Title: '+SG.title+'\nStyle: '+SG.style+'\n\nLyrics:\n'+(($('#sgL')||{}).value||''))};
+ACT.sgSave=async function(){sgRead();var l=($('#sgL')||{}).value||'';if(!l.trim())return;
+ var txt=(SG.title?SG.title+'\n\n':'')+l+(SG.style?'\n\n['+SG.style+']':'');
+ var n={id:uid(),ts:Date.now(),folder:'songs',text:txt,dur:0,aud:false,tr:'typed',src:'songcard'};S.notes.unshift(n);await saveNote(n);closeOv('song');refresh();toast(T('songSaved'))};
+/* ---- smart summary (needs a key) ---- */
+async function aiText(prompt){return S.set.provider==='openai'?await openaiChat(prompt):await geminiRun([{text:prompt}])}
+ACT.summarize=async function(){
+ if(!hasKey()){toast(T('sumNoKey'),5000);return}
+ var since=Date.now()-7*864e5,ns=S.notes.filter(function(n){return n.text&&n.ts>=since}).slice(0,60).reverse();
+ if(!ns.length){toast(T('sumNone'));return}
+ var data=ns.map(function(n){return '['+fName(folderOf(n.folder))+'] '+n.text.replace(/\s+/g,' ').slice(0,400)}).join('\n');
+ var prompt='להלן הערות קוליות מהשבוע האחרון של המשתמש (תמלול אוטומטי, ייתכנו טעויות). סכם בעברית קצרה וברורה: 1) נושאים ורעיונות עיקריים, 2) שורות/רעיונות לשירים, 3) משימות או דברים לא לשכוח, 4) רשימת קניות מאוחדת ללא כפילויות. אל תמציא דבר שלא נאמר.\n\n'+data;
+ toast(T('sumBusy'),30000);
+ try{var out=(await aiText(prompt)).trim();toast('',1);
+  openOv('sum','<h3>✨ '+esc(T('sumTitle'))+'<button class="ib x" data-act="sumClose" aria-label="'+esc(T('close'))+'">✕</button></h3><div class="card" style="white-space:pre-wrap;max-height:55vh;overflow:auto" id="sumTx">'+esc(out)+'</div><div class="btns"><button class="btn" data-act="sumCopy">📋 '+esc(T('copy'))+'</button><button class="btn pri" data-act="sumSave">💾 '+esc(T('songSave'))+'</button></div>')}
+ catch(e){toast(T('aiFail',(e&&e.message)||e),5500)}};
+ACT.sumClose=function(){closeOv('sum')};
+ACT.sumCopy=function(){sgCopy(($('#sumTx')||{}).textContent||'')};
+ACT.sumSave=async function(){var t=($('#sumTx')||{}).textContent||'';if(!t)return;var n={id:uid(),ts:Date.now(),folder:'ideas',text:T('sumTitle')+'\n\n'+t,dur:0,aud:false,tr:'typed',src:'summary'};S.notes.unshift(n);await saveNote(n);closeOv('sum');refresh();toast(T('songSaved'))};
+/* dictionary input (textarea) */
+document.addEventListener('input',function(e){var t=e.target;if(t&&t.dataset&&t.dataset.dict!==undefined){S.set.dict=t.value;saveSet()}});
 
 /* ============ AppNest Assistant: map + local brain (works with no key) ============ */
 (function(){
