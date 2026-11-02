@@ -314,7 +314,8 @@
   async function send(input) {
     if (busy) return;                          // מונע שליחה כפולה בזמן שהעוזר עונה
     var msg = input.value.trim(); if (!msg) return;
-    input.value = ''; addBubble('user', msg);
+    var shown = input.dataset.show || msg; delete input.dataset.show;
+    input.value = ''; addBubble('user', shown);
     var thinking = addBubble('bot', '…חושב');
     setBusy(true);
     try {
@@ -350,8 +351,10 @@
     var inp = panelInput;
     var row = el('div', 'display:flex;flex-wrap:wrap;gap:6px;justify-content:flex-end;margin:4px 0 8px;');
     list.forEach(function (s) {
-      var chip = el('button', 'background:#1e1e26;color:#C9A84C;border:1px solid #C9A84C55;border-radius:14px;padding:6px 11px;font:13px "Segoe UI",sans-serif;cursor:pointer;direction:rtl;', s);
-      chip.onclick = function () { if (busy) return; inp.value = s; row.remove(); if (CFG.chipsFill) { inp.focus(); try { inp.setSelectionRange(s.length, s.length); } catch (e) {} } else send(inp); };
+      // צ'יפ יכול להיות מחרוזת, או אובייקט {label, value, send} — send:true שולח מיד גם במצב chipsFill
+      var o = (s && typeof s === 'object') ? s : { label: s, value: s };
+      var chip = el('button', 'background:#1e1e26;color:#C9A84C;border:1px solid #C9A84C55;border-radius:14px;padding:6px 11px;font:13px "Segoe UI",sans-serif;cursor:pointer;direction:rtl;', o.label);
+      chip.onclick = function () { if (busy) return; if (o.send) { inp.value = o.value; inp.dataset.show = o.label; row.remove(); send(inp); return; } s = o.value; inp.value = s; row.remove(); if (CFG.chipsFill) { inp.focus(); try { inp.setSelectionRange(s.length, s.length); } catch (e) {} } else send(inp); };
       row.appendChild(chip);
     });
     bodyEl.appendChild(row); bodyEl.scrollTop = bodyEl.scrollHeight;
