@@ -20,7 +20,7 @@ CacheStorage.prototype.match=function(){return sm.apply(this,arguments).then(cle
 })();
 
 /* MyThoughtsNest service worker — bump VERSION on every release */
-var VERSION='mythoughtsnest-v1.7.0';
+var VERSION='mythoughtsnest-v1.8.0';
 var CORE=['./','./appnest-assistant.js?v=161','./manifest.json','./icon-192.png','./icon-512.png','./privacy_policy.html'];
 var OFFLINE='<!doctype html><html lang="he" dir="rtl"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>MyThoughtsNest</title><body style="font-family:system-ui;background:#0b0b0d;color:#f2efe6;display:grid;place-items:center;height:100vh;margin:0;text-align:center"><div><div style="font-size:3rem">🪺</div><h2>אין חיבור כרגע</h2><p>הנתונים שלך שמורים במכשיר.</p><button onclick="location.reload()" style="font-size:1.1rem;padding:12px 22px;border-radius:12px;border:0;background:#d4af37;color:#1a1400;font-weight:800">נסה שוב</button></div></body></html>';
 
@@ -93,3 +93,21 @@ self.addEventListener('notificationclick',function(e){
     return self.clients.openWindow('./?rem='+encodeURIComponent(d.id||'')+'&act='+encodeURIComponent(act));
   }));
 });
+
+/* ---- push reminders (v1.8): השרת שולח דחיפה ריקה, הטקסט נקרא מהמטמון המקומי ---- */
+self.addEventListener('push',function(e){e.waitUntil(onPush())});
+async function onPush(){
+  var cs=await self.clients.matchAll({type:'window',includeUncontrolled:true});
+  if(cs.some(function(c){return c.visibilityState==='visible'})){cs.forEach(function(c){c.postMessage({type:'pushTick'})});return}
+  var c=await caches.open('mtn-rem'),data={rem:[],title:'⏰ תזכורת',done:'בוצע',generic:'יש לך תזכורת — פתח את האפליקציה'},shown=[];
+  try{var m=await c.match('/__rem');if(m)data=await m.json()}catch(x){}
+  try{var s=await c.match('/__shown');if(s)shown=await s.json()}catch(x){}
+  var now=Date.now(),due=(data.rem||[]).filter(function(r){return r.when<=now+60000&&r.when>now-6*36e5&&!shown.some(function(x){return x.id===r.id&&x.when===r.when})});
+  var opt=function(body,tag,id){return {body:body,tag:tag,renotify:true,requireInteraction:true,vibrate:[250,120,250],icon:'icon-192.png',badge:'icon-192.png',data:{id:id},actions:id?[{action:'done',title:'✓ '+(data.done||'בוצע')},{action:'snooze',title:'+10'}]:[]}};
+  if(!due.length){await self.registration.showNotification(data.title||'⏰',opt(data.generic||'',"mtn-generic",''));return}
+  for(var i=0;i<due.length;i++){var r=due[i];await self.registration.showNotification(data.title||'⏰',opt(r.title,'r'+r.id,r.id));shown.push({id:r.id,when:r.when});
+    if(r.repeat&&r.repeat!=='none'){var st=r.repeat==='daily'?864e5:7*864e5;while(r.when<=now)r.when+=st}else r.gone=1}
+  data.rem=(data.rem||[]).filter(function(r){return !r.gone});
+  await c.put('/__rem',new Response(JSON.stringify(data),{headers:{'Content-Type':'application/json'}}));
+  await c.put('/__shown',new Response(JSON.stringify(shown.slice(-200)),{headers:{'Content-Type':'application/json'}}));
+}
